@@ -1,0 +1,139 @@
+
+* {
+/* margin:0;
+padding:0; */
+font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100%; 
+    background-image: url(../images/dark-geometry.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  h1 {
+    text-align: center;
+    color:  azure;
+  }
+
+  nav {
+    position: 0px;
+    background-color: lightslategray;
+    box-shadow: 3px 3px 5px rgba(0, 0 ,0, 0.1);
+  }
+
+ nav ul {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    justify-content: flex=flex-end;
+    align-items: center;
+  }
+
+  nav li {
+    height: 30px;
+  }
+
+  nav a {
+    color: darkblue;
+    height:100%;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  } 
+
+  nav a:hover{
+    background-color: lightgrey;
+  }
+
+  nav li:first-child{
+    margin-right: auto;
+  }
+
+.directory-name
+{
+  font-weight: bold;
+  font-size: large;
+}
+
+div.projectBox{
+  background-color: cornsilk;
+  margin-left: 10px;
+  margin-top: 100px;
+  width: 95%;
+  height: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+  img.ImageResultPanel {
+    margin: 10px;
+    width:900px;
+    height:600px
+  }
+
+  div.ImageResultPanel {
+    align-items: center;
+    margin: 0px;
+    margin-top: 0px;
+    background-color: rgb(139, 136, 150);
+    /* background-image: url(uploads/las/sample.png); */
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+div.image-preview{
+  border: groove 5px;
+  background-color: cornsilk;
+  display: flex;
+  justify-content: flex=flex-end;
+  align-items: top;
+}
+
+  img.img_results{
+    align-items: top;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  img.img_loader{
+    align-items: right;
+    width: 50px;
+    height: 50px;
+  }
+
+ div.file_list{
+    margin-top: 0px;
+    vertical-align: top;
+    font-size: small;
+    min-width: 235px;
+    max-width: 250px;
+    overflow-y: scroll;
+  }
+
+  div.img_result{
+    vertical-align: top;
+    align-items: top;
+    margin: 0px;
+    padding: 0px;
+    /* width: 900px;
+    height: 600px; 
+    overflow: scroll; */
+  }
+
+  .nolabel{
+    list-style: none;
+    max-height: 25%;
+  }
+
+  div.map { 
+    margin-top: 80px;
+    padding: 0px;
+    width: 100%;
+    height: 85vh; 
+  }

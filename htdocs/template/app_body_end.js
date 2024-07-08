@@ -1,0 +1,1 @@
+var appBodyEnd = '</body></html>';

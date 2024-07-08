@@ -1,0 +1,21 @@
+{
+  "name": "node_scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Nathan Crews",
+  "license": "ISC",
+  "description": "server form handler",
+  "dependencies": {
+    "cgi": "^0.3.1",
+    "exifreader": "^4.23.3",
+    "file-system": "^2.2.2",
+    "iplocation": "^7.2.0",
+    "node-fs": "^0.1.7",
+    "path": "^0.12.7",
+    "query-string": "^9.0.0"
+  }
+}

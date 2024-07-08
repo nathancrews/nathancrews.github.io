@@ -1,0 +1,21 @@
+{
+  "name": "image-geo",
+  "version": "1.0.0",
+  "main": "image-geo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cgi": "^0.3.1",
+    "exifreader": "^4.23.3",
+    "fs": "^0.0.1-security",
+    "geojson": "^0.5.0",
+    "node-fs": "^0.1.7",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "query-string": "^9.0.0"
+  }
+}
