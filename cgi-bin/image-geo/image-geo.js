@@ -70,7 +70,7 @@ else {
     filePath = process.argv[2];
 }
 
-console.log('filePath: ', filePath)
+//console.log('filePath: ', filePath)
 
 
 if (fs.existsSync(filePath)) {
@@ -141,22 +141,18 @@ async function ProcessImages(imagePath, CGIRealtivePath) {
 
     if (InCGIMode == true) {
 
-        // fs.access(path.join(localDir, geoFileName), fs.constants.F_OK, (err) => {
-        //     if (err) {
-        //         console.log("<p>No image GeoJSON file generated!</p>");
-        //         return 0;
-        //     }
-        // });
-
-        console.log("before: geoFileNameRelative = ", CGIRealtivePath + geoFileName);
+        fs.access(path.join(localDir, geoFileName), fs.constants.F_OK, (err) => {
+            if (err) {
+                console.log("<p>No image GeoJSON file generated!</p>");
+                return 0;
+            }
+        });
 
         if (CGIRealtivePath[CGIRealtivePath.length - 1] != '/') {
             CGIRealtivePath = CGIRealtivePath + '/';
         }
 
         var geoFileNameRelative = CGIRealtivePath + geoFileName
-
-        console.log("after: geoFileNameRelative = ", geoFileNameRelative);
 
         WriteHTMLResponse(geoFileNameRelative);
     }
