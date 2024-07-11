@@ -1,18 +1,14 @@
 
-* {
-/* margin:0;
-padding:0; */
-font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+*{
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    width: 100%;
-    height: 100%; 
+/* body {
     background-image: url(../images/dark-geometry.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-  }
+  } */
 
   h1 {
     text-align: center;
@@ -37,6 +33,10 @@ body {
     height: 30px;
   }
 
+  .selector {
+    color: darkblue;
+  } 
+
   nav a {
     color: darkblue;
     height:100%;
@@ -60,6 +60,11 @@ body {
   font-size: large;
 }
 
+.map { 
+  height: 80vh;
+  width: 100%;
+}
+
 div.projectBox{
   background-color: cornsilk;
   margin-left: 10px;
@@ -77,15 +82,10 @@ div.projectBox{
   }
 
   div.ImageResultPanel {
-    align-items: center;
-    margin: 0px;
-    margin-top: 0px;
-    background-color: rgb(139, 136, 150);
-    /* background-image: url(uploads/las/sample.png); */
-    background-size:contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
+    background-color: cornsilk;
+    min-width: 700px;
+    min-height:600px;
+ }
 
 div.image-preview{
   border: groove 5px;
@@ -121,9 +121,6 @@ div.image-preview{
     align-items: top;
     margin: 0px;
     padding: 0px;
-    /* width: 900px;
-    height: 600px; 
-    overflow: scroll; */
   }
 
   .nolabel{
@@ -131,9 +128,4 @@ div.image-preview{
     max-height: 25%;
   }
 
-  div.map { 
-    margin-top: 80px;
-    padding: 0px;
-    width: 100%;
-    height: 85vh; 
-  }
+  

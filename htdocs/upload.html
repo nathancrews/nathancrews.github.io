@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Nathan Crews Software Development Portfolio</title>
   <meta charset="UTF-8" />
@@ -18,6 +19,9 @@
 <script>
   function displayDate() {
     document.getElementById("demo").innerHTML = Date();
+  }
+  function updateImgResult() {
+    document.getElementById("ImageResultPanel").style.backgroundImage = "url(uploads/las/sample.png)";
   }
 </script>
 <body>
@@ -45,8 +49,39 @@
   </div>
   <br />
   <div id="project" class="projectBox">
-    <h2>Software Portfolio Projects</h2>
+    <h2>Upload files and generate images</h2>
     <div style="margin-left: 10px; display: flex; justify-content: flex=flex-start; align-items: center;">
+      <span>
+        <form hx-encoding="multipart/form-data" method="post" enctype="multipart/form-data">
+          <label for="file">LandXML file to upload:</label>
+          <input id="file" name="file" type="file" class="form-control-file border" accept=".xml,.XML" />
+          <input name="fileTypes" hidden="true" value=".xml,.XML" />
+          <input id="redirectCGI" name="redirectCGI" hidden="true" value="lxml2gltf_cgi.exe?file=%s" />
+          <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+          <input name="fileTypePathMap" hidden="true" value="landxml=.xml,.XML" />
+          <button class="btn btn-primary" type="submit" hx-post="cgi-bin/ncupload.exe" hx-trigger="click"
+            hx-target="#results" hx-indicator="#loading">Upload File</button>
+      </span>
+      </form>
+      <div style="display: flex; justify-content:center; align-items: center;">
+        <img id="loading" src="images/loading.gif" class="htmx-indicator" width="60" height="60" alt="Loading..." />
+      </div>
+      <form style="margin-top: 5px;" hx-encoding="multipart/form-data" method="post" enctype="multipart/form-data">
+        <label for="file">LAS/LAZ file to upload:</label>
+        <input id="file" name="file" type="file" multiple class="form-control-file border"
+          accept=".las,.laz,.gltf,.glb,.jpg,.png,.bin" />
+        <input id="redirectCGI" name="redirectCGI" hidden="true" value="ncimagegen_cgi.exe?file=%s" />
+        <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+        <input id="fileTypePathMap" name="fileTypePathMap" hidden="true"
+          value="las=.las,.laz,.LAZ,.LAS&gltf=.gltf,.glb,.GLTF,.GLB,.jpg,.png,.bin" />
+        <span>
+          <button class="btn btn-primary" type="submit" hx-post="cgi-bin/ncupload.exe" hx-trigger="click"
+            hx-target="#results" hx-indicator="#loading">Upload File(s)</button></span>
+      </form>
+
+    </div>
+    <div id="results" class="ImageResultPanel">
+      <img class="ImageResultPanel" style="outline: 3px; position: relative;" src="uploads/las/sample.png"></img>
     </div>
   </div>
   <script>

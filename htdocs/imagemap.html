@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <div id="map"></div>
+    <div id="map" class="map"></div>
 
     <script type="text/javascript">
 
@@ -45,9 +45,9 @@
                             return L.marker(latlng, { icon: droneIcon });
                         },
                     }).bindPopup(function (layer) {
-                        return "<div><p><b>" + layer.feature.properties.name + "</b></p> \
-                        <a href='" + layer.feature.properties.name + "' style='width: 100%; height:100%' target='window'><img style='rotate: " +
-                            Number(layer.feature.properties.cameraDirection) + "deg; width:200px;height:200px; z-index: -100;' src='" +
+                        return "<div style='margin:0px; padding:0px;'><p style='z-index: -1;'><b>" + layer.feature.properties.name + "</b></p> \
+                        <a href='" + layer.feature.properties.name + "' style='z-index:100;' target='window'><img style='rotate: " +
+                            Number(layer.feature.properties.cameraDirection) + "deg; max-width: 325px; max-height:225px;' src='" +
                             layer.feature.properties.thumbFileName + "' /></a></div>";
                     }).addTo(map);
                 }
@@ -78,7 +78,10 @@
                 layers: [osm, Esri_WorldImagery]
             });
 
-            let jsonFileURL = "images/drone/sheffield/geo-images.json";
+            document.getElementById('map').style.height = "80vh";
+            document.getElementById('map').style.width = "100%";
+
+            let jsonFileURL = "uploads/nathan/pics/geo-images.json";
 
             var imagePointLayer = await loadJSONFile(jsonFileURL, map);
 

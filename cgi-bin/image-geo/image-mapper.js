@@ -137,7 +137,7 @@ async function ProcessImages(imagePath, CGIRealtivePath) {
    // console.log("Number of imageFiles = ", imageFiles.length);
     var geoFileName = "geo-images.json";
 
-    await ReadImageData(localDir, imageFiles, geoFileName);
+    var geoFileData = await ReadImageData(localDir, imageFiles, geoFileName);
 
     if (InCGIMode == true) {
 
@@ -154,7 +154,11 @@ async function ProcessImages(imagePath, CGIRealtivePath) {
 
         var geoFileNameRelative = CGIRealtivePath + geoFileName
 
-        WriteHTMLResponse(geoFileNameRelative);
+       WriteHTMLResponse(geoFileNameRelative);
+    //    console.log("Content-type: application/json\n\n")
+    //    console.log(JSON.stringify(geoFileData))
+
+        return geoFileData;
     }
 }
 
@@ -166,11 +170,6 @@ function WriteHTMLResponse(geoFileName) {
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> \
         <script src="https://unpkg.com/htmx.org@2.0.0" \
             integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script> \
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" \
-            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" /> \
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" \
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> \
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> \
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
@@ -178,27 +177,7 @@ function WriteHTMLResponse(geoFileName) {
         <link rel="stylesheet" href="../../styles/styles.css" /> \
     </head> \
      <body> \
-        <div style="position: fixed;"> \
-        <h1 style="color: azure">Application Projects</h1> \
-        <nav> \
-        <ul> \
-            <li><a href="../../index.html">Uploads</a></li> \
-            <li><a href="../..//mapper/index.html">Memory Mapper</a></li> \
-            <li><label for="map-selector" style="color:darkblue; background-color: lightslategray;">Maps >></label><select style="color:darkblue; background-color: lightslategray;" id="map-selector" name="map-selector" title="Mapping Examples"> \
-                <option value="">None</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/pics">My Memories</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/germany/">Drone: Germany</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/indiancreek/">Drone: Bridge</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/waterbury/images">Drone: Water</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/sheffield/">Sheffield Map</option> \
-                <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/bellus/">Drone: Bellus</option> \
-            </select> \
-            </li> \
-            <li><a href="../../test_node.html">File Listing</a></li> \
-        </ul> \
-        </nav> \
-    </div> \
-    <div id="map" class="map"></div>';
+    <div id="map" name="map" class="map"></div>';
 
     var scripts = '<script type="text/javascript"> \
        var droneIcon = L.icon({ \
@@ -218,9 +197,9 @@ function WriteHTMLResponse(geoFileName) {
                            return L.marker(latlng, { icon: droneIcon }); \
                        }, \
                    }).bindPopup(function (layer) { \
-                       return "<div><p><b>"+ layer.feature.properties.name + "</b></p> \
-                       <a href=\'../../"+ layer.feature.properties.name + "\' style=\'width: 100%; height:100%\' target=\'window\'><img style=\'rotate: "+  \
-                           Number(layer.feature.properties.cameraDirection) + "deg; width:200px;height:250px; z-index: -100;\' src=\'../../"+ \
+                       return "<div style=\'width:100%;height:100%; margin:0px; padding:0px;\'><p><b>"+ layer.feature.properties.name + "</b></p> \
+                       <a href=\'../../"+ layer.feature.properties.name + "\' target=\'window\'><img style=\'rotate: "+  \
+                           Number(layer.feature.properties.cameraDirection) + "deg; max-width: 300px; max-height:200px; z-index: -100;\' src=\'../../"+ \
                            layer.feature.properties.thumbFileName + "\' /></a></div>"; \
                    }).addTo(map); \
                } \
@@ -247,7 +226,9 @@ function WriteHTMLResponse(geoFileName) {
 
     var geoFileNamePart = 'let jsonFileURL = "../../' + geoFileName + '"';
 
-    var lastScriptPart = 'var imagePointLayer = await loadJSONFile(jsonFileURL, map); \
+    var lastScriptPart = 'document.getElementById(\'map\').style.height = "80vh"; \
+           document.getElementById(\'map\').style.width = "100%"; \
+           var imagePointLayer = await loadJSONFile(jsonFileURL, map); \
     if (imagePointLayer !== undefined) { \
         map.fitBounds(imagePointLayer.getBounds()); \
     } \
@@ -255,9 +236,6 @@ function WriteHTMLResponse(geoFileName) {
         "OpenStreetMap": osm, \
         "Esri_WorldImagery": Esri_WorldImagery \
     }; \
-    document.querySelectorAll("[name=map-selector]")[0].addEventListener(\'change\', function () { \
-      window.location = this.value; \
-    }); \
     var layerControl = L.control.layers(baseMaps); \
     layerControl.addTo(map); \
     } \
@@ -348,7 +326,7 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
             fs.access(thumbFileNameExtPath, fs.constants.F_OK, (err) => {
                 if (err) {
                     if (tags['Thumbnail'] && tags['Thumbnail'].image) {
-                        // console.log("writing thumbnail file = ", thumbFileNameExtPath);
+                        //console.log("writing thumbnail file = ", thumbFileNameExtPath);
                         fs.writeFileSync(thumbFileNameExtPath, Buffer.from(tags['Thumbnail'].image));
                         addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
                     }
@@ -365,8 +343,10 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
 
  //   console.log(imageCollection);
 
+    var geoJ;
+
     if (imageCollection.length > 0) {
-        var geoJ = GeoJSON.parse(imageCollection, { Point: ['lat', 'lng', 'elevation'] });
+        geoJ = GeoJSON.parse(imageCollection, { Point: ['lat', 'lng', 'elevation'] });
 
  //       console.log(geoJ);
         fs.writeFileSync(path.join(imagePath, geoFileName), JSON.stringify(geoJ));
@@ -375,7 +355,7 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
         console.log("<h1>Error: No GPS data found in images to create GeoJSON file!</h1>")
     }
 
-
+    return geoJ;
 
 }
 
