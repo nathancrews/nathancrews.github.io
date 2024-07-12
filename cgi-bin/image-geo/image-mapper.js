@@ -281,10 +281,10 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
             }
 
             if (tags.xmp) {
-                addMe.elevation = Number(tags.xmp.RelativeAltitude.value);
-                addMe.flightDirection = Number(tags.xmp.FlightYawDegree.value);
-                addMe.cameraDirection = Number(tags.xmp.GimbalYawDegree.value);
-                addMe.cameraPitch = Number(tags.xmp.GimbalPitchDegree.value);
+                addMe.elevation = tags.xmp.RelativeAltitude.value;
+                addMe.flightDirection = tags.xmp.FlightYawDegree.value;
+                addMe.cameraDirection = tags.xmp.GimbalYawDegree.value;
+                addMe.cameraPitch = tags.xmp.GimbalPitchDegree.value;
             }
             else {
                 // console.log("error reading EXIF XMP data... ");
