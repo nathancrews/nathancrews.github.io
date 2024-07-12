@@ -3,8 +3,8 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 
 	dropZoneElement.addEventListener("click", (e) => {
         e.preventDefault();
-        console.log("calling click on:")
-        console.log(inputElement)
+        //console.log("calling click on:")
+        //console.log(inputElement)
 
 		inputElement.click();
 	});
@@ -41,7 +41,7 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 
            // updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
 		}
-
+		dropZoneElement.classList.add("drop-zone--over");
 		//dropZoneElement.classList.remove("drop-zone--over");
 	});
 });

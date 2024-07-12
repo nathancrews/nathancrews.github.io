@@ -178,12 +178,13 @@ function WriteHTMLResponse(geoFileName) {
         <link rel="stylesheet" href="../../styles/styles.css" /> \
     </head> \
      <body> \
-        <div style="position: fixed;"> \
+        <div > \
         <h1 style="color: azure">Application Projects</h1> \
         <nav> \
         <ul> \
-            <li><a href="../../index.html">Uploads</a></li> \
-            <li><a href="../..//mapper/index.html">Memory Mapper</a></li> \
+            <li><a href="../../index.html">Home</a></li> \
+            <li><a href="../../upload.html">Image Generator</a></li> \
+            <li><a href="../../mapper/index.html">Memory Mapper</a></li> \
             <li><label for="map-selector" style="color:darkblue; background-color: lightslategray;">Maps >></label><select style="color:darkblue; background-color: lightslategray;" id="map-selector" name="map-selector" title="Mapping Examples"> \
                 <option value="">None</option> \
                 <option value="../../cgi-bin/image-geo/image-geo.js?dir=uploads/nathan/pics">My Memories</option> \

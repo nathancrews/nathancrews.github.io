@@ -1,14 +1,19 @@
 
 *{
+  margin:0px;
+  padding:0px;
 font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* body {
+ body {
+  width:100%;
+  height:100%;
+    display: block;
     background-image: url(../images/dark-geometry.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-  } */
+  }
 
   h1 {
     text-align: center;
@@ -61,6 +66,7 @@ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .map { 
+  margin-top: 10px;
   height: 80vh;
   width: 100%;
 }
