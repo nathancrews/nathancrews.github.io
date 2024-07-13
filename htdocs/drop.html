@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <title>Drag and Drop File Image Mapper</title>
     <meta charset="utf-8">
+    <title>Drag and Drop File Image Mapper</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="styles/drop-zone.css">
     <script src="https://unpkg.com/htmx.org@2.0.0"
@@ -27,7 +27,7 @@
                 width="60" height="60" alt="Loading..." /></span>
         <div class="drop-zone">
             <span class="drop-zone__prompt">Drop file(s) here or click to upload</span>
-            <form hx-encoding="multipart/form-data" method="post" enctype="multipart/form-data" hidden="true">
+            <form hx-encoding="multipart/form-data" target="imagemap" method="post" enctype="multipart/form-data" hidden="true">
                 <label for="directory">Directory Name:</label>
                 <input id="directory" name="directory" value="test_drop" type="text">
                 <input id="redirectCGI" name="redirectCGI" hidden="true" value="image-geo/image-mapper.js?dir=%s" />
@@ -36,7 +36,7 @@
                 <input id="file" type="file" name="file" class="drop-zone__input" multiple="true"
                     accept=".jpg,.png,.JPG,.PNG">
                 <button id="submit-button" name="submit-button" type="submit" hx-post="cgi-bin/ncupload.exe"
-                    hx-trigger="click" hx-target="#imagemap" hx-indicator="#loading">
+                    hx-trigger="click" hx-target="[name='imagemap']"" hx-indicator="#loading">
                 </button>
             </form>
             <script src="./src/drop-zone.js"></script>

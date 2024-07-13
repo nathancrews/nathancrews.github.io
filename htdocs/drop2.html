@@ -1,0 +1,93 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Drag and Drop File Image Mapper</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="styles/drop-zone.css">
+    <script src="https://unpkg.com/htmx.org@2.0.0"
+        integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+
+<body>
+    <div>
+        <div class="drop-zone">
+            <span class="drop-zone__prompt">Drop file(s) here or click to upload</span>
+            <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe"
+                target="results" hidden="true">
+                <input id="redirectCGI" name="redirectCGI" hidden="true" value="image-geo/image-mapper.js?dir=%s" />
+                <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
+                <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+                <label for="directory">Directory Name:</label>
+                <input id="directory" name="directory" value="test_drop" type="text">
+                <br />
+                <label for="file">File(s):</label>
+                <input id="file" type="file" name="file" class="drop-zone__input" multiple="true"
+                    accept=".jpg,.png,.JPG,.PNG">
+                <button id="submit-button" name="submit-button" type="submit">Upload</button>
+            </form>
+        </div>
+        <script src="./src/drop-zone.js"></script>
+    </div>
+    <iframe id="results" name="results" style="width: 100%; height:100%; min-height: 50%; min-width: 70%;"></iframe>
+    <script>
+        const form = document.getElementById("uploadForm");
+        if (form) {
+            form.addEventListener("submit", submitClicked);
+        }
+
+        async function submitClicked(event) {
+            if (form) {
+                event.preventDefault();
+
+                var formData = new FormData(form);
+
+                var action = form.getAttribute("action");
+                var target = form.getAttribute("target");
+
+//                console.log(action);
+
+                if (action) {
+                    var response = await fetch(action, {
+                        method: "POST",
+                        body: formData
+                    }).catch(error => { console.log(error); });
+
+                    if (response.status >= 200 && response.status < 300) {
+                        var parser = new DOMParser();
+                        var htmlres = await response.text();
+
+                        if (htmlres) {
+                            const frame_res = document.getElementById("results");
+                            if (frame_res) {
+//                                console.log("Adding map to page....")
+                                var frame = (frame_res.contentWindow || frame_res.contentDocument);
+                                if (frame.document) {
+                                    frame = frame.document;
+                                }
+                                if (frame) {
+                                    frame.open();
+                                    frame.write(htmlres);
+                                    frame.close();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

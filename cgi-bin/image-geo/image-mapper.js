@@ -156,10 +156,8 @@ async function ProcessImages(imagePath, CGIRealtivePath) {
         var geoFileNameRelative = CGIRealtivePath + geoFileName
 
         WriteHTMLResponse(geoFileNameRelative);
-        //    console.log("Content-type: application/json\n\n")
-        //    console.log(JSON.stringify(geoFileData))
-
-        return geoFileData;
+            // console.log("Content-type: application/json\n\n")
+            // console.log(geoFileData)
     }
 }
 

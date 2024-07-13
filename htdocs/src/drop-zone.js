@@ -1,13 +1,14 @@
 document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
+	
 	const dropZoneElement = inputElement.closest(".drop-zone");
 
-	dropZoneElement.addEventListener("click", (e) => {
-        e.preventDefault();
-        //console.log("calling click on:")
-        //console.log(inputElement)
+	// dropZoneElement.addEventListener("click", (e) => {
+    //     e.preventDefault();
+    //     console.log("2 calling click on:")
+    //     console.log(inputElement)
 
-		inputElement.click();
-	});
+	// 	inputElement.click();
+	// });
 
 	inputElement.addEventListener("change", (e) => {
 		if (inputElement.files.length) {
@@ -29,19 +30,21 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
 
+		//console.log("e.dataTransfer.files.length:", e.dataTransfer.files.length)
+
 		if (e.dataTransfer.files.length) {
 			inputElement.files = e.dataTransfer.files;
 
-            var sb = document.querySelectorAll("[name=submit-button]")[0];
+            var sb = document.querySelectorAll("[type=submit]")[0];
 
-            if (sb)
+			if (sb)
             {
+			//	console.log("calling click on:", sb)
                 sb.click();
             }
 
            // updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
 		}
-		dropZoneElement.classList.add("drop-zone--over");
 		//dropZoneElement.classList.remove("drop-zone--over");
 	});
 });
