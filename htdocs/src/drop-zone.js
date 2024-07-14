@@ -35,6 +35,7 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 		if (e.dataTransfer.files.length) {
 			inputElement.files = e.dataTransfer.files;
 
+			//console.log("inputElement.files.length:", inputElement.files.length)
             var sb = document.querySelectorAll("[type=submit]")[0];
 
 			if (sb)

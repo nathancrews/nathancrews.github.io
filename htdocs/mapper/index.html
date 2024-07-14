@@ -65,7 +65,8 @@
       <input id="directory" name="directory" type="text">
       <label for="file">Upload Drone Image Files:</label>
       <input id="file" name="file" type="file" multiple class="form-control-file border" accept=".jpg,.png,.JPG,.PNG" />
-      <input id="redirectCGI" name="redirectCGI" hidden="true" value="../cgi-bin/image-geo/image-geo.js?dir=%s" />
+      <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="75" />
+      <input id="redirectCGI" name="redirectCGI" hidden="true" value="../cgi-bin/image-geo/image-mapper.js?dir=%s" />
       <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
       <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
       <span>

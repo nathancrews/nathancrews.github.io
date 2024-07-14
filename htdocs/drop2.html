@@ -26,6 +26,7 @@
             <span class="drop-zone__prompt">Drop file(s) here or click to upload</span>
             <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe"
                 target="results" hidden="true">
+                <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="75" />
                 <input id="redirectCGI" name="redirectCGI" hidden="true" value="image-geo/image-mapper.js?dir=%s" />
                 <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
                 <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
@@ -51,38 +52,113 @@
             if (form) {
                 event.preventDefault();
 
+                var filesEl = document.getElementById("file")
+
+                //   console.log("filesEl, filesElArray : ", filesEl, filesEl.files);
+
                 var formData = new FormData(form);
 
                 var action = form.getAttribute("action");
                 var target = form.getAttribute("target");
 
-//                console.log(action);
-
                 if (action) {
-                    var response = await fetch(action, {
-                        method: "POST",
-                        body: formData
-                    }).catch(error => { console.log(error); });
 
-                    if (response.status >= 200 && response.status < 300) {
-                        var parser = new DOMParser();
-                        var htmlres = await response.text();
+                    var redirectCGIKey = "redirectCGI";
+                    var redirectCGIValue = formData.get(redirectCGIKey);
 
-                        if (htmlres) {
-                            const frame_res = document.getElementById("results");
-                            if (frame_res) {
-//                                console.log("Adding map to page....")
-                                var frame = (frame_res.contentWindow || frame_res.contentDocument);
-                                if (frame.document) {
-                                    frame = frame.document;
-                                }
-                                if (frame) {
-                                    frame.open();
-                                    frame.write(htmlres);
-                                    frame.close();
-                                }
+                    console.log(redirectCGIValue);
+
+                    var formFileData = formData.get("file");
+                    var filesArray = [];
+
+                    for ([key, value] of formData.entries()) {
+                        let val;
+                        if (value instanceof File) {
+                            val = value.name;
+//                            console.log(key + ': ' + val);
+                            filesArray.push(value);
+                        } else {
+                            val = value;
+                        }
+                    }
+
+                    for ([key, value] of formData.entries()) {
+                        if (value instanceof File) {
+ //                           console.log('deleting : ' + key);
+                            formData.delete(key)
+                        }
+                    }
+
+                    var maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
+
+                    if (maxFilesPerRequest == 0)
+                    {
+                        maxFilesPerRequest = 50;
+                    }
+
+                    var maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
+                    var requestCount = 1;
+
+                    console.log("maxRequest number : ", maxRequestCount);
+
+                    if (maxRequestCount > 1) {
+                        formData.delete(redirectCGIKey)
+                    }
+
+                    for (var ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
+                        for (var yy = 0; yy < (maxFilesPerRequest); yy++) {
+
+//                            console.log('ii= ', ii, ' yy= ', yy);
+
+                            if (ii + yy < filesArray.length) {
+//                                console.log('adding file : ', filesArray[ii + yy].name);
+                                formData.append("file", filesArray[ii + yy])
                             }
                         }
+
+                        console.log("sending request # ", requestCount, " of ", maxRequestCount);
+
+                        if (requestCount == maxRequestCount) {
+                            formData.append(redirectCGIKey, redirectCGIValue)
+                        }
+
+                        var response = await fetch(action, {
+                            method: "POST",
+                            body: formData
+                        }).catch(error => { console.log(error); });
+
+                        if (response.status >= 200 && response.status < 300) {
+                            var parser = new DOMParser();
+                            var htmlres = await response.text();
+
+                            //    console.log("htmlres=", htmlres)
+
+                            if (htmlres.length > 1) {
+                                const frame_res = document.getElementById("results");
+                                if (frame_res) {
+                                    //    console.log("Adding map to page....")
+                                    var frame = (frame_res.contentWindow || frame_res.contentDocument);
+                                    if (frame.document) {
+                                        frame = frame.document;
+                                    }
+                                    if (frame) {
+                                        frame.open();
+                                        frame.write(htmlres);
+                                        frame.close();
+                                    }
+                                }
+                            }
+
+                        }
+
+                        for ([key, value] of formData.entries()) {
+                            if (value instanceof File) {
+//                                console.log('removing file keys : ' + key);
+                                formData.delete(key)
+                            }
+                        }
+
+                        requestCount++;
                     }
                 }
             }
