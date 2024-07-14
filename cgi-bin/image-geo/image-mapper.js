@@ -213,13 +213,13 @@ function WriteHTMLResponse(geoFileName) {
        } \
        async function main() { \
            var osm = L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', { \
-               maxZoom: 24, \
+               maxZoom: 19, \
             }); \
            var Esri_WorldImagery = L.tileLayer(\'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}\', { \
-               maxZoom: 24, \
+               maxZoom: 19, \
            }); \
            var map = L.map(\'map\', { \
-               zoom: 24, \
+               zoom: 10, \
                layers: [osm, Esri_WorldImagery] \
            });'
 
