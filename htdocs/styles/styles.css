@@ -19,6 +19,14 @@ h1 {
   color: azure;
 }
 
+h2 {
+  text-align: center;
+  color: white;
+  background-color: black;
+  z-index: 1000;
+}
+
+
 nav {
   position: 0px;
   background-color: lightslategray;
@@ -64,9 +72,42 @@ nav li:first-child {
 }
 
 .map {
-  margin-top: 10px;
-  height: 100%;
-  width: 100%;
+  /* margin-top: 100px; */
+  width: 100%; 
+  height:100%; 
+}
+
+.map-results{
+  /* margin-top: 20px; */
+  width: 100%; 
+  height:100%; 
+  min-height: 50%; 
+  min-width: 70%;
+}
+
+.drop-with-loading{
+  display: flex;
+  flex-direction: row;
+}
+
+div.loading{
+  width:50%; 
+  min-height:100px;
+  margin-top: 15px;
+  margin-left: 45%;
+  display: flex;
+  flex-flow: row;
+  z-index: 100;
+}
+
+.loading-image{
+  width:50px; 
+  height:50px;
+  margin-top: 15px;
+  margin-left: 45%;
+  display: flex;
+  flex-flow: row;
+  z-index: 100;
 }
 
 div.projectBox {

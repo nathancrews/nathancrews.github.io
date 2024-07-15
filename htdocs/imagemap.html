@@ -4,7 +4,9 @@
 <head>
     <title>Nathan Crews Node.js Portfolio</title>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/drop-zone.css">
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -18,20 +20,184 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
 </head>
 
 <body>
-    <div id="map" class="map"></div>
-
+    <h2>Drag & Drop images on Map Below</h2>
+    <div id="loadingImage" name="loadingImage" class="loading"><img src="images/loading.gif" class="loading-image" />
+    </div>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe" target="results"
+        hidden="true">
+        <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
+        <input id="redirectCGI" name="redirectCGI" hidden="true"
+            value="image-geo/image-mapper.js?dir=%s&response_type=json" />
+        <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
+        <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+        <label for="directory">Directory Name:</label>
+        <input id="directory" name="directory" value="test_drop" type="text">
+        <label for="file">File(s):</label>
+        <input id="file" type="file" name="file" class="drop-zone__input" multiple="true" accept=".jpg,.png,.JPG,.PNG">
+        <button id="submit-button" name="submit-button" type="submit">Upload</button>
+    </form>
+    <div id="map" class="drop-zone-map map"></div>
+    <script src="src/drop-zone.js"></script>
     <script type="text/javascript">
 
-         var droneIcon = L.icon({
+        const form = document.getElementById("uploadForm");
+        if (form) {
+            form.addEventListener("submit", submitClicked);
+        }
+        document.getElementById("loadingImage").style.display = "none";
+
+        var map;
+
+        var droneIcon = L.icon({
             iconUrl: 'images/drone-icon.jpg',
             iconSize: [24, 24],
             iconAnchor: [12, 12],
             popupAnchor: [0, 112]
         });
+
+        async function ThrottleFileUploads(fileInputEl, formEl) {
+            var action = formEl.getAttribute("action");
+            var target = formEl.getAttribute("target");
+
+            if (action) {
+
+                var formData = new FormData(formEl);
+                var filesArray = [];
+                var redirectCGIKey = "redirectCGI";
+                var redirectCGIValue = formData.get(redirectCGIKey);
+
+                console.log(redirectCGIValue);
+
+                var maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
+
+                if (maxFilesPerRequest == 0) {
+                    maxFilesPerRequest = 50;
+                }
+
+                for ([key, value] of formData.entries()) {
+                    if (value instanceof File) {
+                        filesArray.push(value);
+                    }
+                }
+
+                var maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
+                var requestCount = 1;
+
+                //console.log("maxRequest number : ", maxRequestCount);
+
+                if (maxRequestCount > 1) {
+                    formData.delete(redirectCGIKey)
+                }
+
+                for (var ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
+                    for ([key, value] of formData.entries()) {
+                        if (value instanceof File) {
+                            formData.delete(key)
+                        }
+                    }
+
+                    for (var yy = 0; yy < (maxFilesPerRequest); yy++) {
+                        //console.log('ii= ', ii, ' yy= ', yy);
+
+                        if (ii + yy < filesArray.length) {
+                            //console.log('adding file : ', filesArray[ii + yy].name);
+                            formData.append("file", filesArray[ii + yy])
+                        }
+                    }
+
+                    if (requestCount == maxRequestCount) {
+                        formData.append(redirectCGIKey, redirectCGIValue)
+                    }
+
+                    //console.log("sending request # ", requestCount, " of ", maxRequestCount);
+
+                    var response = await fetch(action, {
+                        method: "POST",
+                        body: formData
+                    }).catch(error => { console.log(error); });
+
+                    var imagesMap;
+
+                    if (response.status >= 200 && response.status < 300) {
+                        var fetchData="";
+                        var fetchDataJSON;
+
+                        try {
+                            fetchData = await response.text();
+                        } catch (error) {
+                            console.log(error);
+                            fetchData = "";
+                        }
+
+                        if (fetchData && fetchData.length > 10) {
+                            //console.log("fetchData=", fetchData);
+                            try {
+                                fetchDataJSON = JSON.parse(fetchData);
+                            } catch (error) {
+                               // console.log(error);
+                                fetchDataJSON = null;
+                            }
+                        }
+
+                        if (fetchDataJSON) {
+
+                            imagesMap = await L.geoJSON(fetchDataJSON, {
+                                pointToLayer: function (point, latlng) {
+                                    return L.marker(latlng, { icon: droneIcon });
+                                },
+                            }).bindPopup(function (layer) {
+                                return "<div style='margin:0px; padding:0px;'><p style='z-index: -1;'><b>" + layer.feature.properties.name + "</b></p> \
+                        <a href='" + layer.feature.properties.name + "' style='z-index:100;' target='window'><img style='rotate: " +
+                                    Number(layer.feature.properties.cameraDirection) + "deg; max-width: 325px; max-height:225px;' src='" +
+                                    layer.feature.properties.thumbFileName + "' /></a></div>";
+                            });
+
+                            imagesMap.addTo(map);
+
+                            if (imagesMap !== undefined) {
+                                map.fitBounds(imagesMap.getBounds());
+                            }
+                        }
+                    }
+
+                    // for ([key, value] of formData.entries()) {
+                    //     if (value instanceof File) {
+                    //         //  console.log('removing file keys : ' + key);
+                    //         formData.delete(key)
+                    //     }
+                    // }
+
+                    requestCount++;
+                }
+            }
+        }
+
+        async function submitClicked(event) {
+            if (form) {
+                event.preventDefault();
+
+                var filesEl = document.getElementById("file")
+
+                var loadingImageEl = document.getElementById("loadingImage")
+                var mapDivEl = document.getElementById("map")
+
+                if (loadingImageEl) {
+                    //   mapDivEl.style.margin = "0px";
+                    loadingImageEl.style.display = "flex";
+                }
+
+                console.log('calling ThrottleFileUploads');
+                await ThrottleFileUploads(filesEl, form);
+
+                if (loadingImageEl) {
+                    loadingImageEl.style.display = "none";
+                }
+
+            }
+        }
 
         async function loadJSONFile(jsonFileURL, map) {
             var imagesMap;
@@ -65,33 +231,32 @@
 
             var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '© OpenStreetMap'
             });
 
-            var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            var Esri_Imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 20,
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
 
-            var map = L.map('map', {
-                zoom: 19,
-                layers: [osm, Esri_WorldImagery]
+            map = L.map('map', {
+                center: [56.01877997222222, -3.7548339722222224],
+                zoom: 14,
+                layers: [osm, Esri_Imagery]
             });
 
-            document.getElementById('map').style.height = "80vh";
-            document.getElementById('map').style.width = "100%";
+            // document.getElementById('map').style.height = "80vh";
+            // document.getElementById('map').style.width = "100%";
 
-            let jsonFileURL = "uploads/nathan/pics/geo-images.json";
+            let jsonFileURL = "uploads/test_drop/geo-images.json";
 
-            var imagePointLayer = await loadJSONFile(jsonFileURL, map);
+            // var imagePointLayer = await loadJSONFile(jsonFileURL, map);
 
-            if (imagePointLayer !== undefined) {
-                map.fitBounds(imagePointLayer.getBounds());
-            }
+            // if (imagePointLayer !== undefined) {
+            //     map.fitBounds(imagePointLayer.getBounds());
+            // }
 
             var baseMaps = {
-                "OpenStreetMap": osm,
-                "Esri_WorldImagery": Esri_WorldImagery
+                "Street Map": osm,
+                "Esri Imagery": Esri_Imagery
             };
 
             var layerControl = L.control.layers(baseMaps);

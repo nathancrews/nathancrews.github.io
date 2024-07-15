@@ -12,6 +12,7 @@ const exifErrors = ExifReader.errors;
 var InCGIMode = true;
 var dirRequestName = '';
 var fileNameRequest = '';
+var responseType = 'html';
 var docRoot = '';
 var filePath = '';
 var fileURL = '';
@@ -30,6 +31,15 @@ if (process.env.QUERY_STRING != null) {
 
     fileNameRequest = querystring.parse(process.env.QUERY_STRING).filename
     //    console.log("\n", "fileName: ", fileNameRequest)
+
+    var resType = querystring.parse(process.env.QUERY_STRING).response_type
+    //console.log("\n1 response_type: ", resType)
+
+    if (resType){
+        responseType = resType
+    }
+
+    //console.log("\n2 final response_type: ", resType)
 
     docRoot = process.env.DOCUMENT_ROOT;
 
@@ -74,7 +84,7 @@ else {
 
 
 if (fs.existsSync(filePath)) {
-    ProcessImages(filePath, dirRequestName);
+    ProcessImages(filePath, dirRequestName, responseType);
 }
 else {
     console.log('Error reading file path: ', filePath);
@@ -94,7 +104,7 @@ function ImageData(inName, inThumbFileName, inLat, inLon, inElev, inflightDirect
     date = inDate;
 };
 
-async function ProcessImages(imagePath, CGIRealtivePath) {
+async function ProcessImages(imagePath, CGIRealtivePath, responseType) {
 
     var localDir = "";
     var imageFiles = [];
@@ -155,10 +165,106 @@ async function ProcessImages(imagePath, CGIRealtivePath) {
 
         var geoFileNameRelative = CGIRealtivePath + geoFileName
 
-        WriteHTMLResponse(geoFileNameRelative);
-            // console.log("Content-type: application/json\n\n")
-            // console.log(geoFileData)
+        if (responseType == 'html') {
+            WriteHTMLResponse(geoFileNameRelative);
+        }
+        else if (responseType == 'json'){
+           // console.log("Content-type: application/json")
+            console.log(JSON.stringify(geoFileData))
+        }
+
     }
+}
+
+async function ReadImageData(imagePath, imageNames, geoFileName) {
+
+    var imageCollection = []
+
+    for (var ii = 0; ii < imageNames.length; ii++) {
+
+        var imageFilename = imageNames[ii];
+
+        // console.log("imageFilename = ", imageFilename);
+
+        var imageFilenamePath = path.join(imagePath, imageFilename);
+
+        // console.log("imagePath = ", imagePath);
+
+        const tags = await ExifReader.load(imageFilenamePath, { expanded: true })
+
+        if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
+            var addMe = new ImageData();
+
+            addMe.lat = tags.gps.Latitude;
+            addMe.lng = tags.gps.Longitude;
+            addMe.elevation = tags.gps.Altitude;
+
+            if (tags.exif.DateTime) {
+                addMe.date = tags.exif.DateTime.description;
+            }
+
+            if (tags.xmp) {
+                addMe.elevation = tags.xmp.RelativeAltitude.value;
+                addMe.flightDirection = tags.xmp.FlightYawDegree.value;
+                addMe.cameraDirection = tags.xmp.GimbalYawDegree.value;
+                addMe.cameraPitch = tags.xmp.GimbalPitchDegree.value;
+            }
+            else {
+                // console.log("error reading EXIF XMP data... ");
+                addMe.elevation = 0;
+                addMe.flightDirection = 0;
+                addMe.cameraDirection = 0;
+                addMe.cameraPitch = 90;
+            }
+
+            addMe.name = path.join(fileURL, imageFilename);
+
+            var FileNameOnly = path.parse(imageFilename).name;
+
+            var thumbFileNameExt = path.format({
+                name: FileNameOnly + '_thumb',
+                ext: '.png'
+            });
+
+            addMe.thumbFileName = addMe.name;
+
+            // Try to extract the thumbnail:
+            var thumbFileNameExtPath = path.join(imagePath, thumbFileNameExt);
+
+            fs.access(thumbFileNameExtPath, fs.constants.F_OK, (err) => {
+                if (err) {
+                    if (tags['Thumbnail'] && tags['Thumbnail'].image) {
+                        addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
+                        fs.writeFileSync(thumbFileNameExtPath, Buffer.from(tags['Thumbnail'].image));
+                        //console.log("\nwriting file, addMe.thumbFileName = ", addMe.thumbFileName);
+                    }
+                }
+                else {
+                    addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
+                    //console.log("reading file, addMe.thumbFileName = ", addMe.thumbFileName);
+                }
+            });
+
+            imageCollection.push(addMe)
+        }
+        else {
+            // console.log("<p>Image GPS lat/lon not found!</p>")
+        }
+    }
+
+    var geoJ;
+
+    if (imageCollection.length > 0) {
+        geoJ = GeoJSON.parse(imageCollection, { Point: ['lat', 'lng', 'elevation'] });
+
+        //       console.log(geoJ);
+        fs.writeFileSync(path.join(imagePath, geoFileName), JSON.stringify(geoJ));
+    }
+    else {
+        console.log("<h1>Error: No GPS data found in images to create GeoJSON file!</h1>")
+    }
+
+    return geoJ;
 }
 
 function WriteHTMLResponse(geoFileName) {
@@ -173,10 +279,10 @@ function WriteHTMLResponse(geoFileName) {
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> \
-        <link rel="stylesheet" href="../../styles/styles.css" /> \
+        <link rel="stylesheet" href="../styles/styles.css" /> \
     </head> \
      <body> \
-    <div id="map" name="map"></div>';
+    <div id="map" name="map"</div>';
 
     var scripts = '<script type="text/javascript"> \
        var droneIcon = L.icon({ \
@@ -251,98 +357,6 @@ function WriteHTMLResponse(geoFileName) {
     console.log(htmlEnd);
 }
 
-async function ReadImageData(imagePath, imageNames, geoFileName) {
-
-    var imageCollection = []
-
-    for (var ii = 0; ii < imageNames.length; ii++) {
-
-        var imageFilename = imageNames[ii];
-
-        // console.log("imageFilename = ", imageFilename);
-
-        var imageFilenamePath = path.join(imagePath, imageFilename);
-
-        // console.log("imagePath = ", imagePath);
-
-        const tags = await ExifReader.load(imageFilenamePath, { expanded: true })
-
-        if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
-            var addMe = new ImageData();
-
-            addMe.lat = tags.gps.Latitude;
-            addMe.lng = tags.gps.Longitude;
-            addMe.elevation = tags.gps.Altitude;
-
-            if (tags.exif.DateTime) {
-                addMe.date = tags.exif.DateTime.description;
-            }
-
-            if (tags.xmp) {
-                addMe.elevation = tags.xmp.RelativeAltitude.value;
-                addMe.flightDirection = tags.xmp.FlightYawDegree.value;
-                addMe.cameraDirection = tags.xmp.GimbalYawDegree.value;
-                addMe.cameraPitch = tags.xmp.GimbalPitchDegree.value;
-            }
-            else {
-                // console.log("error reading EXIF XMP data... ");
-                addMe.elevation = 0;
-                addMe.flightDirection = 0;
-                addMe.cameraDirection = 0;
-                addMe.cameraPitch = 90;
-            }
-
-            addMe.name = path.join(fileURL, imageFilename);
-
-            var FileNameOnly = path.parse(imageFilename).name;
-
-            var thumbFileNameExt = path.format({
-                name: FileNameOnly + '_thumb',
-                ext: '.png'
-            });
-
-            addMe.thumbFileName = addMe.name;
-
-            // Try to extract the thumbnail:
-            var thumbFileNameExtPath = path.join(imagePath, thumbFileNameExt);
-
-            fs.access(thumbFileNameExtPath, fs.constants.F_OK, (err) => {
-                if (err) {
-                    if (tags['Thumbnail'] && tags['Thumbnail'].image) {
-                        addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
-                        fs.writeFileSync(thumbFileNameExtPath, Buffer.from(tags['Thumbnail'].image));
-                        //console.log("\nwriting file, addMe.thumbFileName = ", addMe.thumbFileName);
-                    }
-                }
-                else{
-                    addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
-                    //console.log("reading file, addMe.thumbFileName = ", addMe.thumbFileName);
-                }
-            });
-
-            imageCollection.push(addMe)
-        }
-        else {
-           // console.log("<p>Image GPS lat/lon not found!</p>")
-        }
-    }
-
-    var geoJ;
-
-    if (imageCollection.length > 0) {
-        geoJ = GeoJSON.parse(imageCollection, { Point: ['lat', 'lng', 'elevation'] });
-
-        //       console.log(geoJ);
-        fs.writeFileSync(path.join(imagePath, geoFileName), JSON.stringify(geoJ));
-    }
-    else {
-        console.log("<h1>Error: No GPS data found in images to create GeoJSON file!</h1>")
-    }
-
-    return geoJ;
-
-}
-
 function listTags(tags) {
     for (const group in tags) {
         for (const name in tags[group]) {
@@ -368,18 +382,4 @@ function listTags(tags) {
             // }
         }
     }
-}
-
-function getMpfImagesDescription(images) {
-    return images.map(
-        (image, index) => `(${index}) ` + Object.keys(image).map((key) => {
-            if (key === 'image') {
-                return `${key}: <image>`;
-            }
-            if (key === 'base64') {
-                return `${key}: <base64 encoded image>`;
-            }
-            return `${key}: ${image[key].description}`;
-        }).join(', ')
-    ).join('; ');
 }

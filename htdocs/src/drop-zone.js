@@ -1,20 +1,8 @@
-document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
-	
-	const dropZoneElement = inputElement.closest(".drop-zone");
+var inputElement = document.querySelector(".drop-zone__input");
 
-	// dropZoneElement.addEventListener("click", (e) => {
-    //     e.preventDefault();
-    //     console.log("2 calling click on:")
-    //     console.log(inputElement)
+document.querySelectorAll(".drop-zone").forEach((dropZoneElement) => {
 
-	// 	inputElement.click();
-	// });
-
-	inputElement.addEventListener("change", (e) => {
-		if (inputElement.files.length) {
-			//updateThumbnail(dropZoneElement, inputElement.files[0]);
-		}
-	});
+	//console.log("found drop zone:", dropZoneElement)
 
 	dropZoneElement.addEventListener("dragover", (e) => {
 		e.preventDefault();
@@ -30,25 +18,71 @@ document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
 
-		//console.log("e.dataTransfer.files.length:", e.dataTransfer.files.length)
+		//console.log("using inputElement:", inputElement)
 
-		if (e.dataTransfer.files.length) {
-			inputElement.files = e.dataTransfer.files;
+		if (inputElement) {
 
-			//console.log("inputElement.files.length:", inputElement.files.length)
-            var sb = document.querySelectorAll("[type=submit]")[0];
+			if (e.dataTransfer.files.length) {
+				inputElement.files = e.dataTransfer.files;
 
-			if (sb)
-            {
-			//	console.log("calling click on:", sb)
-                sb.click();
-            }
+				//console.log("inputElement.files.length:", inputElement.files.length)
+				var sb = document.querySelectorAll("[type=submit]")[0];
 
-           // updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+				console.log("calling click on:", sb)
+
+				if (sb) {
+					//	console.log("calling click on:", sb)
+					sb.click();
+				}
+			}
 		}
-		//dropZoneElement.classList.remove("drop-zone--over");
+
+		dropZoneElement.classList.remove("drop-zone--over");
 	});
 });
+
+document.querySelectorAll(".drop-zone-map").forEach((dropZoneElement) => {
+
+	//console.log("found drop zone:", dropZoneElement)
+
+	dropZoneElement.addEventListener("dragover", (e) => {
+		e.preventDefault();
+		dropZoneElement.classList.add("drop-zone--over");
+	});
+
+	["dragleave", "dragend"].forEach((type) => {
+		dropZoneElement.addEventListener(type, (e) => {
+			dropZoneElement.classList.remove("drop-zone--over");
+		});
+	});
+
+	dropZoneElement.addEventListener("drop", (e) => {
+		e.preventDefault();
+
+		//console.log("using inputElement:", inputElement)
+
+		if (inputElement) {
+
+			if (e.dataTransfer.files.length) {
+				inputElement.files = e.dataTransfer.files;
+
+				//console.log("inputElement.files.length:", inputElement.files.length)
+				var sb = document.querySelectorAll("[type=submit]")[0];
+
+				console.log("calling click on:", sb)
+
+				if (sb) {
+					//	console.log("calling click on:", sb)
+					sb.click();
+				}
+			}
+		}
+
+		dropZoneElement.classList.remove("drop-zone--over");
+	});
+});
+
+
 
 /**
  * Updates the thumbnail on a drop zone element.
