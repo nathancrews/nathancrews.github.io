@@ -1,8 +1,20 @@
 var inputElement = document.querySelector(".drop-zone__input");
 
-document.querySelectorAll(".drop-zone").forEach((dropZoneElement) => {
+var dropElementsOrig = document.querySelectorAll(".drop-zone")
 
-	//console.log("found drop zone:", dropZoneElement)
+dropElementsOrig.forEach((dropElement) => {
+	ProcessDropElement(dropElement);
+});
+
+var dropElements = document.querySelectorAll(".drop-zone-map")
+
+dropElements.forEach((dropElement) => {
+	ProcessDropElement(dropElement);
+});
+
+function ProcessDropElement(dropZoneElement){
+
+	//console.log("setting up drop zone element:", dropZoneElement)
 
 	dropZoneElement.addEventListener("dragover", (e) => {
 		e.preventDefault();
@@ -28,7 +40,7 @@ document.querySelectorAll(".drop-zone").forEach((dropZoneElement) => {
 				//console.log("inputElement.files.length:", inputElement.files.length)
 				var sb = document.querySelectorAll("[type=submit]")[0];
 
-				console.log("calling click on:", sb)
+				//console.log("calling click on:", sb)
 
 				if (sb) {
 					//	console.log("calling click on:", sb)
@@ -39,83 +51,4 @@ document.querySelectorAll(".drop-zone").forEach((dropZoneElement) => {
 
 		dropZoneElement.classList.remove("drop-zone--over");
 	});
-});
-
-document.querySelectorAll(".drop-zone-map").forEach((dropZoneElement) => {
-
-	//console.log("found drop zone:", dropZoneElement)
-
-	dropZoneElement.addEventListener("dragover", (e) => {
-		e.preventDefault();
-		dropZoneElement.classList.add("drop-zone--over");
-	});
-
-	["dragleave", "dragend"].forEach((type) => {
-		dropZoneElement.addEventListener(type, (e) => {
-			dropZoneElement.classList.remove("drop-zone--over");
-		});
-	});
-
-	dropZoneElement.addEventListener("drop", (e) => {
-		e.preventDefault();
-
-		//console.log("using inputElement:", inputElement)
-
-		if (inputElement) {
-
-			if (e.dataTransfer.files.length) {
-				inputElement.files = e.dataTransfer.files;
-
-				//console.log("inputElement.files.length:", inputElement.files.length)
-				var sb = document.querySelectorAll("[type=submit]")[0];
-
-				console.log("calling click on:", sb)
-
-				if (sb) {
-					//	console.log("calling click on:", sb)
-					sb.click();
-				}
-			}
-		}
-
-		dropZoneElement.classList.remove("drop-zone--over");
-	});
-});
-
-
-
-/**
- * Updates the thumbnail on a drop zone element.
- *
- * @param {HTMLElement} dropZoneElement
- * @param {File} file
- */
-function updateThumbnail(dropZoneElement, file) {
-	// let thumbnailElement = dropZoneElement.querySelector(".drop-zone__thumb");
-
-	// // First time - remove the prompt
-	// if (dropZoneElement.querySelector(".drop-zone__prompt")) {
-	// 	dropZoneElement.querySelector(".drop-zone__prompt").remove();
-	// }
-
-	// // First time - there is no thumbnail element, so lets create it
-	// if (!thumbnailElement) {
-	// 	thumbnailElement = document.createElement("div");
-	// 	thumbnailElement.classList.add("drop-zone__thumb");
-	// 	dropZoneElement.appendChild(thumbnailElement);
-	// }
-
-	// thumbnailElement.dataset.label = file.name;
-
-	// // Show thumbnail for image files
-	// if (file.type.startsWith("image/")) {
-	// 	const reader = new FileReader();
-
-	// 	reader.readAsDataURL(file);
-	// 	reader.onload = () => {
-	// 		thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
-	// 	};
-	// } else {
-	// 	thumbnailElement.style.backgroundImage = null;
-	// }
 }
