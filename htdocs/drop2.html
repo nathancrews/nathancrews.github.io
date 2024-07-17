@@ -6,6 +6,11 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="styles/drop-zone.css">
     <link rel="stylesheet" href="styles/styles.css">
+      <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "fa970db8cf1343a78f1e7f5c7b1c4ea8"}'></script>
+<!-- End Cloudflare Web Analytics -->
+
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -41,10 +46,9 @@
                 <button id="submit-button" name="submit-button" type="submit">Upload</button>
             </form>
         </div>
-        
         <div id="loadingImage" name="loadingImage"><img src="images/loading.gif" class="loading-image" /></div>
     </div>
-    <iframe id="results" name="results" class="map-results"></iframe>
+    <iframe title="Map Results" id="results" name="results" class="map-results"></iframe>
     <script src="./src/drop-zone.js"></script>
     <script type="module">import {nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed} from "./src/nc_file_upload_client.js"
 
