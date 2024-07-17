@@ -7,11 +7,6 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="styles/styles.css" />
     <link rel="stylesheet" href="styles/drop-zone.css">
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-        data-cf-beacon='{"token": "fa970db8cf1343a78f1e7f5c7b1c4ea8"}'></script>
-    <!-- End Cloudflare Web Analytics -->
-
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -28,12 +23,10 @@
 </head>
 
 <body>
-    <header id="loading-headrer" name="loading-headrer" class="loading">
+    <header id="loading-header" name="loading-header" class="loading">
         <h2>Drag & Drop images on Map Below</h2>
         <img id="loading-image" name="loading-image" src="images/loading.gif" class="loading-image" />
-
     </header>
-    <!-- class="drop-zone-map map" -->
     <div id="map" class="drop-zone-map map">
         <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe" target="results"
             hidden="true">
@@ -50,7 +43,7 @@
             <button id="submit-button" name="submit-button" type="submit">Upload</button>
         </form>
     </div>
-    <script src="src/drop-zone.js"></script>
+    <script src="./src/drop-zone.js"></script>
     <script type="module">import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js"
 
         const form = document.getElementById("uploadForm");
@@ -58,7 +51,10 @@
             form.addEventListener("submit", submitClicked);
         }
         
-        document.getElementById("loading-image").style.display = "none";
+        var loadingImageEl = document.getElementById("loading-image");
+        if (loadingImageEl) {
+            loadingImageEl.style.display = "none";
+        }
 
         var map;
 
@@ -74,12 +70,9 @@
                 event.preventDefault();
 
                 var filesEl = document.getElementById("file")
-
-                var loadingImageEl = document.getElementById("loading-image")
                 var mapDivEl = document.getElementById("map")
 
                 if (loadingImageEl) {
-                    //   mapDivEl.style.margin = "0px";
                     loadingImageEl.style.display = "flex";
                 }
 

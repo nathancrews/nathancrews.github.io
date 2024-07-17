@@ -6,11 +6,6 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="styles/drop-zone.css">
     <link rel="stylesheet" href="styles/styles.css">
-      <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-  data-cf-beacon='{"token": "fa970db8cf1343a78f1e7f5c7b1c4ea8"}'></script>
-<!-- End Cloudflare Web Analytics -->
-
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -27,6 +22,10 @@
 </head>
 
 <body>
+    <header id="loading-header" name="loading-header" class="loading">
+        <h2>Drag & Drop images on Map Below</h2>
+        <img id="loading-image" name="loading-image" src="images/loading.gif" class="loading-image" />
+    </header>
     <div class="drop-with-loading">
         <div class="drop-zone">
             <span class="drop-zone__prompt">Drop file(s) here or click to upload</span>
@@ -46,25 +45,26 @@
                 <button id="submit-button" name="submit-button" type="submit">Upload</button>
             </form>
         </div>
-        <div id="loadingImage" name="loadingImage"><img src="images/loading.gif" class="loading-image" /></div>
     </div>
     <iframe title="Map Results" id="results" name="results" class="map-results"></iframe>
     <script src="./src/drop-zone.js"></script>
-    <script type="module">import {nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed} from "./src/nc_file_upload_client.js"
+    <script type="module">import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js"
 
         const fileUploadForm = document.getElementById("uploadForm");
         if (fileUploadForm) {
             fileUploadForm.addEventListener("submit", submitClicked);
         }
 
-        document.getElementById("loadingImage").style.display = "none";
+        var loadingImageEl = document.getElementById("loading-image");
+        if (loadingImageEl) {
+            loadingImageEl.style.display = "none";
+        }
 
         async function submitClicked(event) {
             if (fileUploadForm) {
                 event.preventDefault();
 
                 var filesEl = document.getElementById("file");
-                var loadingImageEl = document.getElementById("loadingImage");
 
                 if (loadingImageEl) {
                     loadingImageEl.style.display = "flex";
