@@ -6,7 +6,7 @@ dropElementsOrig.forEach((dropElement) => {
 	ProcessDropElement(dropElement);
 });
 
-var dropElements = document.querySelectorAll(".drop-zone-map")
+var dropElements = document.querySelectorAll(".map-drop-zone")
 
 dropElements.forEach((dropElement) => {
 	ProcessDropElement(dropElement);

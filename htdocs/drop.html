@@ -1,16 +1,11 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <title>Drag and Drop File Image Mapper</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-      <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-  data-cf-beacon='{"token": "fa970db8cf1343a78f1e7f5c7b1c4ea8"}'></script>
-<!-- End Cloudflare Web Analytics -->
-
     <link rel="stylesheet" href="styles/drop-zone.css">
+    <link rel="stylesheet" href="styles/nc-map.css">
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -26,28 +21,79 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 
-<body>
-    <div>
-        <span style="width:100%; height:60px;"><img id="loading" src="images/loading.gif" class="htmx-indicator"
-                width="60" height="60" alt="Loading..." /></span>
+<body class="map-body">
+    <header id="loading-header" name="loading-header" class="map-loading">
+        <h2 class="map-h2">Drag & Drop images on Map Below</h2>
+        <img id="loading-image" name="loading-image" src="images/loading.gif" class="map-loading-image" />
+    </header>
+    <div class="map-drop-with-loading">
         <div class="drop-zone">
-            <span class="drop-zone__prompt">Drop file(s) here or click to upload</span>
-            <form hx-encoding="multipart/form-data" target="imagemap" method="post" enctype="multipart/form-data" hidden="true">
-                <label for="directory">Directory Name:</label>
-                <input id="directory" name="directory" value="test_drop" type="text">
-                <input id="redirectCGI" name="redirectCGI" hidden="true" value="image-geo/image-mapper.js?dir=%s" />
+            <span >To See Map, Drop Image File(s) Here</span>
+            <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe"
+                target="results" hidden="true">
+                <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
+                <input id="redirectCGI" name="redirectCGI" hidden="true"
+                    value="image-geo/image-mapper.js?dir=%s&response_type=html" />
                 <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
                 <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+                <label for="directory" hidden="false">Directory Name:</label>
+                <input id="directory" name="directory" value="test_drop" type="text" hidden="false">
+                <br />
+                <label for="file">File(s):</label>
                 <input id="file" type="file" name="file" class="drop-zone__input" multiple="true"
                     accept=".jpg,.png,.JPG,.PNG">
-                <button id="submit-button" name="submit-button" type="submit" hx-post="cgi-bin/ncupload.exe"
-                    hx-trigger="click" hx-target="[name='imagemap']"" hx-indicator="#loading">
-                </button>
+                <button id="submit-button" name="submit-button" type="submit">Upload</button>
             </form>
-            <script src="./src/drop-zone.js"></script>
         </div>
     </div>
-    <div id="imagemap" name="imagemap" class="map"></div>
+    <iframe title="Map Results" id="results" name="results" class="map-results"></iframe>
+    <script src="./src/drop-zone.js"></script>
+    <script type="module">import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js"
+
+        const fileUploadForm = document.getElementById("uploadForm");
+        if (fileUploadForm) {
+            fileUploadForm.addEventListener("submit", submitClicked);
+        }
+
+        var loadingImageEl = document.getElementById("loading-image");
+        if (loadingImageEl) {
+            loadingImageEl.style.display = "none";
+        }
+
+        async function submitClicked(event) {
+            if (fileUploadForm) {
+                event.preventDefault();
+
+                var filesEl = document.getElementById("file");
+
+                if (loadingImageEl) {
+                    loadingImageEl.style.display = "flex";
+                }
+
+                var uploadActionResults = await nc_ChunkFileUploadRequests(fileUploadForm, filesEl);
+
+                if (loadingImageEl) {
+                    loadingImageEl.style.display = "none";
+                }
+
+                if (uploadActionResults && uploadActionResults.length > 1) {
+                    const frame_res = document.getElementById("results");
+                    if (frame_res) {
+                        //    console.log("Adding map to page....")
+                        var frame = (frame_res.contentWindow || frame_res.contentDocument);
+                        if (frame.document) {
+                            frame = frame.document;
+                        }
+                        if (frame) {
+                            frame.open();
+                            frame.write(uploadActionResults);
+                            frame.close();
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>

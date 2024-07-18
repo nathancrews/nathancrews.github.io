@@ -8,6 +8,7 @@ const os = require('os');
 var GeoJSON = require('geojson');
 const ExifReader = require('exifreader');
 const exifErrors = ExifReader.errors;
+const sharp = require('sharp');
 
 var InCGIMode = true;
 var dirRequestName = '';
@@ -35,7 +36,7 @@ if (process.env.QUERY_STRING != null) {
     var resType = querystring.parse(process.env.QUERY_STRING).response_type
     //console.log("\n1 response_type: ", resType)
 
-    if (resType){
+    if (resType) {
         responseType = resType
     }
 
@@ -168,8 +169,8 @@ async function ProcessImages(imagePath, CGIRealtivePath, responseType) {
         if (responseType == 'html') {
             WriteHTMLResponse(geoFileNameRelative);
         }
-        else if (responseType == 'json'){
-           // console.log("Content-type: application/json")
+        else if (responseType == 'json') {
+            // console.log("Content-type: application/json")
             console.log(JSON.stringify(geoFileData))
         }
 
@@ -204,10 +205,10 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
             }
 
             if (tags.xmp) {
-                addMe.elevation = tags.xmp.RelativeAltitude.value;
-                addMe.flightDirection = tags.xmp.FlightYawDegree.value;
-                addMe.cameraDirection = tags.xmp.GimbalYawDegree.value;
-                addMe.cameraPitch = tags.xmp.GimbalPitchDegree.value;
+                addMe.elevation = Number(tags.xmp.RelativeAltitude.value);
+                addMe.flightDirection = Number(tags.xmp.FlightYawDegree.value);
+                addMe.cameraDirection = Number(tags.xmp.GimbalYawDegree.value);
+                addMe.cameraPitch = Number(tags.xmp.GimbalPitchDegree.value);
             }
             else {
                 // console.log("error reading EXIF XMP data... ");
@@ -226,22 +227,27 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
                 ext: '.png'
             });
 
-            addMe.thumbFileName = addMe.name;
-
             // Try to extract the thumbnail:
             var thumbFileNameExtPath = path.join(imagePath, thumbFileNameExt);
+            addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
 
             fs.access(thumbFileNameExtPath, fs.constants.F_OK, (err) => {
                 if (err) {
-                    if (tags['Thumbnail'] && tags['Thumbnail'].image) {
+                    // console.log("\nwriting thumbFileName = ", thumbFileNameExtPath);
+                    try {
                         addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
-                        fs.writeFileSync(thumbFileNameExtPath, Buffer.from(tags['Thumbnail'].image));
-                        //console.log("\nwriting file, addMe.thumbFileName = ", addMe.thumbFileName);
+
+                        if (addMe.cameraDirection != 0) {
+                            sharp(imageFilenamePath).resize(200).rotate(addMe.cameraDirection, {background: 'white'}).toFile(thumbFileNameExtPath, (err) => { });
+                        }
+                        else {
+                            sharp(imageFilenamePath).resize(200).toFile(thumbFileNameExtPath, (err) => { });
+                        }
                     }
-                }
-                else {
-                    addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
-                    //console.log("reading file, addMe.thumbFileName = ", addMe.thumbFileName);
+                    catch (error) {
+                        // addMe.thumbFileName = addMe.name;
+                        // console.log("Error[", error, "] writing thumbFileName = ", thumbFileNameExtPath);
+                    }
                 }
             });
 
@@ -267,6 +273,8 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
     return geoJ;
 }
 
+{/*  */ }
+
 function WriteHTMLResponse(geoFileName) {
     var htmlTop = '\
     <head> \
@@ -275,14 +283,16 @@ function WriteHTMLResponse(geoFileName) {
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> \
         <script src="https://unpkg.com/htmx.org@2.0.0" \
             integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script> \
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> \
+        // <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \
+        //     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
+        // <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
+        //     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> \
         <link rel="stylesheet" href="../styles/styles.css" /> \
     </head> \
      <body> \
-    <div id="map" name="map"</div>';
+      <div id="map" name="map"</div>';
+
+    //   rotate: "+ Number(layer.feature.properties.cameraDirection) + "deg;
 
     var scripts = '<script type="text/javascript"> \
        var droneIcon = L.icon({ \
@@ -302,9 +312,8 @@ function WriteHTMLResponse(geoFileName) {
                            return L.marker(latlng, { icon: droneIcon }); \
                        }, \
                    }).bindPopup(function (layer) { \
-                       return "<div><p><b>"+ layer.feature.properties.name + "</b></p> \
-                       <a href=\'../../"+ layer.feature.properties.name + "\' target=\'window\'><img style=\'rotate: "+  \
-                           Number(layer.feature.properties.cameraDirection) + "deg; max-width: 300px; max-height:200px; z-index: 100;\' src=\'../../"+ \
+                       return "<div style=\'width: 250px;height: 250px;\'><p><b>"+ layer.feature.properties.name + "</b></p> \
+                       <a href=\'../../"+ layer.feature.properties.name + "\' target=\'window\'><img style=\'max-width: 250px; max-height:250px; z-index: 100;\' src=\'../../"+ \
                            layer.feature.properties.thumbFileName + "\' /></a></div>"; \
                    }).addTo(map); \
                } \
@@ -339,7 +348,7 @@ function WriteHTMLResponse(geoFileName) {
     } \
     var baseMaps = { \
         "OpenStreetMap": osm, \
-        "Esri_WorldImagery": Esri_WorldImagery \
+        "Esri_Imagery": Esri_WorldImagery \
     }; \
     var layerControl = L.control.layers(baseMaps); \
     layerControl.addTo(map); \
