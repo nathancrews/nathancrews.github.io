@@ -79,6 +79,8 @@ else {
     }
 
     filePath = process.argv[2];
+
+    filePath = path.normalize(filePath);
 }
 
 //console.log('filePath: ', filePath)
@@ -112,22 +114,24 @@ async function ProcessImages(imagePath, CGIRealtivePath, responseType) {
 
     if (fileSys.lstatSync(imagePath).isDirectory()) {
         localDir = imagePath
-        // console.log("localDir = ", localDir)
+        //       console.log("localDir = ", localDir)
 
         fileSys.readdirSync(imagePath).map(entryName => {
-            innerFilename = path.join(localDir, entryName)
 
-            //    console.log("innerFilename = ", innerFilename)
+            innerFilename = path.join(localDir, entryName)
+            //            console.log("innerFilename = ", innerFilename)
 
             if (fileSys.lstatSync(innerFilename).isFile()) {
                 var localNamePath = innerFilename
 
-                //    console.log("localNamePath=", localNamePath)
-                if (path.extname(entryName) == ".jpg" || path.extname(entryName) == ".JPG" ||
-                    //    path.extname(entryName) === ".png" || path.extname(entryName) === ".PNG" ||
-                    path.extname(entryName) == ".tiff" || path.extname(entryName) == ".TIFF") {
+                //console.log("localNamePath=", localNamePath)
+                if (path.extname(entryName).toUpperCase() == ".JPG" ||
+                    path.extname(entryName).toUpperCase() == ".PNG" ||
+                    path.extname(entryName).toUpperCase() == ".TIFF") {
 
-                    imageFiles.push(entryName)
+                    if (localNamePath.indexOf("_thumb") < 0) {
+                        imageFiles.push(entryName)
+                    }
                 }
             }
         })
@@ -137,16 +141,18 @@ async function ProcessImages(imagePath, CGIRealtivePath, responseType) {
         var localNamePath = filePath
         localDir = path.parse(filePath).dir;
 
-        //console.log("localDir=", localDir)
-        if (path.extname(localNamePath) === ".jpg" || path.extname(localNamePath) === ".JPG" ||
-            path.extname(localNamePath) === ".png" || path.extname(localNamePath) === ".PNG" ||
-            path.extname(localNamePath) === ".tiff" || path.extname(localNamePath) === ".TIFF") {
+        // console.log("localNamePath=", localNamePath)
+        if (path.extname(localNamePath).toUpperCase() == ".JPG" ||
+            path.extname(localNamePath).toUpperCase() == ".PNG" ||
+            path.extname(localNamePath).toUpperCase() == ".TIFF") {
 
-            imageFiles.push(path.parse(localNamePath).base);
+            if (localNamePath.indexOf("_thumb") < 0) {
+                imageFiles.push(path.parse(localNamePath).base);
+            }
         }
     }
 
-    // console.log("Number of imageFiles = ", imageFiles.length);
+    // console.log("imageFiles = ", imageFiles);
     var geoFileName = "geo-images.json";
 
     var geoFileData = await ReadImageData(localDir, imageFiles, geoFileName);
@@ -185,16 +191,20 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
 
         var imageFilename = imageNames[ii];
 
-        // console.log("imageFilename = ", imageFilename);
+        //console.log("imageFilename = ", imageFilename);
 
-        var imageFilenamePath = path.join(imagePath, imageFilename);
+        let imageFilenamePath = path.join(imagePath, imageFilename);
 
-        // console.log("imagePath = ", imagePath);
+        //console.log("imagePath = ", imagePath);
 
         const tags = await ExifReader.load(imageFilenamePath, { expanded: true })
 
         if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
             var addMe = new ImageData();
+
+            addMe.name = path.join(fileURL, imageFilename);
+
+            let FileNameOnly = path.parse(imageFilename).name;
 
             addMe.lat = tags.gps.Latitude;
             addMe.lng = tags.gps.Longitude;
@@ -204,52 +214,71 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
                 addMe.date = tags.exif.DateTime.description;
             }
 
-            if (tags.xmp) {
-                addMe.elevation = Number(tags.xmp.RelativeAltitude.value);
-                addMe.flightDirection = Number(tags.xmp.FlightYawDegree.value);
-                addMe.cameraDirection = Number(tags.xmp.GimbalYawDegree.value);
-                addMe.cameraPitch = Number(tags.xmp.GimbalPitchDegree.value);
+            try {
+                if (tags.xmp) {
+                    addMe.elevation = Number(tags.xmp.RelativeAltitude.value);
+                    addMe.flightDirection = Number(tags.xmp.FlightYawDegree.value);
+                    addMe.cameraDirection = Number(tags.xmp.GimbalYawDegree.value);
+                    addMe.cameraPitch = Number(tags.xmp.GimbalPitchDegree.value);
+                }
+                else {
+                    // console.log("error reading EXIF XMP data... ");
+                    addMe.elevation = 0;
+                    addMe.flightDirection = 0;
+                    addMe.cameraDirection = 0;
+                    addMe.cameraPitch = 90;
+                }
             }
-            else {
-                // console.log("error reading EXIF XMP data... ");
+            catch (error) {
                 addMe.elevation = 0;
                 addMe.flightDirection = 0;
                 addMe.cameraDirection = 0;
                 addMe.cameraPitch = 90;
             }
 
-            addMe.name = path.join(fileURL, imageFilename);
 
-            var FileNameOnly = path.parse(imageFilename).name;
-
-            var thumbFileNameExt = path.format({
+            // Try to extract the thumbnail:
+            let thumbFileNameExt = path.format({
                 name: FileNameOnly + '_thumb',
                 ext: '.png'
             });
 
-            // Try to extract the thumbnail:
-            var thumbFileNameExtPath = path.join(imagePath, thumbFileNameExt);
+            let thumbFileNameExtPath = path.join(imagePath, thumbFileNameExt);
+
             addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
 
             fs.access(thumbFileNameExtPath, fs.constants.F_OK, (err) => {
                 if (err) {
-                    // console.log("\nwriting thumbFileName = ", thumbFileNameExtPath);
-                    try {
-                        addMe.thumbFileName = path.join(fileURL, thumbFileNameExt);
-
-                        if (addMe.cameraDirection != 0) {
-                            sharp(imageFilenamePath).resize(200).rotate(addMe.cameraDirection, {background: 'white'}).toFile(thumbFileNameExtPath, (err) => { });
-                        }
-                        else {
-                            sharp(imageFilenamePath).resize(200).toFile(thumbFileNameExtPath, (err) => { });
-                        }
-                    }
-                    catch (error) {
-                        // addMe.thumbFileName = addMe.name;
-                        // console.log("Error[", error, "] writing thumbFileName = ", thumbFileNameExtPath);
-                    }
+                    CreateThumbnail();
                 }
             });
+
+            function CreateThumbnail() {
+                try {
+                    //  console.log("imageFilenamePath", imageFilenamePath);
+                    //  console.log("thumbFileNameExtPath", thumbFileNameExtPath);
+
+                    let thumbWidth = 250;
+
+                    if (addMe.cameraDirection != 0) {
+
+                        sharp(imageFilenamePath).rotate(addMe.cameraDirection, { background: 'white' }).resize(thumbWidth).toFile(thumbFileNameExtPath, null);
+                    }
+                    else {
+
+                        sharp(imageFilenamePath).resize(thumbWidth).toFile(thumbFileNameExtPath, null);
+                    }
+                }
+                catch (error) {
+                    addMe.thumbFileName = addMe.name;
+                    console.log("Catch Error[", error, "] writing thumbFileName = ", thumbFileNameExtPath);
+                }
+            }
+
+            function ThumbError(err) {
+                // console.log("Sharp Error[", err, "] writing thumbFileName = ", thumbFileNameExtPath);
+                addMe.thumbFileName = addMe.name;
+            }
 
             imageCollection.push(addMe)
         }

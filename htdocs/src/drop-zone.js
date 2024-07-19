@@ -1,4 +1,3 @@
-var inputElement = document.querySelector(".drop-zone__input");
 
 var dropElementsOrig = document.querySelectorAll(".drop-zone")
 
@@ -30,6 +29,7 @@ function ProcessDropElement(dropZoneElement){
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
 
+		let inputElement = document.querySelector(".drop-zone__input");
 		//console.log("using inputElement:", inputElement)
 
 		if (inputElement) {

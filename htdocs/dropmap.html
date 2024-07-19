@@ -25,7 +25,8 @@
 <body class="map-body">
     <header id="loading-header" name="loading-header" class="map-loading">
         <h2 class="map-h2">Drag & Drop images on Map Below</h2>
-        <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe" target="results" class="map-form-input">
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.exe" target="results"
+            class="map-form-input">
             <label for="directory">Enter Upload Directory Name:</label>
             <input id="directory" name="directory" value="test_drop" type="text" class="map-form-input-text">
             <label for="file" hidden="true">File(s):</label>
@@ -45,9 +46,14 @@
     <script src="./src/drop-zone.js"></script>
     <script type="module">import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js"
 
-        const form = document.getElementById("uploadForm");
-        if (form) {
-            form.addEventListener("submit", submitClicked);
+        const formEl = document.getElementById("uploadForm");
+        if (formEl) {
+            formEl.addEventListener("submit", submitClicked);
+        }
+
+        const dirInputEl = document.getElementById("directory");
+        if (dirInputEl) {
+            dirInputEl.addEventListener("change", onDirChanged);
         }
 
         var loadingImageEl = document.getElementById("loading-image");
@@ -57,16 +63,51 @@
 
         let map;
         let imagesLayer;
+        let layerControl;
+        let imageLayerGroup;
 
         let droneIcon = L.icon({
             iconUrl: 'images/drone-icon.jpg',
             iconSize: [24, 24],
             iconAnchor: [12, 12],
-            popupAnchor: [0, 112]
+            popupAnchor: [0, 95]
         });
 
+        async function onDirChanged(event) {
+            console.log("clearing image layer")
+
+            if (loadingImageEl) {
+                loadingImageEl.style.display = "flex";
+            }
+
+            if (imagesLayer) {
+                imageLayerGroup.removeLayer(imagesLayer);
+                map.removeLayer(imagesLayer);
+                imagesLayer = null;
+            }
+            let newDirectory = event.target.value;
+            let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
+
+            // console.log("formAction = ", formAction);
+
+            var response = await fetch(formAction, {method: "GET"}).catch(error => {
+                console.log("Error: refresh image GeoJSON failed.", error);
+            });
+
+            if (response && response.status >= 200 && response.status < 300) {
+
+                var responseRes = await response.text();
+                //console.log("responseRes=", responseRes)
+                await UpdateMap(responseRes)
+            }
+
+            if (loadingImageEl) {
+                loadingImageEl.style.display = "none";
+            }
+        }
+
         async function submitClicked(event) {
-            if (form) {
+            if (formEl) {
                 event.preventDefault();
 
                 var filesEl = document.getElementById("file")
@@ -76,52 +117,116 @@
                     loadingImageEl.style.display = "flex";
                 }
 
-                const uploadActionResults = await nc_ChunkFileUploadRequests(form, filesEl);
+                const uploadActionResults = await nc_ChunkFileUploadRequests(formEl, filesEl);
 
-               // console.log(uploadActionResults);
+                await UpdateMap(uploadActionResults);
 
                 if (loadingImageEl) {
                     loadingImageEl.style.display = "none";
                 }
 
-                let fetchDataJSON;
+                let newFileInputEl = document.createElement("input");
+                if (newFileInputEl) {
+                    newFileInputEl.setAttribute('type', 'file');
+                    newFileInputEl.setAttribute('id', 'file');
+                    newFileInputEl.setAttribute('name', 'file');
+                    newFileInputEl.setAttribute('class', 'drop-zone__input');
+                    newFileInputEl.setAttribute('multiple', 'true');
+                    newFileInputEl.setAttribute('accept', '.jpg,.png,.JPG,.PNG');
+                    newFileInputEl.setAttribute('hidden', 'true');
 
-                if (uploadActionResults) {
-                    try {
-                        fetchDataJSON = JSON.parse(uploadActionResults);
-
-                       // console.log(fetchDataJSON);
-                    } catch (error) {
-                        console.log(error);
-                        //fetchDataJSON = null;
-                    }
+                    formEl.replaceChild(newFileInputEl, filesEl);
                 }
 
-                if (fetchDataJSON) {
-                    
-                    if (imagesLayer){
-                        map.removeLayer(imagesLayer)
-                        imagesLayer = null;
-                    }
+            }
 
-                    imagesLayer = L.geoJSON(fetchDataJSON, {
-                        pointToLayer: function (point, latlng) {
-                            return L.marker(latlng, { icon: droneIcon });
-                        },
-                    }).bindPopup(function (layer) {
-                        return "<div style='margin:0px; padding:0px;'><p style='z-index: -1;'><b>" + layer.feature.properties.name + "</b></p> \
-                        <a href='" + layer.feature.properties.name + "' style='z-index:100;' target='window'><img style=max-width: 250px; max-height:300px;' src='" +
-                            layer.feature.properties.thumbFileName + "' /></a></div>";
-                    });
+        }
 
-                    if (imagesLayer) {
-                        imagesLayer.addTo(map);
-                        map.fitBounds(imagesLayer.getBounds());
-                    }
+        async function UpdateMap(geoJSONResults) {
+
+            let fetchDataJSON;
+
+            if (geoJSONResults) {
+                try {
+                    fetchDataJSON = JSON.parse(geoJSONResults);
+
+                    // console.log(fetchDataJSON);
+                } catch (error) {
+                    console.log(error);
+                    //fetchDataJSON = null;
+                }
+            }
+
+            if (fetchDataJSON) {
+
+                if (imagesLayer) {
+                    imageLayerGroup.removeLayer(imagesLayer);
+                    map.removeLayer(imagesLayer);
+                    imagesLayer = null;
+                }
+
+                imagesLayer = L.geoJSON(fetchDataJSON, {
+                    pointToLayer: function (point, latlng) {
+                       // console.log("point = ", point)
+                       // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+
+                        let currentDroneIcon = droneIcon;
+
+                        // if (point.properties.thumbFileName) {
+                        //     currentDroneIcon = L.icon({
+                        //         iconUrl: point.properties.thumbFileName,
+                        //         iconSize: [48, 48],
+                        //         iconAnchor: [24, 24],
+                        //         popupAnchor: [0, 112]
+                        //     });
+                        // }
+
+                        return L.marker(latlng, { icon: currentDroneIcon });
+                    },
+                }).bindPopup(function (layer) {
+                    return "<div style='margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+        <a href='" + layer.feature.properties.name + "' target='window'><img style=max-width: 250px; max-height:300px;' src='" +
+                        layer.feature.properties.thumbFileName + "' /></a></div>";
+                });
+
+                if (imagesLayer) {
+                    imageLayerGroup.addLayer(imagesLayer);
+                    map.fitBounds(imagesLayer.getBounds());
                 }
             }
 
         }
+
+        async function main() {
+
+            var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            });
+
+            var Esri_Imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 20,
+            });
+
+            map = L.map('map', {
+                center: [56.01877997222222, -3.7548339722222224],
+                zoom: 14,
+                maxZoom: 19,
+                layers: [osm, Esri_Imagery]
+            });
+
+            var baseMaps = {
+                "Street Map": osm,
+                "Esri Imagery": Esri_Imagery
+            };
+
+            imageLayerGroup = L.layerGroup().addTo(map); // Create empty photos LayerGroup
+            layerControl = L.control.layers(baseMaps);
+            layerControl.addOverlay(imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
+            layerControl.addTo(map);
+        }
+
+        main();
+
 
         async function loadJSONFile(jsonFileURL, map) {
             var imagesMap;
@@ -151,158 +256,5 @@
             return imagesMap;
         }
 
-        async function main() {
-
-            var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-            });
-
-            var Esri_Imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 20,
-            });
-
-            map = L.map('map', {
-                center: [56.01877997222222, -3.7548339722222224],
-                zoom: 14,
-                maxZoom: 19,
-                layers: [osm, Esri_Imagery]
-            });
-
-            // document.getElementById('map').style.height = "80vh";
-            // document.getElementById('map').style.width = "100%";
-
-            let jsonFileURL = "uploads/test_drop/geo-images.json";
-
-            // var imagePointLayer = await loadJSONFile(jsonFileURL, map);
-
-            // if (imagePointLayer !== undefined) {
-            //     map.fitBounds(imagePointLayer.getBounds());
-            // }
-
-            var baseMaps = {
-                "Street Map": osm,
-                "Esri Imagery": Esri_Imagery
-            };
-
-            var layerControl = L.control.layers(baseMaps);
-            layerControl.addTo(map);
-        }
-
-        main();
-
     </script>
 </body>
-
-
-<!-- async function ThrottleFileUploads(fileInputEl, formEl) {
-    var action = formEl.getAttribute("action");
-    var target = formEl.getAttribute("target");
-    var doAction = false;
-
-    if (action) {
-
-        var formData = new FormData(formEl);
-        var filesArray = [];
-        var redirectCGIKey = "redirectCGI";
-        var redirectCGIValue = formData.get(redirectCGIKey);
-
-        console.log(redirectCGIValue);
-
-        var maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
-
-        if (maxFilesPerRequest == 0) {
-            maxFilesPerRequest = 50;
-        }
-
-        for ([key, value] of formData.entries()) {
-            if (value instanceof File) {
-                filesArray.push(value);
-            }
-        }
-
-        var maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
-        var requestCount = 1;
-
-        //console.log("maxRequest number : ", maxRequestCount);
-
-        if (maxRequestCount > 1) {
-            formData.delete(redirectCGIKey)
-        }
-
-        for (var ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
-
-            for ([key, value] of formData.entries()) {
-                if (value instanceof File) {
-                    formData.delete(key)
-                }
-            }
-
-            for (var yy = 0; yy < (maxFilesPerRequest); yy++) {
-                //console.log('ii= ', ii, ' yy= ', yy);
-
-                if (ii + yy < filesArray.length) {
-                    //console.log('adding file : ', filesArray[ii + yy].name);
-                    formData.append("file", filesArray[ii + yy])
-                }
-            }
-
-            if (requestCount == maxRequestCount) {
-                doAction = true;
-                formData.append(redirectCGIKey, redirectCGIValue)
-            }
-
-            //console.log("sending request # ", requestCount, " of ", maxRequestCount);
-
-            var response = await fetch(action, {
-                method: "POST",
-                body: formData
-            }).catch(error => { console.log(error); });
-
-            var imagesMap;
-
-            if (doAction && response.status >= 200 && response.status < 300) {
-                var fetchData = "";
-                var fetchDataJSON;
-
-                try {
-                    fetchData = await response.text();
-                } catch (error) {
-                    console.log(error);
-                    fetchData = "";
-                }
-
-                if (fetchData && fetchData.length > 10) {
-                    //console.log("fetchData=", fetchData);
-                    try {
-                        fetchDataJSON = JSON.parse(fetchData);
-                    } catch (error) {
-                        // console.log(error);
-                        fetchDataJSON = null;
-                    }
-                }
-
-                if (fetchDataJSON) {
-
-                    imagesMap = await L.geoJSON(fetchDataJSON, {
-                        pointToLayer: function (point, latlng) {
-                            return L.marker(latlng, { icon: droneIcon });
-                        },
-                    }).bindPopup(function (layer) {
-                        return "<div style='margin:0px; padding:0px;'><p style='z-index: -1;'><b>" + layer.feature.properties.name + "</b></p> \
-                <a href='" + layer.feature.properties.name + "' style='z-index:100;' target='window'><img style='rotate: " +
-                            Number(layer.feature.properties.cameraDirection) + "deg; max-width: 325px; max-height:225px;' src='" +
-                            layer.feature.properties.thumbFileName + "' /></a></div>";
-                    });
-
-                    imagesMap.addTo(map);
-
-                    if (imagesMap !== undefined) {
-                        map.fitBounds(imagesMap.getBounds());
-                    }
-                }
-            }
-
-            requestCount++;
-        }
-    }
-} -->
