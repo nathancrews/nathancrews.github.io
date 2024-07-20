@@ -20,7 +20,7 @@ var fileURL = '';
 
 if (process.env.QUERY_STRING != null) {
 
-    // console.log('Status: 200 Ok')
+    //console.log('Status: 200 Ok')
     console.log("Content-type: text/html\r\n\r\n")
     //console.log('')
 
@@ -90,7 +90,7 @@ if (fs.existsSync(filePath)) {
     ProcessImages(filePath, dirRequestName, responseType);
 }
 else {
-    console.log('Error reading file path: ', filePath);
+    console.log('ERROR');
 }
 
 return 0;
@@ -162,7 +162,7 @@ async function ProcessImages(imagePath, CGIRealtivePath, responseType) {
 
         fs.access(path.join(localDir, geoFileName), fs.constants.F_OK, (err) => {
             if (err) {
-                console.log("<p>No image GeoJSON file generated!</p>");
+                console.log('ERROR');
                 return 0;
             }
         });
@@ -297,7 +297,7 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
         fs.writeFileSync(path.join(imagePath, geoFileName), JSON.stringify(geoJ));
     }
     else {
-        console.log("<h1>Error: No GPS data found in images to create GeoJSON file!</h1>")
+        console.log("ERROR")
     }
 
     return geoJ;
@@ -307,7 +307,7 @@ function WriteHTMLResponse(geoFileName) {
     var htmlTop = '<head> \
         <title>Nathan Crews Node.js Portfolio</title> \
         <meta charset="UTF-8" /> \
-        <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> \
+        <link rel="icon" type="image/x-icon" href="../../images/favicon.ico"> \
         <script src="https://unpkg.com/htmx.org@2.0.0" \
             integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script> \
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \

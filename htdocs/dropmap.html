@@ -18,8 +18,8 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <link rel="stylesheet" href="styles/drop-zone.css">
-        <link rel="stylesheet" href="styles/nc-map.css" />
+    <link rel="stylesheet" href="styles/drop-zone.css">
+    <link rel="stylesheet" href="styles/nc-map.css" />
 </head>
 
 <body class="map-body">
@@ -91,11 +91,16 @@
                 console.log("Error: refresh image GeoJSON failed.", error);
             });
 
-            if (response && response.status >= 200 && response.status < 300) {
+            //console.log("response.status=", response.status)
 
-                var responseRes = await response.text();
-                //console.log("responseRes=", responseRes)
-                await UpdateMap(responseRes)
+            if (response.status == 200) {
+                var responseText = "ERROR";
+                responseText = await response.text();
+
+                let stat = responseText.indexOf("ERROR");
+                if (stat < 0) {
+                    await UpdateMap(responseText)
+                }
             }
 
             if (AppUIData.loadingImageEl) {
