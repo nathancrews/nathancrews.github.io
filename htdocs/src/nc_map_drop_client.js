@@ -1,65 +1,69 @@
+    let droneIcon = L.icon({
+        iconUrl: 'images/drone-icon.jpg',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, 95]
+    });
+
+    let AppMapData = {
+        map: null,
+        imagesLayer: null,
+        layerControl: null,
+        imageLayerGroup: null,
+        mapIcon: new droneIcon()
+    }
 
 
 const formEl = document.getElementById("uploadForm");
-if (formEl) {
-    formEl.addEventListener("submit", submitClicked);
-}
+    if(formEl) {
+        formEl.addEventListener("submit", submitClicked);
+    }
 
 const dirInputEl = document.getElementById("directory");
-if (dirInputEl) {
-    dirInputEl.addEventListener("change", onDirChanged);
-}
+    if(dirInputEl) {
+        dirInputEl.addEventListener("change", onDirChanged);
+    }
 
 var loadingImageEl = document.getElementById("loading-image");
+    if(loadingImageEl) {
+        loadingImageEl.style.display = "none";
+    }
+
+
+
+async function onDirChanged(event) {
+        console.log("clearing image layer")
+
+if (loadingImageEl) {
+    loadingImageEl.style.display = "flex";
+}
+
+if (imagesLayer) {
+    imageLayerGroup.removeLayer(imagesLayer);
+    map.removeLayer(imagesLayer);
+    imagesLayer = null;
+}
+let newDirectory = event.target.value;
+let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
+
+// console.log("formAction = ", formAction);
+
+var response = await fetch(formAction, {
+    method: "GET"
+}).catch(error => {
+    console.log("Error: refresh image GeoJSON falied.", error);
+});
+
+if (response && response.status >= 200 && response.status < 300) {
+
+    var responseRes = await response.text();
+    //console.log("responseRes=", responseRes)
+    await UpdateMap(responseRes)
+}
+
 if (loadingImageEl) {
     loadingImageEl.style.display = "none";
 }
-
-let map;
-let imagesLayer;
-let layerControl;
-let imageLayerGroup;
-
-let droneIcon = L.icon({
-    iconUrl: 'images/drone-icon.jpg',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-    popupAnchor: [0, 95]
-});
-
-async function onDirChanged(event) {
-    console.log("clearing image layer")
-
-    if (loadingImageEl) {
-        loadingImageEl.style.display = "flex";
-    }
-
-    if (imagesLayer) {
-        imageLayerGroup.removeLayer(imagesLayer);
-        map.removeLayer(imagesLayer);
-        imagesLayer = null;
-    }
-    let newDirectory = event.target.value;
-    let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
-
-    // console.log("formAction = ", formAction);
-
-    var response = await fetch(formAction, {
-        method: "GET"
-    }).catch(error => {
-        console.log("Error: refresh image GeoJSON falied.", error);
-    });
-
-    if (response && response.status >= 200 && response.status < 300) {
-
-        var responseRes = await response.text();
-        //console.log("responseRes=", responseRes)
-        await UpdateMap(responseRes)
-    }
-
-    if (loadingImageEl) {
-        loadingImageEl.style.display = "none";
-    }
 }
 
 async function submitClicked(event) {
@@ -123,8 +127,8 @@ async function UpdateMap(geoJSONResults) {
 
         imagesLayer = L.geoJSON(fetchDataJSON, {
             pointToLayer: function (point, latlng) {
-               // console.log("point = ", point)
-               // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+                // console.log("point = ", point)
+                // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
                 let currentDroneIcon = droneIcon;
 
@@ -208,3 +212,4 @@ async function loadJSONFile(jsonFileURL, map) {
     }
     return imagesMap;
 }
+

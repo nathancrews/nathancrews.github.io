@@ -1,4 +1,4 @@
-function nc_IsFileTypeAllowed(allowedFileTypes, fileName) {
+function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
     var ret = false;
 
     if ((allowedFileTypes == undefined) || (allowedFileTypes.length < 1)
@@ -59,7 +59,7 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
         //console.log(fileEntries);
 
         fileEntries.forEach((fileEntry) => {
-            if (nc_IsFileTypeAllowed(allowedFileTypes, fileEntry.name)) {
+            if (nc_IsFileTypeAllowed(fileEntry.name, allowedFileTypes)) {
                 filesArray.push(fileEntry);
             }
         });

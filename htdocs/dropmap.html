@@ -5,8 +5,6 @@
     <title>Nathan Crews Node.js Portfolio</title>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-    <link rel="stylesheet" href="styles/nc-map.css" />
-    <link rel="stylesheet" href="styles/drop-zone.css">
     <script src="https://unpkg.com/htmx.org@2.0.0"
         integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
         crossorigin="anonymous"></script>
@@ -20,6 +18,8 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <link rel="stylesheet" href="styles/drop-zone.css">
+        <link rel="stylesheet" href="styles/nc-map.css" />
 </head>
 
 <body class="map-body">
@@ -45,52 +45,49 @@
     </div>
     <script src="./src/drop-zone.js"></script>
     <script type="module">import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js"
-
-        const formEl = document.getElementById("uploadForm");
-        if (formEl) {
-            formEl.addEventListener("submit", submitClicked);
+        //************************************
+        // Define Application Data
+        //************************************
+        let AppUIData = {
+            formEl: document.getElementById("uploadForm"),
+            dirInputEl: document.getElementById("directory"),
+            loadingImageEl: document.getElementById("loading-image")
         }
 
-        const dirInputEl = document.getElementById("directory");
-        if (dirInputEl) {
-            dirInputEl.addEventListener("change", onDirChanged);
+        let AppMapData = {
+            map: null,
+            imagesLayer: null,
+            layerControl: null,
+            imageLayerGroup: null,
+            droneIcon: L.icon({
+                iconUrl: 'images/drone-icon.jpg',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
+                popupAnchor: [0, 95]
+            })
         }
 
-        var loadingImageEl = document.getElementById("loading-image");
-        if (loadingImageEl) {
-            loadingImageEl.style.display = "none";
-        }
-
-        let map;
-        let imagesLayer;
-        let layerControl;
-        let imageLayerGroup;
-
-        let droneIcon = L.icon({
-            iconUrl: 'images/drone-icon.jpg',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12],
-            popupAnchor: [0, 95]
-        });
-
-        async function onDirChanged(event) {
+        //************************************
+        // Define Application Methods
+        //************************************
+        async function OnDirChanged(event) {
             console.log("clearing image layer")
 
-            if (loadingImageEl) {
-                loadingImageEl.style.display = "flex";
+            if (AppUIData.loadingImageEl) {
+                AppUIData.loadingImageEl.style.display = "flex";
             }
 
-            if (imagesLayer) {
-                imageLayerGroup.removeLayer(imagesLayer);
-                map.removeLayer(imagesLayer);
-                imagesLayer = null;
+            if (AppMapData.imagesLayer) {
+                AppMapData.imageLayerGroup.removeLayer(imagesLayer);
+                AppMapData.map.removeLayer(imagesLayer);
+                AppMapData.imagesLayer = null;
             }
             let newDirectory = event.target.value;
             let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
 
             // console.log("formAction = ", formAction);
 
-            var response = await fetch(formAction, {method: "GET"}).catch(error => {
+            var response = await fetch(formAction, { method: "GET" }).catch(error => {
                 console.log("Error: refresh image GeoJSON failed.", error);
             });
 
@@ -101,76 +98,76 @@
                 await UpdateMap(responseRes)
             }
 
-            if (loadingImageEl) {
-                loadingImageEl.style.display = "none";
+            if (AppUIData.loadingImageEl) {
+                AppUIData.loadingImageEl.style.display = "none";
             }
         }
 
-        async function submitClicked(event) {
-            if (formEl) {
+        async function SubmitClicked(event) {
+
+            if (AppUIData.formEl) {
                 event.preventDefault();
 
                 var filesEl = document.getElementById("file")
                 var mapDivEl = document.getElementById("map")
 
-                if (loadingImageEl) {
-                    loadingImageEl.style.display = "flex";
+                if (AppUIData.loadingImageEl) {
+                    AppUIData.loadingImageEl.style.display = "flex";
                 }
 
-                const uploadActionResults = await nc_ChunkFileUploadRequests(formEl, filesEl);
+                const uploadActionResults = await nc_ChunkFileUploadRequests(AppUIData.formEl, filesEl);
 
-                await UpdateMap(uploadActionResults);
+                if (await UpdateMap(uploadActionResults)) {
 
-                if (loadingImageEl) {
-                    loadingImageEl.style.display = "none";
+                    if (AppUIData.loadingImageEl) {
+                        AppUIData.loadingImageEl.style.display = "none";
+                    }
+
+                    let newFileInputEl = document.createElement("input");
+                    if (newFileInputEl) {
+                        newFileInputEl.setAttribute('type', 'file');
+                        newFileInputEl.setAttribute('id', 'file');
+                        newFileInputEl.setAttribute('name', 'file');
+                        newFileInputEl.setAttribute('class', 'drop-zone__input');
+                        newFileInputEl.setAttribute('multiple', 'true');
+                        newFileInputEl.setAttribute('accept', '.jpg,.png,.JPG,.PNG');
+                        newFileInputEl.setAttribute('hidden', 'true');
+
+                        AppUIData.formEl.replaceChild(newFileInputEl, filesEl);
+                    }
                 }
-
-                let newFileInputEl = document.createElement("input");
-                if (newFileInputEl) {
-                    newFileInputEl.setAttribute('type', 'file');
-                    newFileInputEl.setAttribute('id', 'file');
-                    newFileInputEl.setAttribute('name', 'file');
-                    newFileInputEl.setAttribute('class', 'drop-zone__input');
-                    newFileInputEl.setAttribute('multiple', 'true');
-                    newFileInputEl.setAttribute('accept', '.jpg,.png,.JPG,.PNG');
-                    newFileInputEl.setAttribute('hidden', 'true');
-
-                    formEl.replaceChild(newFileInputEl, filesEl);
-                }
-
             }
-
         }
 
         async function UpdateMap(geoJSONResults) {
 
             let fetchDataJSON;
+            let retVal = false;
 
             if (geoJSONResults) {
                 try {
                     fetchDataJSON = JSON.parse(geoJSONResults);
-
                     // console.log(fetchDataJSON);
                 } catch (error) {
                     console.log(error);
-                    //fetchDataJSON = null;
+                    return retVal;
                 }
             }
 
             if (fetchDataJSON) {
 
-                if (imagesLayer) {
-                    imageLayerGroup.removeLayer(imagesLayer);
-                    map.removeLayer(imagesLayer);
-                    imagesLayer = null;
+                if (AppUIData.imagesLayer) {
+                    AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);
+                    AppUIData.map.removeLayer(AppUIData.imagesLayer);
+                    AppUIData.imagesLayer = null;
                 }
 
-                imagesLayer = L.geoJSON(fetchDataJSON, {
+                AppUIData.imagesLayer = L.geoJSON(fetchDataJSON, {
                     pointToLayer: function (point, latlng) {
-                       // console.log("point = ", point)
-                       // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+                        // console.log("point = ", point)
+                        // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
-                        let currentDroneIcon = droneIcon;
+                        let currentDroneIcon = AppMapData.droneIcon;
 
                         // if (point.properties.thumbFileName) {
                         //     currentDroneIcon = L.icon({
@@ -184,20 +181,22 @@
                         return L.marker(latlng, { icon: currentDroneIcon });
                     },
                 }).bindPopup(function (layer) {
-                    return "<div style='margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
-        <a href='" + layer.feature.properties.name + "' target='window'><img style=max-width: 250px; max-height:300px;' src='" +
+                    return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+        <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:300px;' src='" +
                         layer.feature.properties.thumbFileName + "' /></a></div>";
                 });
 
-                if (imagesLayer) {
-                    imageLayerGroup.addLayer(imagesLayer);
-                    map.fitBounds(imagesLayer.getBounds());
+                if (AppUIData.imagesLayer) {
+                    AppUIData.imageLayerGroup.addLayer(AppUIData.imagesLayer);
+                    AppUIData.map.fitBounds(AppUIData.imagesLayer.getBounds());
+                    retVal = true;
                 }
             }
 
+            return retVal;
         }
 
-        async function main() {
+        async function Main() {
 
             var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
@@ -207,7 +206,7 @@
                 maxZoom: 20,
             });
 
-            map = L.map('map', {
+            AppUIData.map = L.map('map', {
                 center: [56.01877997222222, -3.7548339722222224],
                 zoom: 14,
                 maxZoom: 19,
@@ -219,16 +218,13 @@
                 "Esri Imagery": Esri_Imagery
             };
 
-            imageLayerGroup = L.layerGroup().addTo(map); // Create empty photos LayerGroup
-            layerControl = L.control.layers(baseMaps);
-            layerControl.addOverlay(imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
-            layerControl.addTo(map);
+            AppUIData.imageLayerGroup = L.layerGroup().addTo(AppUIData.map); // Create empty photos LayerGroup
+            AppUIData.layerControl = L.control.layers(baseMaps);
+            AppUIData.layerControl.addOverlay(AppUIData.imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
+            AppUIData.layerControl.addTo(AppUIData.map);
         }
 
-        main();
-
-
-        async function loadJSONFile(jsonFileURL, map) {
+        async function LoadGeoJSONFile(jsonFileURL, map) {
             var imagesMap;
             var fetchJson = await fetch(jsonFileURL);
             if (fetchJson.status === 200) {
@@ -237,14 +233,13 @@
 
                     imagesMap = L.geoJSON(fetchData, {
                         pointToLayer: function (point, latlng) {
-                            return L.marker(latlng, { icon: droneIcon });
+                            return L.marker(latlng, { icon: AppMapData.droneIcon });
                         },
                     }).bindPopup(function (layer) {
-                        return "<div style='margin:0px; padding:0px;'><p style='z-index: -1;'><b>" + layer.feature.properties.name + "</b></p> \
-                        <a href='" + layer.feature.properties.name + "' style='z-index:100;' target='window'><img style='rotate: " +
-                            Number(layer.feature.properties.cameraDirection) + "deg; max-width: 325px; max-height:225px;' src='" +
-                            layer.feature.properties.thumbFileName + "' /></a></div>";
-                    }).addTo(map);
+                        return "<div style='margin:0px; padding:0px;'><span><b>" + layer.feature.properties.name + "</b></span> \
+                        <a href='" + layer.feature.properties.URLName + "'target='window'><img style='max-width: 325px; max-height:225px;' src='" +
+                            layer.feature.properties.thumbFileName + "'/></a></div>";
+                    }).addTo(AppMapData.map);
                 }
                 else {
                     console.log("Parsing GeoJSON file failed: ", jsonFileURL)
@@ -255,6 +250,27 @@
             }
             return imagesMap;
         }
+
+        //************************************
+        // Attach event listeners
+        //************************************
+
+        if (AppUIData.formEl) {
+            AppUIData.formEl.addEventListener("submit", SubmitClicked);
+        }
+
+        if (AppUIData.dirInputEl) {
+            AppUIData.dirInputEl.addEventListener("change", OnDirChanged);
+        }
+
+        if (AppUIData.loadingImageEl) {
+            AppUIData.loadingImageEl.style.display = "none";
+        }
+
+        //************************************
+        // Run Application
+        //************************************
+        Main();
 
     </script>
 </body>

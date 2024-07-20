@@ -95,8 +95,9 @@ else {
 
 return 0;
 
-function ImageData(inName, inThumbFileName, inLat, inLon, inElev, inflightDirection, incameraDirection, incameraPitch, inDate) {
+function ImageData(inName, inURLName,inThumbFileName, inLat, inLon, inElev, inflightDirection, incameraDirection, incameraPitch, inDate) {
     name = inName;
+    URLName = inURLName;
     ThumbFileName = inThumbFileName;
     lat = inLat;
     lng = inLon;
@@ -202,13 +203,13 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
         if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
             var addMe = new ImageData();
 
-            addMe.name = path.join(fileURL, imageFilename);
-
-            let FileNameOnly = path.parse(imageFilename).name;
-
+            addMe.URLName = path.join(fileURL, imageFilename);
+            addMe.name = imageFilename;
             addMe.lat = tags.gps.Latitude;
             addMe.lng = tags.gps.Longitude;
             addMe.elevation = tags.gps.Altitude;
+
+            let FileNameOnly = path.parse(imageFilename).name;
 
             if (tags.exif.DateTime) {
                 addMe.date = tags.exif.DateTime.description;
@@ -266,18 +267,18 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
                     }
                     else {
 
-                        sharp(imageFilenamePath).resize(thumbWidth).toFile(thumbFileNameExtPath, null);
+                        sharp(imageFilenamePath).rotate().resize(thumbWidth).toFile(thumbFileNameExtPath, null);
                     }
                 }
                 catch (error) {
-                    addMe.thumbFileName = addMe.name;
+                    addMe.thumbFileName = addMe.URLName;
                     console.log("Catch Error[", error, "] writing thumbFileName = ", thumbFileNameExtPath);
                 }
             }
 
             function ThumbError(err) {
                 // console.log("Sharp Error[", err, "] writing thumbFileName = ", thumbFileNameExtPath);
-                addMe.thumbFileName = addMe.name;
+                addMe.thumbFileName = addMe.URLName;
             }
 
             imageCollection.push(addMe)
@@ -302,28 +303,22 @@ async function ReadImageData(imagePath, imageNames, geoFileName) {
     return geoJ;
 }
 
-{/*  */ }
-
 function WriteHTMLResponse(geoFileName) {
-    var htmlTop = '\
-    <head> \
+    var htmlTop = '<head> \
         <title>Nathan Crews Node.js Portfolio</title> \
         <meta charset="UTF-8" /> \
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> \
         <script src="https://unpkg.com/htmx.org@2.0.0" \
             integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script> \
-        // <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \
-        //     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
-        // <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
-        //     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> \
-        <link rel="stylesheet" href="../styles/styles.css" /> \
-    </head> \
-     <body> \
-      <div id="map" name="map"</div>';
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" \
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> \
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" \
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> \
+        <link rel="stylesheet" href="../../styles/styles.css" /> \
+        <link rel="stylesheet" href="../../styles/nc-map.css" /> \
+    </head><body><div id="map" name="map"</div>';
 
-    //   rotate: "+ Number(layer.feature.properties.cameraDirection) + "deg;
-
-    var scripts = '<script type="text/javascript"> \
+     var scripts = '<script type="text/javascript"> \
        var droneIcon = L.icon({ \
            iconUrl: \'../../images/drone-icon.jpg\', \
            iconSize: [24, 24], \
@@ -342,7 +337,7 @@ function WriteHTMLResponse(geoFileName) {
                        }, \
                    }).bindPopup(function (layer) { \
                        return "<div style=\'width: 250px;height: 250px;\'><p><b>"+ layer.feature.properties.name + "</b></p> \
-                       <a href=\'../../"+ layer.feature.properties.name + "\' target=\'window\'><img style=\'max-width: 250px; max-height:250px; z-index: 100;\' src=\'../../"+ \
+                       <a href=\'../../"+ layer.feature.properties.URLName + "\' target=\'window\'><img style=\'max-width: 250px; max-height:250px; z-index: 100;\' src=\'../../"+ \
                            layer.feature.properties.thumbFileName + "\' /></a></div>"; \
                    }).addTo(map); \
                } \
