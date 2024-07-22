@@ -101,6 +101,7 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
             }).catch(error => {
                 console.log("Error: nc_ChunkFileUploadRequests: fetch error: ");
                 console.log(error);
+                return;
             });
 
             if (doAction === true && response && response.status >= 200 && response.status < 300) {
@@ -113,6 +114,8 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
             requestCount++;
         }
     }
+
+    return;
 }
 
 export { nc_IsFileTypeAllowed, nc_ChunkFileUploadRequests }

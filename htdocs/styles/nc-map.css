@@ -96,3 +96,12 @@ div.leaflet-popup-content{
 	border: 4px dashed #009578;
 	border-radius: 10px;
 }
+
+.map-drop-zone--over {
+	border-style: solid;
+	border-color: limegreen;
+}
+
+.map-drop-zone__input {
+	display: none;
+}

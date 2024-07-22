@@ -1,9 +1,10 @@
 
-var dropElementsOrig = document.querySelectorAll(".drop-zone")
+function InitDropElements(dropElements) {
 
-dropElementsOrig.forEach((dropElement) => {
-	ProcessDropElement(dropElement);
-});
+	dropElements.forEach((dropElement) => {
+		ProcessDropElement(dropElement);
+	});
+}
 
 function ProcessDropElement(dropZoneElement) {
 
@@ -12,17 +13,17 @@ function ProcessDropElement(dropZoneElement) {
 	dropZoneElement.addEventListener("dragover", (e) => {
 		e.preventDefault();
 
-		if (!dropZoneElement.classList.contains("drop-zone--over")) {
-			//console.log("Adding class: drop-zone--over to ", dropZoneElement)
-			dropZoneElement.classList.add("drop-zone--over");
+		if (!dropZoneElement.classList.contains("map-drop-zone--over")) {
+			//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
+			dropZoneElement.classList.add("map-drop-zone--over");
 		}
 	});
 
 	["dragleave", "dragend"].forEach((type) => {
 		dropZoneElement.addEventListener(type, (e) => {
-			if (dropZoneElement.classList.contains("drop-zone--over")) {
+			if (dropZoneElement.classList.contains("map-drop-zone--over")) {
 				//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
-				dropZoneElement.classList.remove("drop-zone--over");
+				dropZoneElement.classList.remove("map-drop-zone--over");
 			}
 		});
 	});
@@ -30,7 +31,7 @@ function ProcessDropElement(dropZoneElement) {
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
 
-		let inputElement = document.querySelector(".drop-zone__input");
+		let inputElement = document.querySelector(".map-drop-zone__input");
 		//console.log("using inputElement:", inputElement)
 
 		if (inputElement) {
@@ -50,6 +51,8 @@ function ProcessDropElement(dropZoneElement) {
 			}
 		}
 
-		dropZoneElement.classList.remove("drop-zone--over");
+		dropZoneElement.classList.remove("map-drop-zone--over");
 	});
 }
+
+export { InitDropElements }

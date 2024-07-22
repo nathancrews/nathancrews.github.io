@@ -18,6 +18,7 @@
 
 .drop-zone--over {
 	border-style: solid;
+	border-color: limegreen;
 }
 
 .drop-zone__input {
