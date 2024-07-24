@@ -18,9 +18,13 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="./src/bing/leaflet-bing-layer.js" ></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4Sd_RLN2sRAhS3YIDAH1WPi5dDtNbP8&loading=async" defer></script>
+    <script src="./src/bing/leaflet-bing-layer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu4Sd_RLN2sRAhS3YIDAH1WPi5dDtNbP8&loading=async"
+        defer></script>
     <script src="https://unpkg.com/leaflet.gridlayer.googlemutant@latest/dist/Leaflet.GoogleMutant.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.105/Build/Cesium/Cesium.js" defer></script>
+    <link href="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.105/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
     <link rel="stylesheet" href="styles/nc-map.css" />
 </head>
 
@@ -42,10 +46,150 @@
             <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
         </form>
         <img id="loading-image" name="loading-image" src="images/loading.gif" class="map-form-loading-image" />
+        <span style="width:50%;"><button id="view2d" style="margin-left:25px; margin-right:25px;">View 2D Map</button>
+            <button id="view3d">View 3D Map</button></span>
     </header>
-    <div id="map" class="map-drop-zone map-base">
-    </div>
-    <script type="module">import { InitMap2D } from "./src/map-drop-view2D.js"
-        InitMap2D();
+    <div id="map2d" class="map-drop-zone map-base"></div>
+    <div id="map3d" class="map-drop-zone map-base map-drop-zone-3d"></div>
+
+    <script type="module" defer>import { InitMap2D, AppMapData2D, UpdateMap2D, AppUIData2D } from "./src/map-drop-view2D.js"
+
+        let view3D = null;
+        const UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail: { AppMapData: {} } });
+
+        await InitMap2D();
+        UpdateMap2D(AppMapData2D.geoJSONFileData);
+
+        await InitMap3D();
+        UpdateMap3D(AppMapData2D.geoJSONFileURL);
+
+        let view2D_button_el = document.getElementById("view2d");
+        let view3D_button_el = document.getElementById("view3d");
+
+        if (view2D_button_el) {
+            view2D_button_el.addEventListener('click', go2D);
+        }
+        if (view3D_button_el) {
+            view3D_button_el.addEventListener('click', go3D);
+        }
+
+        let map2D_div_el = document.getElementById("map2d");
+        let map3D_div_el = document.getElementById("map3d");
+
+
+        function UpdateMaps(event) {
+            console.log("updating maps...");
+
+            UpdateMap2D(event.detail.AppMapData.geoJSONData);
+            UpdateMap3D(event.detail.AppMapData.geoJSONFileURL);
+        }
+
+        function go2D(event) {
+            map3D_div_el.style.display = "none";
+            map2D_div_el.style.display = "block";
+
+            console.log("view set to 2D");
+            UpdateMap2D(AppMapData2D.geoJSONData);
+        }
+
+        function go3D(event) {
+            map2D_div_el.style.display = "none";
+            map3D_div_el.style.display = "block";
+
+            console.log("view set to 3D");
+            UpdateMap3D(AppMapData2D.geoJSONFileURL);
+        }
+
+        if (AppUIData2D.formEl) {
+            AppUIData2D.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
+        }
+
+        async function InitMap3D() {
+            view3D = await LoadCesium3D(view3D);
+        }
+
+        async function UpdateMap3D(geoJSONfileURL) {
+            if (view3D) {
+                await LoadCesiumGeoJSON(view3D, geoJSONfileURL);
+            }
+        }
+
+        async function LoadCesium3D(viewer3D) {
+            let retView = viewer3D;
+            try {
+
+                Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYmVjM2RmMy01MTVmLTQxNTctYjk0OC1jNmM2ZTFmMzkwZDYiLCJpZCI6MTc0MzI1LCJpYXQiOjE2OTgzOTQxNjh9.qw8O6-GM1BxdYdPyUFz7MLKH3KTh52edzeS_K0EmmZQ";
+
+                if (!viewer3D) {
+                    retView = new Cesium.Viewer('map3d', {
+                        imageryProvider: false,
+                        baseLayerPicker: false,
+                        requestRenderMode: true,
+                    });
+
+                    const tileset = retView.scene.primitives.add(new Cesium.Cesium3DTileset({
+                        url: "https://tile.googleapis.com/v1/3dtiles/root.json?key=AIzaSyDu4Sd_RLN2sRAhS3YIDAH1WPi5dDtNbP8",
+                        showCreditsOnScreen: false,
+                    }));
+                }
+
+                retView.scene.globe.show = false;
+
+            } catch (error) {
+                console.log(error);
+            }
+
+            return retView;
+        }
+
+        async function LoadCesiumGeoJSON(view3D, fileURL) {
+
+            // console.log(view3D.dataSources)
+
+            if (view3D.dataSources.length > 0) {
+                view3D.dataSources.removeAll()
+            }
+            // console.log(view3D.dataSources)
+
+            if (!view3D || (fileURL.length < 10)) {
+                console.log("Error: data not set");
+                return;
+            }
+
+            const dataSource = await Cesium.GeoJsonDataSource.load(fileURL,
+                {
+                    clampToGround: true,
+                    markerSize: 100
+                });
+
+            let entities = dataSource.entities.values;
+
+            //            console.log("1 entities", entities);
+
+            for (let i = 0; i < entities.length; i++) {
+                let entity = entities[i];
+                //                console.log("entity.billboard",entity.billboard);
+
+                //                console.log('entity.properties.thumbFileName', entity.properties.thumbFileName)
+
+                entity.billboard.scale = 0.25;
+                //                entity.billboard.scaleByDistance = true;
+
+                entity.billboard.image = entity.properties.thumbFileName;
+
+                // entity.point = new Cesium.PointGraphics({
+                //     color: Cesium.Color.fromRandom(),
+                //     pixelSize: 100
+                // });
+
+                // console.log("entity.position", entity.position);
+            }
+
+            //            console.log("2 dataSource.entities", entities);
+
+            view3D.dataSources.add(dataSource);
+            await view3D.zoomTo(dataSource);
+        }
+
     </script>
 </body>
