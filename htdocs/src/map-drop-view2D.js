@@ -1,77 +1,23 @@
 
-import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
-import { InitDropElements } from "./map-drop-zone.js";
-
-
-//************************************
-// Define Application Data
-//************************************
-export let AppUIData2D = {
-    formEl: document.getElementById("uploadForm"),
-    dirInputEl: document.getElementById("directory"),
-    loadingImageEl: document.getElementById("loading-image")
-}
-
-export let AppMapData2D = {
-    map: null,
-    imagesLayer: null,
-    layerControl: null,
-    imageLayerGroup: null,
-    droneIcon: L.icon({
-        iconUrl: 'images/drone-icon.jpg',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-        popupAnchor: [0, 95]
-    }),
-    projectDirectory: "test_drop",
-    baseUploadPath: "uploads/",
-    geoJSONFileURL: "uploads/test_drop/geo-images.json",
-    geoJSONFileName: "geo-images.json",
-    geoJSONFileData: null
-}
+import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
+import { LoadGeoJSONFile } from "./geo-map.js";
 
 //************************************
 // Define Application Methods
 //************************************
 export async function InitMap2D() {
 
-    //************************************
-    // Attach event listeners
-    //************************************
-
-    AppUIData2D.formEl = document.getElementById("uploadForm");
-    AppUIData2D.dirInputEl = document.getElementById("directory");
-    AppUIData2D.loadingImageEl = document.getElementById("loading-image");
-
-    console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData2D.formEl)
-
-    if (AppUIData2D.formEl) {
-        AppUIData2D.formEl.addEventListener("submit", SubmitClicked);
-    }
-
-    if (AppUIData2D.dirInputEl) {
-        AppUIData2D.dirInputEl.addEventListener("change", OnDirChanged);
-        AppUIData2D.dirInputEl.addEventListener("keydown", OnDirChanged);
-    }
-
-    if (AppUIData2D.loadingImageEl) {
-        AppUIData2D.loadingImageEl.style.display = "none";
-    }
-
-    let dropElements = document.querySelectorAll(".map-drop-zone");
-
-    InitDropElements(dropElements);
-
+    // <div class="cesium-infoBox cesium-infoBox-visible" data-bind="css: { &quot;cesium-infoBox-visible&quot; : showInfo, &quot;cesium-infoBox-bodyless&quot; : _bodyless }"><div class="cesium-infoBox-title" data-bind="text: titleText"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Toyama Yasuaki</font></font></div><button type="button" class="cesium-button cesium-infoBox-camera" data-bind="attr: { title: &quot;Focus camera on object&quot; },click: function () { cameraClicked.raiseEvent(this); },enable: enableCamera,cesiumSvgPath: { path: cameraIconPath, width: 32, height: 32 }" title="Focus camera on object"><svg:svg class="cesium-svgPath-svg" width="32" height="32" viewBox="0 0 32 32"><path d="M 13.84375 7.03125 C 11.412798 7.03125 9.46875 8.975298 9.46875 11.40625 L 9.46875 11.59375 L 2.53125 7.21875 L 2.53125 24.0625 L 9.46875 19.6875 C 9.4853444 22.104033 11.423165 24.0625 13.84375 24.0625 L 25.875 24.0625 C 28.305952 24.0625 30.28125 22.087202 30.28125 19.65625 L 30.28125 11.40625 C 30.28125 8.975298 28.305952 7.03125 25.875 7.03125 L 13.84375 7.03125 z"></path></svg:svg></button><button type="button" class="cesium-infoBox-close" data-bind="click: function () { closeClicked.raiseEvent(this); }"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></button><iframe class="cesium-infoBox-iframe" sandbox="allow-scripts allow-presentation allow-same-origin allow-popups allow-forms" data-bind="style : { maxHeight : maxHeightOffset(40) }" allowfullscreen="true" src="about:blank" style="max-height: 751px; height: 382.963px;"></iframe></div>
     let osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 24,
+        maxZoom: 21,
     });
 
     let Esri_Imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 20,
+        maxZoom: 19,
     });
 
-    let BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-    let bingLayer = L.tileLayer.bing(BING_KEY);
+    // let BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
+    // let bingLayer = L.tileLayer.bing(BING_KEY);
 
     let googleHybrid = L.gridLayer
         .googleMutant({
@@ -91,26 +37,25 @@ export async function InitMap2D() {
             maxZoom: 20,
         })
 
-    AppUIData2D.map = L.map('map2d', {
+    AppUIData.map = L.map('map2d', {
         center: [56.01877997222222, -3.7548339722222224],
         zoom: 18,
-        maxZoom: 20,
-        layers: [osm, Esri_Imagery, bingLayer, googleHybrid, googleRoadmap, googleSatellite]
+        maxZoom: 19,
+        layers: [osm, Esri_Imagery, googleHybrid, googleRoadmap, googleSatellite]
     });
 
     let baseMaps = {
         "OpenStreetMap": osm,
         " Esri Imagery": Esri_Imagery,
-        " Bing Imagery": bingLayer,
         " Google Roads": googleRoadmap,
         "Google Imagery": googleSatellite,
         " Google Hybrid": googleHybrid,
     };
 
-    AppUIData2D.imageLayerGroup = L.layerGroup().addTo(AppUIData2D.map); // Create empty photos LayerGroup
-    AppUIData2D.layerControl = L.control.layers(baseMaps);
-    AppUIData2D.layerControl.addOverlay(AppUIData2D.imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
-    AppUIData2D.layerControl.addTo(AppUIData2D.map);
+    AppUIData.imageLayerGroup = L.layerGroup().addTo(AppUIData.map); // Create empty photos LayerGroup
+    AppUIData.layerControl = L.control.layers(baseMaps);
+    AppUIData.layerControl.addOverlay(AppUIData.imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
+    AppUIData.layerControl.addTo(AppUIData.map);
 
 }
 
@@ -119,41 +64,38 @@ export async function UpdateMap2D(geoJSONResults) {
     let localgeoJSONResults = geoJSONResults;
     let fetchDataJSON;
     let retVal = false;
-    //console.log("localgeoJSONResults = ", localgeoJSONResults);
-    //console.log("AppMapData2D.geoJSONFileURL = ", AppMapData2D.geoJSONFileURL);
+    //    console.log("localgeoJSONResults = ", localgeoJSONResults);
+    //    console.log("AppMapData.geoJSONFileURL = ", AppMapData.geoJSONFileURL);
 
-    if (!localgeoJSONResults && AppMapData2D.geoJSONFileURL) {
-        localgeoJSONResults = await LoadGeoJSONFile(AppMapData2D.geoJSONFileURL);
+    if (!localgeoJSONResults && AppMapData.geoJSONFileURL && AppUIData.clientSideOnly == false) {
+        try {
+
+            localgeoJSONResults = await LoadGeoJSONFile(AppMapData.geoJSONFileURL);
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
     if (localgeoJSONResults) {
-
-        AppMapData2D.geoJSONFileData = localgeoJSONResults;
-    //    console.log("AppMapData2D.geoJSONFileData=", AppMapData2D.geoJSONFileData);
-
-        // try {
-        //    // fetchDataJSON = JSON.parse(AppMapData2D.geoJSONFileData);
-        //     console.log("fetchDataJSON=",fetchDataJSON);
-        // } catch (error) {
-        //     console.log(error);
-        //     return retVal;
-        // }
+        AppMapData.geoJSONFileData = localgeoJSONResults;
+                console.log("AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
-    if (AppMapData2D.geoJSONFileData) {
+    if (AppMapData.geoJSONFileData) {
 
-        if (AppUIData2D.imagesLayer) {
-            AppUIData2D.imageLayerGroup.removeLayer(AppUIData2D.imagesLayer);
-            AppUIData2D.map.removeLayer(AppUIData2D.imagesLayer);
-            AppUIData2D.imagesLayer = null;
+        if (AppUIData.imagesLayer && AppUIData.clientSideOnly == false) {
+            AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);
+            AppUIData.map.removeLayer(AppUIData.imagesLayer);
+            AppUIData.imagesLayer = null;
         }
 
-        AppUIData2D.imagesLayer = L.geoJSON(AppMapData2D.geoJSONFileData, {
+        AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
             pointToLayer: function (point, latlng) {
                 // console.log("point = ", point)
                 // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
-                let currentDroneIcon = AppMapData2D.droneIcon;
+                let currentDroneIcon = AppMapData.droneIcon;
 
                 // if (point.properties.thumbFileName) {
                 //     currentDroneIcon = L.icon({
@@ -172,9 +114,9 @@ export async function UpdateMap2D(geoJSONResults) {
                 layer.feature.properties.thumbFileName + "' /></a></div>";
         });
 
-        if (AppUIData2D.imagesLayer) {
-            AppUIData2D.imageLayerGroup.addLayer(AppUIData2D.imagesLayer);
-            AppUIData2D.map.fitBounds(AppUIData2D.imagesLayer.getBounds());
+        if (AppUIData.imagesLayer) {
+            AppUIData.imageLayerGroup.addLayer(AppUIData.imagesLayer);
+            AppUIData.map.fitBounds(AppUIData.imagesLayer.getBounds());
             retVal = true;
         }
     }
@@ -183,137 +125,6 @@ export async function UpdateMap2D(geoJSONResults) {
 }
 
 
-async function OnDirChanged(event) {
-    //console.log("OnDirChanged called")
-    if ((event instanceof KeyboardEvent) && event.key != "Enter") {
-        return;
-    }
-
-    event.preventDefault();
-
-    //console.log("1 AppUIData.loadingImageEl = ", AppUIData.loadingImageEl)
-
-    if (AppUIData2D.loadingImageEl) {
-        AppUIData2D.loadingImageEl.style.display = "flex";
-    }
-
-    try {
-        if (AppMapData2D.imagesLayer) {
-            AppMapData2D.imageLayerGroup.removeLayer(imagesLayer);
-            AppMapData2D.map.removeLayer(imagesLayer);
-            AppMapData2D.imagesLayer = null;
-        }
-
-        let newDirectory = "";
-        newDirectory = document.getElementById("directory").value;
-
-        AppMapData2D.projectDirectory = newDirectory;
-        AppMapData2D.geoJSONFileURL = AppMapData2D.baseUploadPath + newDirectory + "/" + AppMapData2D.geoJSONFileName;
-
-        let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
-
-        //console.log("formAction = ", formAction);
-
-        let response = await fetch(formAction, { method: "GET" }).catch(error => {
-            console.log("Error: refresh image GeoJSON failed.", error);
-        });
-
-        //console.log("response.status=", response.status)
-
-        if (response.status == 200) {
-            let responseText = "ERROR";
-            responseText = await response.text();
-
-            let stat = responseText.indexOf("ERROR");
-            if (stat < 0) {
-                AppMapData2D.geoJSONFileData = await JSON.parse(responseText);
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail: { AppMapData: AppMapData2D } });
-                AppUIData2D.formEl.dispatchEvent(UpdateMapEvent);
-            }
-        }
-    }
-    catch (error) {
-        console.log("OnDirChanged catch error:", error)
-    }
-
-    //console.log("2 AppUIData.loadingImageEl = ", AppUIData.loadingImageEl)
-
-    if (AppUIData2D.loadingImageEl) {
-        AppUIData2D.loadingImageEl.style.display = "none";
-    }
-}
-
-async function SubmitClicked(event) {
-
-    event.preventDefault();
-    //console.log("submit button clicked....")
-
-    if (AppUIData2D.formEl) {
-
-        try {
-            let filesEl = document.getElementById("file")
-
-            if (AppUIData2D.loadingImageEl) {
-                AppUIData2D.loadingImageEl.style.display = "flex";
-            }
-
-            const responseText = await nc_ChunkFileUploadRequests(AppUIData2D.formEl, filesEl);
-
-            if (responseText) {
-                AppMapData2D.geoJSONFileData = await JSON.parse(responseText);
-
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                    { detail: { AppMapData: AppMapData2D } });
-
-                ResetFileInputElement(filesEl);
-                AppUIData2D.formEl.dispatchEvent(UpdateMapEvent);
-            }
-
-        }
-        catch (error) {
-            console.log("catch error:", error)
-        }
-
-        if (AppUIData2D.loadingImageEl) {
-            AppUIData2D.loadingImageEl.style.display = "none";
-        }
-    }
-}
-
-function ResetFileInputElement(existingFileInputEl) {
-    let newFileInputEl = document.createElement("input");
-
-    if (newFileInputEl) {
-        newFileInputEl.setAttribute('type', 'file');
-        newFileInputEl.setAttribute('id', 'file');
-        newFileInputEl.setAttribute('name', 'file');
-        newFileInputEl.setAttribute('class', 'map-drop-zone__input');
-        newFileInputEl.setAttribute('multiple', 'true');
-        newFileInputEl.setAttribute('accept', '.jpg,.png,.JPG,.PNG');
-        newFileInputEl.setAttribute('hidden', 'true');
-
-        AppUIData2D.formEl.replaceChild(newFileInputEl, existingFileInputEl);
-        existingFileInputEl = newFileInputEl;
-    }
-}
-
-async function LoadGeoJSONFile(jsonFileURL) {
-    let fetchData = "";
-
-    console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
-
-    let fetchResponse = await fetch(jsonFileURL);
-    if (fetchResponse.status === 200) {
-        fetchData = await fetchResponse.json();
-    }
-    else {
-        console.log("Load GeoJSON file failed: ", jsonFileURL)
-    }
-
-   // console.log("LoadGeoJSONFile: fetchData=", fetchData);
-
-    return fetchData;
-}
 
 
 

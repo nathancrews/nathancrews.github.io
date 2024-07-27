@@ -9,7 +9,7 @@ const GeoJSON = require('geojson');
 const ExifReader = require('exifreader');
 const exifErrors = ExifReader.errors;
 const sharp = require('sharp');
-const { Worker, workerData } = require('node:worker_threads')
+
 
 class ImageData {
     name = "";
@@ -22,9 +22,11 @@ class ImageData {
     cameraDirection = 0.0;
     cameraPitch = 90.0;
     date;
+    geoJSONval = null;
+    imageFileData = null;
 };
 
-
+const geoFileName = "geo-images.json";
 let InCGIMode = true;
 let dirRequestName = '';
 let fileNameRequest = '';
@@ -161,7 +163,7 @@ async function ProcessImages(imagePath, imageURL, CGIRealtivePath, responseType)
     }
 
     // console.log("imageFiles = ", imageFiles);
-    let geoFileName = "geo-images.json";
+   
 
     let geoFileData = await ReadImageData(localDir, imageURL, imageFiles, geoFileName);
 
@@ -349,13 +351,13 @@ function WriteHTMLResponse(geoFileName) {
     </head><body><div id="map" name="map"</div>';
 
     let scripts = '<script type="text/javascript"> \
-       let droneIcon = L.icon({ \
+       async function loadJSONFile(jsonFileURL, map) { \
+       const droneIcon = L.icon({ \
            iconUrl: \'../../images/drone-icon.jpg\', \
            iconSize: [24, 24], \
            iconAnchor: [12, 12], \
            popupAnchor: [0, 112] \
        }); \
-       async function loadJSONFile(jsonFileURL, map) { \
            let imagesMap; \
            let fetchJson = await fetch(jsonFileURL); \
            if (fetchJson.status === 200) { \
