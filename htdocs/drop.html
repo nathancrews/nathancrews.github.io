@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,8 +16,8 @@
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Cesium.js" defer></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/nc-map.css" />
-    <script src="./src/geo-map.js" type="module" defer></script>
     <script src="./src/geojson/geojson.min.js" defer></script>
+    <script src="./src/geo-map.js" type="module" defer></script>
 </head>
 
 <body class="map-body">
@@ -50,62 +51,92 @@
         import { InitMap2D, UpdateMap2D } from "./src/map-drop-view2D.js";
         import { nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js";
         import { ImageData } from "./src/image-data.js"
-        import { ProcessImage, ProcessImages } from "./src/image-processor.js"
+        import { ProcessImages } from "./src/image-processor.js"
+
+        let processingArrayCount = 0;
+        let resultArray = [];
 
         const fileUploadForm = document.getElementById("uploadForm");
 
         //console.log("fileUploadForm = ", fileUploadForm)
         if (fileUploadForm) {
-            fileUploadForm.addEventListener("submit", submitClickedClient);
+            fileUploadForm.addEventListener("submit", OnImageDropped);
         }
 
-        var loadingImageEl = document.getElementById("loading-image");
-        if (loadingImageEl) {
-            loadingImageEl.style.display = "none";
+        // var loadingImageEl = document.getElementById("loading-image");
+        if (AppUIData.loadingImageEl) {
+            AppUIData.loadingImageEl.style.display = "none";
         }
 
-        async function submitClickedClient(event) {
+        let canvasEl = document.createElement('canvas');
+        let ThumbnailReadyArray = [];
 
-            console.log("submitClickedClient called = ", event)
+        canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
+
+          //  console.log("ThumbnailReadyEvent called: ", evt);
+
+            if (evt.detail.ImageData) {
+
+                //    console.log('evt.detail.imageData = ', evt.detail.ImageData);
+                ThumbnailReadyArray.push(evt.detail.ImageData);
+
+                console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
+
+                if (processingArrayCount == (ThumbnailReadyArray.length)) {
+
+                    console.log("Updating Map...")
+
+                    let geoJSONval = GeoJSON.parse(ThumbnailReadyArray, { Point: ['lat', 'lng', 'elevation'] });
+
+                    //    console.log("result geoJSONval = ", geoJSONval)
+
+                    UpdateMap2D(geoJSONval);
+
+                    if (AppUIData.loadingImageEl) {
+                        AppUIData.loadingImageEl.style.display = "none";
+                    }
+
+                    // clear the array and count for the next drop operation
+                    ThumbnailReadyArray = [];
+                    processingArrayCount = 0;
+                }
+                else {
+                    console.log("waiting for complete results array.... ")
+                }
+            }
+        });
+
+        async function OnImageDropped(event) {
+
+            // console.log("OnImageDropped called = ", event)
 
             if (fileUploadForm) {
                 event.preventDefault();
 
-                if (loadingImageEl) {
-                    loadingImageEl.style.display = "flex";
+                if (AppUIData.loadingImageEl) {
+                    AppUIData.loadingImageEl.style.display = "flex";
                 }
-
-                var filesEl = document.getElementById("file");
 
                 let startTime = performance.now();
 
+                var filesEl = document.getElementById("file");
                 const files = filesEl.files;
-                let resultArray = [];
 
-                resultArray = await ProcessImages(files);
- 
+                resultArray = await ProcessImages(files, canvasEl);
+
+                processingArrayCount = resultArray.length;
+
+//                console.log("clicked result resultArray = ", resultArray)
+                console.log("OnDrop processingArrayCount = ", processingArrayCount)
+
                 let endTime = performance.now();
 
-                console.log(`OnDrop ProcessImages took ${endTime-startTime}ms`)
+                console.log(`OnDrop ProcessImages took ${endTime - startTime}ms`)
 
-
-                startTime = performance.now();
-
-                if (resultArray.length > 0) {
-
-                    let geoJSONval = await GeoJSON.parse(resultArray, { Point: ['lat', 'lng', 'elevation'] });
-
-                    console.log("result geoJSONval = ", geoJSONval)
-
-                    await UpdateMap2D(geoJSONval);
-                }
-
-                endTime = performance.now();
-
-                console.log(`OnDrop UpdateMap2D took ${endTime-startTime}ms`)
-
-                if (loadingImageEl) {
-                    loadingImageEl.style.display = "none";
+                if (processingArrayCount == 0) {
+                    if (AppUIData.loadingImageEl) {
+                        AppUIData.loadingImageEl.style.display = "none";
+                    }
                 }
             }
         }

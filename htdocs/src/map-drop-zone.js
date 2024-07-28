@@ -32,7 +32,7 @@ function ProcessDropElement(dropZoneElement) {
 		e.preventDefault();
 
 		let inputElement = document.querySelector(".map-drop-zone__input");
-		console.log("using inputElement:", inputElement)
+		//console.log("using inputElement:", inputElement)
 
 		if (inputElement) {
 
@@ -42,7 +42,7 @@ function ProcessDropElement(dropZoneElement) {
 				//console.log("inputElement.files.length:", inputElement.files.length)
 				var sb = document.querySelectorAll("[type=submit]")[0];
 
-				console.log("calling click on:", sb)
+				//console.log("calling click on:", sb)
 
 				if (sb) {
 					//	console.log("calling click on:", sb)

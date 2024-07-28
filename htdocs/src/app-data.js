@@ -22,7 +22,7 @@ export const AppMapData = {
         iconUrl: 'images/drone-icon.jpg',
         iconSize: [24, 24],
         iconAnchor: [12, 12],
-        popupAnchor: [0, 95]
+        popupAnchor: [0, 175]
     }),
     projectDirectory: "test_drop",
     baseUploadPath: "uploads/",

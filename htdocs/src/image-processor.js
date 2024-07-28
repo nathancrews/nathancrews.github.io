@@ -2,7 +2,7 @@
 import { ImageData } from "./image-data.js"
 const ExifReader = await import('./exifreader/src/exif-reader.js')
 
-export async function ProcessImages(FilesDataArray) {
+export async function ProcessImages(FilesDataArray, canvasEl) {
 
     //  console.log("Worker FilesDataArray = ", FilesDataArray);
 
@@ -10,7 +10,7 @@ export async function ProcessImages(FilesDataArray) {
         return null;
     }
 
-    let resultArr = [];
+    let resultImageDataArr = [];
 
     for (let ii = 0; ii < FilesDataArray.length; ii++) {
         if (FilesDataArray[ii].name.length > 0) {
@@ -19,18 +19,117 @@ export async function ProcessImages(FilesDataArray) {
             imageDataMessage.name = FilesDataArray[ii].name;
             imageDataMessage.imageFileData = FilesDataArray[ii];
 
-            let imageDataResponse = await ProcessImage(imageDataMessage);
+            let imageDataResponse = await ReadImageEXIFTags(imageDataMessage);
 
             if (imageDataResponse) {
-                resultArr.push(imageDataResponse);
+                resultImageDataArr.push(imageDataResponse);
             }
         }
-    };
+    }
 
-    return resultArr;
+    console.log("Worker process images count: = ", resultImageDataArr.length);
+
+    for (let ii = 0; ii < resultImageDataArr.length; ii++) {
+ //       console.log("creating thumbnail : ", resultImageDataArr[ii].name);
+        CreateImageThumbnail(resultImageDataArr[ii], canvasEl);
+    }
+
+    return resultImageDataArr;
+};
+
+async function CreateImageThumbnail(fileImageData, canvasEl) {
+
+    let imageEl = document.createElement('img');
+    let reader = new FileReader();
+
+    imageEl.style.display = 'none';
+    imageEl.id = fileImageData.name;
+
+    async function FinalizeThumbnailImage(event) {
+        let thumbnail_local_file_url = '';
+        let thumbnail_local_file;
+        let thumb_width = 250;
+        let thumbnail_image_data;
+    
+    //    console.log('Worker FinalizeThumbnailImage called, event = ', event);
+
+        let canvasContext = canvasEl.getContext('2d');
+        let imageRatio = thumb_width / imageEl.naturalWidth;
+    
+        canvasEl.width = thumb_width;
+        canvasEl.height = 125 | (imageEl.naturalHeight * imageRatio);
+ 
+        canvasContext.fillStyle = "white";
+        canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);
+    
+        if (fileImageData.cameraDirection != 0) {
+            let rotateRads = ((fileImageData.cameraDirection) * Math.PI) / 180;
+    
+            canvasContext.translate(canvasEl.width / 2, canvasEl.height / 2);
+            canvasContext.rotate(rotateRads);
+            canvasContext.translate(-canvasEl.width / 2, -canvasEl.height / 2);
+        }
+    
+        canvasContext.drawImage(imageEl, 0, 0, canvasEl.width, canvasEl.height);
+        //        console.log('fileImageData = ', fileImageData);
+        thumbnail_image_data = canvasEl.toDataURL('image/jpeg', 50);
+    
+        thumbnail_local_file = URLToFile(thumbnail_image_data);
+        thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
+    
+        fileImageData.thumbFileName = thumbnail_local_file_url;
+        //        console.log('fileImageData.thumbFileName = ', fileImageData.thumbFileName);
+    
+        
+        let ThumbnailReadyEvent = new CustomEvent("ThumbnailReadyEvent", { async: true, detail: { ImageData: fileImageData } });
+    
+        console.log('Worker calling ThumbnailReadyEvent');
+    
+        canvasEl.dispatchEvent(ThumbnailReadyEvent);
+    }   
+
+    imageEl.onload = FinalizeThumbnailImage;
+
+    const file = fileImageData.imageFileData;
+    const url = URL.createObjectURL(file);
+
+    fileImageData.URLName = url;
+
+    imageEl.src = "";
+    imageEl.src = url;
 }
 
-export async function ProcessImage(FileData) {
+function URLToFile(imageData) {
+
+    if (!imageData) return null;
+
+    //    console.log('url = ', imageData);
+
+    let dataArray = imageData.split(',');
+
+    //    console.log('dataArray = ', dataArray);
+
+    if (dataArray.length < 2) return null;
+
+    let mimeType = dataArray[0].match(/:(.*?);/)[1];
+    let data = dataArray[1];
+
+    let dataStr = atob(data);
+    let count = dataStr.length;
+
+    let imageArray = new Uint8Array(count);
+    if (!imageArray) return null;
+
+    while (count--) {
+        imageArray[count] = dataStr.charCodeAt(count);
+    }
+
+    let ret_file = new File([imageArray], "thumb.jpg", { type: mimeType })
+
+    return ret_file;
+}
+
+export async function ReadImageEXIFTags(FileData) {
 
     //  console.log("Worker FileData = ", FileData);
 
@@ -50,7 +149,7 @@ export async function ProcessImage(FileData) {
             const addMe = new ImageData();
 
             addMe.name = FileData.imageFileData.name;
-//            addMe.URLName = path.join(imageURL, imageFilename);
+            //            addMe.URLName = path.join(imageURL, imageFilename);
             addMe.lat = tags.gps.Latitude;
             addMe.lng = tags.gps.Longitude;
             addMe.elevation = tags.gps.Altitude;
@@ -94,3 +193,4 @@ export async function ProcessImage(FileData) {
 
     return null;
 }
+
