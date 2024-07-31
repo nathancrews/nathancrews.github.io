@@ -31,7 +31,8 @@ function ProcessDropElement(dropZoneElement) {
 		e.preventDefault();
 
 		let inputElement = document.querySelector(".drop-zone__input");
-		//console.log("using inputElement:", inputElement)
+		
+		console.log("using inputElement:", inputElement)
 
 		if (inputElement) {
 
@@ -48,6 +49,12 @@ function ProcessDropElement(dropZoneElement) {
 					sb.click();
 				}
 			}
+			else 
+			{
+				console.log("e.dataTransfer: ", e.dataTransfer);
+			}
+
+
 		}
 
 		dropZoneElement.classList.remove("drop-zone--over");

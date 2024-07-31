@@ -16,8 +16,6 @@ export async function InitMap2D() {
         maxZoom: 19,
     });
 
-    // let BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L'
-    // let bingLayer = L.tileLayer.bing(BING_KEY);
 
     let googleHybrid = L.gridLayer
         .googleMutant({
@@ -37,25 +35,25 @@ export async function InitMap2D() {
             maxZoom: 20,
         })
 
-    AppUIData.map = L.map('map2d', {
-        center: [56.01877997222222, -3.7548339722222224],
+    AppMapData.map2D = L.map('map2d', {
+        center: [AppMapData.defaultLatitude, AppMapData.defaultLongitude],
         zoom: 18,
         maxZoom: 19,
         layers: [osm, Esri_Imagery, googleHybrid, googleRoadmap, googleSatellite]
     });
 
     let baseMaps = {
-        "OpenStreetMap": osm,
-        " Esri Imagery": Esri_Imagery,
+        "  Esri SatImg": Esri_Imagery,
         " Google Roads": googleRoadmap,
-        "Google Imagery": googleSatellite,
-        " Google Hybrid": googleHybrid,
+        "Google SatImg": googleSatellite,
+        "Google Hybrid": googleHybrid,
+        "OpenStreetMap": osm
     };
 
-    AppUIData.imageLayerGroup = L.layerGroup().addTo(AppUIData.map); // Create empty photos LayerGroup
+    AppUIData.imageLayerGroup = L.layerGroup().addTo(AppMapData.map2D); // Create empty photos LayerGroup
     AppUIData.layerControl = L.control.layers(baseMaps);
     AppUIData.layerControl.addOverlay(AppUIData.imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
-    AppUIData.layerControl.addTo(AppUIData.map);
+    AppUIData.layerControl.addTo(AppMapData.map2D);
 
 }
 
@@ -64,8 +62,6 @@ export async function UpdateMap2D(geoJSONResults) {
     let localgeoJSONResults = geoJSONResults;
     let fetchDataJSON;
     let retVal = false;
-    //    console.log("localgeoJSONResults = ", localgeoJSONResults);
-    //    console.log("AppMapData.geoJSONFileURL = ", AppMapData.geoJSONFileURL);
 
     if (!localgeoJSONResults && AppMapData.geoJSONFileURL && AppUIData.clientSideOnly == false) {
         try {
@@ -79,47 +75,75 @@ export async function UpdateMap2D(geoJSONResults) {
 
     if (localgeoJSONResults) {
         AppMapData.geoJSONFileData = localgeoJSONResults;
- //       console.log("AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+        //       console.log("AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
     if (AppMapData.geoJSONFileData) {
 
-        if (AppUIData.imagesLayer && AppUIData.clientSideOnly == false ) {
+        if (AppUIData.imagesLayer && AppUIData.clientSideOnly == false) {
 
             console.log("removing imageLayerGroup");
 
             AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);
-            AppUIData.map.removeLayer(AppUIData.imagesLayer);
+            AppMapData.map2D.removeLayer(AppUIData.imagesLayer);
             AppUIData.imagesLayer = null;
         }
 
-        AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
-            pointToLayer: function (point, latlng) {
-                // console.log("point = ", point)
-                 console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+       // Add new images to the EXISTING map layer
+        if (AppUIData.imagesLayer) {
+            AppUIData.imagesLayer.addData(AppMapData.geoJSONFileData, {
+                pointToLayer: function (point, latlng) {
+                    // console.log("point = ", point)
+                    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
-                let currentDroneIcon = AppMapData.droneIcon;
+                    let currentDroneIcon = AppMapData.droneIcon;
 
-                if (point.properties.thumbFileName) {
-                    currentDroneIcon = L.icon({
-                        iconUrl: point.properties.thumbFileName,
-                        iconSize: [48, 48],
-                        iconAnchor: [24, 24],
-                        popupAnchor: [0, 112]
-                    });
-                }
+                    if (point.properties.thumbFileName) {
+                        currentDroneIcon = L.icon({
+                            iconUrl: point.properties.thumbFileName,
+                            iconSize: [48, 48],
+                            iconAnchor: [24, 24],
+                            popupAnchor: [0, 112]
+                        });
+                    }
 
-                return L.marker(latlng, { icon: currentDroneIcon });
-            },
-        }).bindPopup(function (layer) {
-            return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+                    return L.marker(latlng, { icon: currentDroneIcon });
+                },
+            }).bindPopup(function (layer) {
+                return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
         <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:350px;' src='" +
-                layer.feature.properties.thumbFileName + "' /></a></div>";
-        });
+                    layer.feature.properties.thumbFileName + "' /></a></div>";
+            });
+        }
+        else {// Add new images to a NEW map layer
+            AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
+                pointToLayer: function (point, latlng)  {
+                    // console.log("point = ", point)
+                    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+
+                    let currentDroneIcon = AppMapData.droneIcon;
+
+                    if (point.properties.thumbFileName) {
+                        currentDroneIcon = L.icon({
+                            iconUrl: point.properties.thumbFileName,
+                            iconSize: [48, 48],
+                            iconAnchor: [24, 24],
+                            popupAnchor: [0, 112]
+                        });
+                    }
+
+                    return L.marker(latlng, { icon: currentDroneIcon });
+                },
+            }).bindPopup(function (layer) {
+                return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+        <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:350px;' src='" +
+                    layer.feature.properties.thumbFileName + "' /></a></div>";
+            });
+        }
 
         if (AppUIData.imagesLayer) {
             AppUIData.imageLayerGroup.addLayer(AppUIData.imagesLayer);
-            AppUIData.map.fitBounds(AppUIData.imagesLayer.getBounds());
+            AppMapData.map2D.fitBounds(AppUIData.imagesLayer.getBounds());
             retVal = true;
         }
     }
@@ -127,7 +151,30 @@ export async function UpdateMap2D(geoJSONResults) {
     return retVal;
 }
 
+function AddPointToLayer (point, latlng) {
+    // console.log("point = ", point)
+    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
+    let currentDroneIcon = AppMapData.droneIcon;
+
+    if (point.properties.thumbFileName) {
+        currentDroneIcon = L.icon({
+            iconUrl: point.properties.thumbFileName,
+            iconSize: [48, 48],
+            iconAnchor: [24, 24],
+            popupAnchor: [0, 112]
+        });
+    }
+
+    return L.marker(latlng, { icon: currentDroneIcon });
+}
+
+export async function ResetMap2DView() {
+    console.log("Re-zooming 2D Map...");
+    if (AppUIData.imagesLayer) {
+        AppMapData.map2D.fitBounds(AppUIData.imagesLayer.getBounds());
+    }
+}
 
 
 

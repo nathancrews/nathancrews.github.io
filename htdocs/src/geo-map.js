@@ -1,7 +1,7 @@
 import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
-import { InitMap2D, UpdateMap2D } from "./map-drop-view2D.js";
-import { InitMap3D, UpdateMap3D } from "./map-drop-view3D.js";
+import { InitMap2D, UpdateMap2D, ResetMap2DView } from "./map-view2D.js";
+import { InitMap3D, UpdateMap3D, ResetMap3DView } from "./map-view3D.js";
 import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
 
 
@@ -18,11 +18,7 @@ if (view2D_button_el) {
     view2D_button_el.addEventListener('click', go2D);
 }
 if (view3D_button_el) {
-    AppUIData.clientSideOnly = false;
     view3D_button_el.addEventListener('click', go3D);
-}
-else {
-    AppUIData.clientSideOnly = true;
 }
 
 InitUI();
@@ -60,6 +56,7 @@ function go2D(event) {
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
+        ResetMap2DView();
         map3D_div_el.style.display = "none";
         map2D_div_el.style.display = "block";
         console.log("view set to 2D");
@@ -71,6 +68,7 @@ function go3D(event) {
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
+        ResetMap3DView();
 
         map2D_div_el.style.display = "none";
         map3D_div_el.style.display = "block";
@@ -91,6 +89,7 @@ function InitUI() {
     AppUIData.formEl = document.getElementById("uploadForm");
     AppUIData.dirInputEl = document.getElementById("directory");
     AppUIData.loadingImageEl = document.getElementById("loading-image");
+    AppUIData.fileInputEl = document.getElementById("file");
 
     //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
 
@@ -130,7 +129,7 @@ async function OnDirChanged(event) {
     try {
         if (AppMapData.imagesLayer) {
             AppMapData.imageLayerGroup.removeLayer(imagesLayer);
-            AppMapData.map.removeLayer(imagesLayer);
+            AppMapData.map2D.removeLayer(imagesLayer);
             AppMapData.imagesLayer = null;
         }
 
@@ -181,15 +180,13 @@ async function SubmitClicked(event) {
     if (AppUIData.formEl) {
 
         try {
-            let filesEl = document.getElementById("file")
-
             if (AppUIData.loadingImageEl) {
                 AppUIData.loadingImageEl.style.display = "flex";
             }
 
             let startTime = performance.now();
 
-            const responseText = await nc_ChunkFileUploadRequests(AppUIData.formEl, filesEl);
+            const responseText = await nc_ChunkFileUploadRequests(AppUIData.formEl, AppUIData.fileInputEl);
 
             let endTime = performance.now();
 
@@ -208,7 +205,7 @@ async function SubmitClicked(event) {
                     { detail: { AppMapData: AppMapData } });
 
                 if (AppUIData.clientSideOnly == false) {
-                    ResetFileInputElement(filesEl);
+                    ResetFileInputElement(AppUIData.fileInputEl);
                 }
 
                 AppUIData.formEl.dispatchEvent(UpdateMapEvent);
