@@ -56,9 +56,9 @@ function go2D(event) {
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
-        ResetMap2DView();
         map3D_div_el.style.display = "none";
         map2D_div_el.style.display = "block";
+        ResetMap2DView();
         console.log("view set to 2D");
     }
 }
@@ -68,11 +68,10 @@ function go3D(event) {
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
-        ResetMap3DView();
-
         map2D_div_el.style.display = "none";
         map3D_div_el.style.display = "block";
         console.log("view set to 3D");
+        ResetMap3DView();
     }
 }
 
