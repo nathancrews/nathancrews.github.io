@@ -18,7 +18,7 @@ export async function UpdateMap3D(geoJSONfileURL) {
 }
 
 export async function ResetMap3DView() {
-    console.log("Re-zooming 3D Map...);
+    console.log("Re-zooming 3D Map...");
     if (AppMapData.map3D.dataSources.length > 0) {
         let dataSource = AppMapData.map3D.dataSources.get(0);
         await AppMapData.map3D.flyTo(dataSource);
