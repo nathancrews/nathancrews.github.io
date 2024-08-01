@@ -98,7 +98,13 @@ div.leaflet-popup-content{
 }
 
 .map-drop-zone-3d {
-  display:none;
+  display: block;
+	padding: 0px;
+	margin: 0px;
+}
+
+.map-drop-zone-2d {
+  display:block;
 	padding: 0px;
 	margin: 0px;
 }

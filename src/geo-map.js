@@ -51,6 +51,8 @@ if (AppUIData.formEl) {
     AppUIData.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
 }
 
+go3D(null);
+
 function go2D(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
