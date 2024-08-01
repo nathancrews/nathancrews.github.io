@@ -10,6 +10,7 @@ export function ImageData() {
         this.cameraPitch = 0.0;
         this.date = null;
         this.geoJSONval = null;
-        this.imageFileData = null
+        this.imageFileData = null;
+        this.imageHeight = 1.0;
 }
 

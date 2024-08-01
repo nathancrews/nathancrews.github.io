@@ -57,8 +57,11 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         let imageRatio = thumb_width / imageEl.naturalWidth;
     
         canvasEl.width = thumb_width;
-        canvasEl.height = 125 | (imageEl.naturalHeight * imageRatio);
- 
+        canvasEl.height = Math.min((imageEl.naturalHeight * imageRatio), 350);
+        fileImageData.imageHeight = canvasEl.height;
+        
+        console.log('canvasEl.height = ', canvasEl.height);
+
         canvasContext.fillStyle = "white";
         canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);
     
@@ -143,8 +146,6 @@ export async function ReadImageEXIFTags(FileData) {
             return null;
         }
 
-        //console.log(tags);
-
         if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
             const addMe = new ImageData();
 
@@ -183,6 +184,12 @@ export async function ReadImageEXIFTags(FileData) {
                 addMe.cameraPitch = 90;
             }
 
+            let iHeight = tags.file['Image Height'].value;
+            let iWidth = tags.file['Image Width'].value;
+
+            addMe.imageHeight = iHeight;
+            console.log("addMe.imageHeight: ", addMe.imageHeight);
+ 
             return addMe;
         }
     }

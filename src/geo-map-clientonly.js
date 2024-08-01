@@ -71,7 +71,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
 async function OnImageDropped(event) {
 
-    console.log("OnImageDropped called = ", event)
+    //console.log("OnImageDropped called = ", event)
 
     if (fileUploadForm) {
         event.preventDefault();
