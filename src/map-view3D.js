@@ -115,7 +115,7 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
                 entity.billboard.position = entity.position;
                 entity.billboard.position._value.z += 75;
                 entity.billboard.height = entity.properties.imageHeight;
-                entity.billboard.width = 250;
+                entity.billboard.width = entity.properties.imageWidth;
                 entity.billboard.image = entity.properties.thumbFileName;
                 entity.billboard.scale = 1.0;
                 entity.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;

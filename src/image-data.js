@@ -12,5 +12,7 @@ export function ImageData() {
         this.geoJSONval = null;
         this.imageFileData = null;
         this.imageHeight = 1.0;
+        this.imageWidth = 1.0;
+        this.imageRatio = 1.0;
 }
 

@@ -30,7 +30,7 @@ export async function ProcessImages(FilesDataArray, canvasEl) {
     console.log("Worker process images count: = ", resultImageDataArr.length);
 
     for (let ii = 0; ii < resultImageDataArr.length; ii++) {
- //       console.log("creating thumbnail : ", resultImageDataArr[ii].name);
+        //       console.log("creating thumbnail : ", resultImageDataArr[ii].name);
         CreateImageThumbnail(resultImageDataArr[ii], canvasEl);
     }
 
@@ -48,48 +48,60 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     async function FinalizeThumbnailImage(event) {
         let thumbnail_local_file_url = '';
         let thumbnail_local_file;
-        let thumb_width = 250;
+        let max_thumb_width = 250;
+        let max_thumb_height = 300;
         let thumbnail_image_data;
-    
-    //    console.log('Worker FinalizeThumbnailImage called, event = ', event);
+
+        //    console.log('Worker FinalizeThumbnailImage called, event = ', event);
 
         let canvasContext = canvasEl.getContext('2d');
-        let imageRatio = thumb_width / imageEl.naturalWidth;
-    
-        canvasEl.width = thumb_width;
-        canvasEl.height = Math.min((imageEl.naturalHeight * imageRatio), 350);
+        let largeImageRatio = imageEl.naturalHeight / imageEl.naturalWidth;
+        let imageRatio = max_thumb_width / max_thumb_height;
+
+        canvasEl.width = max_thumb_width;
+        canvasEl.height = (max_thumb_height * (largeImageRatio));
+
+        if (canvasEl.height > max_thumb_height){
+            canvasEl.width /= largeImageRatio;
+            canvasEl.height = max_thumb_height;
+        }
+
         fileImageData.imageHeight = canvasEl.height;
-        
-        console.log('canvasEl.height = ', canvasEl.height);
+        fileImageData.imageWidth = canvasEl.width;
+
+        fileImageData.imageRatio = fileImageData.imageWidth / fileImageData.imageHeight;
+
+        console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
+        console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
 
         canvasContext.fillStyle = "white";
         canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);
-    
+
         if (fileImageData.cameraDirection != 0) {
             let rotateRads = ((fileImageData.cameraDirection) * Math.PI) / 180;
-    
+
             canvasContext.translate(canvasEl.width / 2, canvasEl.height / 2);
             canvasContext.rotate(rotateRads);
             canvasContext.translate(-canvasEl.width / 2, -canvasEl.height / 2);
         }
-    
+
         canvasContext.drawImage(imageEl, 0, 0, canvasEl.width, canvasEl.height);
         //        console.log('fileImageData = ', fileImageData);
         thumbnail_image_data = canvasEl.toDataURL('image/jpeg', 50);
-    
+
         thumbnail_local_file = URLToFile(thumbnail_image_data);
         thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
-    
+
         fileImageData.thumbFileName = thumbnail_local_file_url;
         //        console.log('fileImageData.thumbFileName = ', fileImageData.thumbFileName);
-    
-        
+
+
         let ThumbnailReadyEvent = new CustomEvent("ThumbnailReadyEvent", { async: true, detail: { ImageData: fileImageData } });
-    
+
         console.log('Worker calling ThumbnailReadyEvent');
-    
+
         canvasEl.dispatchEvent(ThumbnailReadyEvent);
-    }   
+    }
 
     imageEl.onload = FinalizeThumbnailImage;
 
@@ -184,12 +196,11 @@ export async function ReadImageEXIFTags(FileData) {
                 addMe.cameraPitch = 90;
             }
 
-            let iHeight = tags.file['Image Height'].value;
-            let iWidth = tags.file['Image Width'].value;
+            addMe.imageHeight = tags.file['Image Height'].value;
+            addMe.imageWidth = tags.file['Image Width'].value;
 
-            addMe.imageHeight = iHeight;
-            console.log("addMe.imageHeight: ", addMe.imageHeight);
- 
+            addMe.imageRatio = addMe.imageWidth/addMe.imageHeight;
+
             return addMe;
         }
     }

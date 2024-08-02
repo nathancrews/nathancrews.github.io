@@ -124,10 +124,23 @@ export async function UpdateMap2D(geoJSONResults) {
                     let currentDroneIcon = AppMapData.droneIcon;
 
                     if (point.properties.thumbFileName) {
+                        let maxIconSize = 64;
+                        let iconWidth = maxIconSize;
+                        let iconHeight = maxIconSize;
+
+                        if (point.properties.imageRatio < 1.0){
+                            iconHeight /= point.properties.imageRatio;
+                        }
+                        else{
+                            iconWidth *= point.properties.imageRatio;
+                        }
+                        
+                        //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
+                        
                         currentDroneIcon = L.icon({
                             iconUrl: point.properties.thumbFileName,
-                            iconSize: [48, 48],
-                            iconAnchor: [24, 24],
+                            iconSize: [iconWidth, iconHeight],
+                            iconAnchor: [iconWidth/2, iconHeight/2],
                             popupAnchor: [0, 112]
                         });
                     }
