@@ -31,11 +31,11 @@ export async function ResetMap3DView() {
         let dataSource = AppMapData.map3D.dataSources.get(0);
         //console.log("dataSource...: ", dataSource);
         //console.log("AppMapData.map3D.camera: ", AppMapData.map3D.camera);
-        await AppMapData.map3D.flyTo(dataSource, { duration: 2 });
+        await AppMapData.map3D.flyTo(dataSource, { duration: 2});
 
         if (dataSource.entities._entities.length < 2) {
             console.log("Zooming single image");
-            await AppMapData.map3D.zoomTo(dataSource, new Cesium.HeadingPitchRange(0.0, -0.650, 250.0));
+            await AppMapData.map3D.zoomTo(dataSource, new Cesium.HeadingPitchRange(0.0, -0.650, 500.0));
         }
         else{
             console.log("Zooming images");
@@ -93,14 +93,6 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
 
         console.log("client side processing")
 
-        let singleDataSource = null;
-        let newEntities = null;
-
-        if (view3D.dataSources && view3D.dataSources.length > 0) {
-            singleDataSource = view3D.dataSources.get(0);
-            console.log("setting singleDataSource : ", singleDataSource);
-        }
-
         const newDataSource = await Cesium.GeoJsonDataSource.load(fileUrl_OR_Data,
             {
                 clampToGround: true,
@@ -112,17 +104,13 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
             return;
         }
 
-        newEntities = newDataSource.entities.values;
+        let newEntities = newDataSource.entities.values;
 
-        if (!singleDataSource) {
-            view3D.dataSources.removeAll();
-            singleDataSource = await view3D.dataSources.add(newDataSource);
-            console.log("Adding singleDataSource : ", singleDataSource);
-        }
-
-        if (singleDataSource && newEntities) {
+        if (newEntities) {
             for (let i = 0; i < newEntities.length; i++) {
                 let entity = newEntities[i];
+
+                //console.log("entity.properties.thumbFileName : ", entity.properties.thumbFileName);
 
                 entity.billboard.position = entity.position;
                 entity.billboard.position._value.z += 75;
@@ -135,10 +123,10 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
                 entity.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY;
                 entity.billboard.scaleByDistance = new Cesium.NearFarScalar(50, 1.0, 500, 0.1)
 
-                console.log("adding entity.billboard.image", entity.billboard.image);
+               //console.log("adding entity.billboard.image", entity.billboard.image);
+             }
 
-                singleDataSource.entities.add(entity);
-            }
+            await view3D.dataSources.add(newDataSource);
         }
     }
     else { // server side
