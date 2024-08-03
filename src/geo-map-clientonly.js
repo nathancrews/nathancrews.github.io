@@ -136,6 +136,7 @@ async function OnImageDropped(event) {
             if (AppUIData.loadingImageEl) {
                 AppUIData.loadingImageEl.style.display = "none";
             }
+            alert("Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!");
         }
     }
 }
