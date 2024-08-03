@@ -33,4 +33,5 @@ export const AppMapData = {
     baseUploadPath: "uploads/",
     geoJSONFileURL: "uploads/test_drop/geo-images.json",
     geoJSONFileName: "geo-images.json",
+    imageDataArray: [],
 }

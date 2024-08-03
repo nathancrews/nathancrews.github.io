@@ -71,8 +71,8 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
 
         fileImageData.imageRatio = fileImageData.imageWidth / fileImageData.imageHeight;
 
-        console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
-        console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
+        //console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
+        //console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
 
         canvasContext.fillStyle = "white";
         canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);

@@ -75,84 +75,54 @@ export async function UpdateMap2D(geoJSONResults) {
 
     if (localgeoJSONResults) {
         AppMapData.geoJSONFileData = localgeoJSONResults;
-        //       console.log("AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+        //console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
     if (AppMapData.geoJSONFileData) {
 
-        if (AppUIData.imagesLayer && AppUIData.clientSideOnly == false) {
-
+        if (AppUIData.imagesLayer) {
             console.log("removing imageLayerGroup");
-
             AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);
             AppMapData.map2D.removeLayer(AppUIData.imagesLayer);
             AppUIData.imagesLayer = null;
         }
 
-       // Add new images to the EXISTING map layer
-        if (AppUIData.imagesLayer) {
-            AppUIData.imagesLayer.addData(AppMapData.geoJSONFileData, {
-                pointToLayer: function (point, latlng) {
-                    // console.log("point = ", point)
-                    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
+        AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
+            pointToLayer: function (point, latlng) {
+                // console.log("point = ", point)
+                // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
-                    let currentDroneIcon = AppMapData.droneIcon;
+                let currentDroneIcon = AppMapData.droneIcon;
 
-                    if (point.properties.thumbFileName) {
-                        currentDroneIcon = L.icon({
-                            iconUrl: point.properties.thumbFileName,
-                            iconSize: [48, 48],
-                            iconAnchor: [24, 24],
-                            popupAnchor: [0, 112]
-                        });
+                if (point.properties.thumbFileName) {
+                    let maxIconSize = 64;
+                    let iconWidth = maxIconSize;
+                    let iconHeight = maxIconSize;
+
+                    if (point.properties.imageRatio < 1.0) {
+                        iconHeight /= point.properties.imageRatio;
+                    }
+                    else {
+                        iconWidth *= point.properties.imageRatio;
                     }
 
-                    return L.marker(latlng, { icon: currentDroneIcon });
-                },
-            }).bindPopup(function (layer) {
-                return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+                    //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
+
+                    currentDroneIcon = L.icon({
+                        iconUrl: point.properties.thumbFileName,
+                        iconSize: [iconWidth, iconHeight],
+                        iconAnchor: [iconWidth / 2, iconHeight / 2],
+                        popupAnchor: [0, 112]
+                    });
+                }
+
+                return L.marker(latlng, { icon: currentDroneIcon });
+            },
+        }).bindPopup(function (layer) {
+            return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
         <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:350px;' src='" +
-                    layer.feature.properties.thumbFileName + "' /></a></div>";
-            });
-        }
-        else {// Add new images to a NEW map layer
-            AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
-                pointToLayer: function (point, latlng)  {
-                    // console.log("point = ", point)
-                    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
-
-                    let currentDroneIcon = AppMapData.droneIcon;
-
-                    if (point.properties.thumbFileName) {
-                        let maxIconSize = 64;
-                        let iconWidth = maxIconSize;
-                        let iconHeight = maxIconSize;
-
-                        if (point.properties.imageRatio < 1.0){
-                            iconHeight /= point.properties.imageRatio;
-                        }
-                        else{
-                            iconWidth *= point.properties.imageRatio;
-                        }
-                        
-                        //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
-                        
-                        currentDroneIcon = L.icon({
-                            iconUrl: point.properties.thumbFileName,
-                            iconSize: [iconWidth, iconHeight],
-                            iconAnchor: [iconWidth/2, iconHeight/2],
-                            popupAnchor: [0, 112]
-                        });
-                    }
-
-                    return L.marker(latlng, { icon: currentDroneIcon });
-                },
-            }).bindPopup(function (layer) {
-                return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
-        <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:350px;' src='" +
-                    layer.feature.properties.thumbFileName + "' /></a></div>";
-            });
-        }
+                layer.feature.properties.thumbFileName + "' /></a></div>";
+        });
 
         if (AppUIData.imagesLayer) {
             AppUIData.imageLayerGroup.addLayer(AppUIData.imagesLayer);
@@ -164,7 +134,7 @@ export async function UpdateMap2D(geoJSONResults) {
     return retVal;
 }
 
-function AddPointToLayer (point, latlng) {
+function AddPointToLayer(point, latlng) {
     // console.log("point = ", point)
     // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 

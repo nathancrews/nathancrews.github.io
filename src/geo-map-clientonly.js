@@ -27,14 +27,30 @@ if (AppUIData.loadingImageEl) {
 let canvasEl = document.createElement('canvas');
 let ThumbnailReadyArray = [];
 
+function findImageDataInArray(nameStr, imageArray) {
+    let existsInArray = false;
+
+    for (let ii = 0; ii < imageArray.length; ii++) {
+        if (nameStr === imageArray[ii].name) {
+            existsInArray = true;
+            break;
+        }
+    }
+
+    return existsInArray;
+}
+
 canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
     //  console.log("ThumbnailReadyEvent called: ", evt);
 
     if (evt.detail.ImageData) {
 
-        //    console.log('evt.detail.imageData = ', evt.detail.ImageData);
-        ThumbnailReadyArray.push(evt.detail.ImageData);
+        console.log('evt.detail.imageData = ', evt.detail.ImageData);
+
+        if (evt.detail.ImageData) {
+            ThumbnailReadyArray.push(evt.detail.ImageData);
+        }
 
         console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
 
@@ -42,9 +58,13 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
             console.log("Updating Map...")
 
-            let geoJSONval = GeoJSON.parse(ThumbnailReadyArray, { Point: ['lat', 'lng', 'elevation'] });
+            AppMapData.imageDataArray = AppMapData.imageDataArray.concat(ThumbnailReadyArray);
 
-            //    console.log("result geoJSONval = ", geoJSONval)
+           // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
+
+            let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
+
+            //console.log("result geoJSONval = ", geoJSONval)
 
             AppMapData.geoJSONFileData = geoJSONval;
 
@@ -53,9 +73,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
             AppUIData.formEl.dispatchEvent(UpdateMapEvent);
 
-            //  UpdateMap2D(geoJSONval);
-
-            if (AppUIData.loadingImageEl) {
+             if (AppUIData.loadingImageEl) {
                 AppUIData.loadingImageEl.style.display = "none";
             }
 
@@ -91,17 +109,21 @@ async function OnImageDropped(event) {
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
             if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppUIData.allowedFileTypes)) {
-                files.push(allowedFiles[ii]);
+                // don't allow duplicate file names to be processed
+                if (!findImageDataInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
+                    files.push(allowedFiles[ii]);
+                }
             }
         };
 
         console.log("Allowed image files to process: ", files.length);
 
+        processingArrayCount = files.length;
+        
         if (files.length > 0) {
             resultArray = await ProcessImages(files, canvasEl);
+            processingArrayCount = resultArray.length;
         }
-
-        processingArrayCount = resultArray.length;
 
         //                console.log("clicked result resultArray = ", resultArray)
         console.log("OnDrop processingArrayCount = ", processingArrayCount)

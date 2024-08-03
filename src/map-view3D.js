@@ -31,13 +31,13 @@ export async function ResetMap3DView() {
         let dataSource = AppMapData.map3D.dataSources.get(0);
         //console.log("dataSource...: ", dataSource);
         //console.log("AppMapData.map3D.camera: ", AppMapData.map3D.camera);
-        await AppMapData.map3D.flyTo(dataSource, { duration: 2});
+        await AppMapData.map3D.flyTo(dataSource, { duration: 2 });
 
         if (dataSource.entities._entities.length < 2) {
             console.log("Zooming single image");
             await AppMapData.map3D.zoomTo(dataSource, new Cesium.HeadingPitchRange(0.0, -0.650, 500.0));
         }
-        else{
+        else {
             console.log("Zooming images");
             await AppMapData.map3D.zoomTo(dataSource);
         }
@@ -83,15 +83,15 @@ async function LoadCesium3D(viewer3D) {
 async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
 
     //console.log("AppUIData.clientSideOnly : ", AppUIData.clientSideOnly);
-
+    
     if (!view3D || (!fileUrl_OR_Data)) {
         console.log("Error: data not set");
         return;
     }
 
-    if (AppUIData.clientSideOnly == true) {
-
-        console.log("client side processing")
+    if (view3D.dataSources && view3D.dataSources.length > 0) {
+        view3D.dataSources.removeAll();
+    }
 
         const newDataSource = await Cesium.GeoJsonDataSource.load(fileUrl_OR_Data,
             {
@@ -110,8 +110,6 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
             for (let i = 0; i < newEntities.length; i++) {
                 let entity = newEntities[i];
 
-                //console.log("entity.properties.thumbFileName : ", entity.properties.thumbFileName);
-
                 entity.billboard.position = entity.position;
                 entity.billboard.position._value.z += 75;
                 entity.billboard.height = entity.properties.imageHeight;
@@ -123,63 +121,10 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
                 entity.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY;
                 entity.billboard.scaleByDistance = new Cesium.NearFarScalar(50, 1.0, 500, 0.1)
 
-               //console.log("adding entity.billboard.image", entity.billboard.image);
-             }
+              //console.log("entity.properties.thumbFileName : ", entity.properties.thumbFileName);
+              //console.log("adding entity.billboard.image", entity.billboard.image);
+            }
 
             await view3D.dataSources.add(newDataSource);
         }
-    }
-    else { // server side
-
-        console.log("Server side processing")
-        //console.log("fileUrl_OR_Data: ", fileUrl_OR_Data);
-
-        if (view3D.dataSources && view3D.dataSources.length > 0) {
-            view3D.dataSources.removeAll();
-        }
-
-        const newDataSource = await Cesium.GeoJsonDataSource.load(fileUrl_OR_Data,
-            {
-                clampToGround: true,
-                markerSize: 100
-            });
-
-        if (!newDataSource) {
-            console.log("No data loaded", fileUrl_OR_Data);
-            return;
-        }
-
-        let entities = newDataSource.entities.values;
-        console.log("1 entities", entities);
-
-        //   var center = Cesium.Cartesian3 = dataSource.
-
-        for (let i = 0; i < entities.length; i++) {
-            let entity = entities[i];
-
-            //console.log("entity.position",entity.position)
-            //console.log("entity.position._value.z",entity.position._value.z)
-
-            entity.billboard.position = entity.position;
-
-            //console.log("entity.billboard.position",entity.billboard.position)
-
-            entity.billboard.position._value.z += 75;
-
-            //console.log("entity.billboard.position",entity.billboard.position)
-            // entity.billboard.height = 150;
-
-            entity.billboard.scaleByDistance = new Cesium.NearFarScalar(100, 0.5, 500, 0.1)
-
-            entity.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY;
-            entity.billboard.scale = 1.0;
-            entity.billboard.image = entity.properties.thumbFileName;
-            entity.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-            entity.billboard.verticalOrigin = Cesium.VerticalOrigin.BASELINE;
-
-
-        }
-
-        await view3D.dataSources.add(newDataSource);
-    }
 }
