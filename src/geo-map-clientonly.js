@@ -24,6 +24,8 @@ if (AppUIData.loadingImageEl) {
     AppUIData.loadingImageEl.style.display = "none";
 }
 
+InitSettingsUI();
+
 let canvasEl = document.createElement('canvas');
 let ThumbnailReadyArray = [];
 
@@ -36,7 +38,6 @@ function findImageDataInArray(nameStr, imageArray) {
             break;
         }
     }
-
     return existsInArray;
 }
 
@@ -46,7 +47,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
     if (evt.detail.ImageData) {
 
-        console.log('evt.detail.imageData = ', evt.detail.ImageData);
+        //console.log('evt.detail.imageData = ', evt.detail.ImageData);
 
         if (evt.detail.ImageData) {
             ThumbnailReadyArray.push(evt.detail.ImageData);
@@ -60,7 +61,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
             AppMapData.imageDataArray = AppMapData.imageDataArray.concat(ThumbnailReadyArray);
 
-           // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
+            // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
 
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
 
@@ -73,7 +74,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
             AppUIData.formEl.dispatchEvent(UpdateMapEvent);
 
-             if (AppUIData.loadingImageEl) {
+            if (AppUIData.loadingImageEl) {
                 AppUIData.loadingImageEl.style.display = "none";
             }
 
@@ -119,7 +120,7 @@ async function OnImageDropped(event) {
         console.log("Allowed image files to process: ", files.length);
 
         processingArrayCount = files.length;
-        
+
         if (files.length > 0) {
             resultArray = await ProcessImages(files, canvasEl);
             processingArrayCount = resultArray.length;
@@ -139,4 +140,74 @@ async function OnImageDropped(event) {
             alert("Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!");
         }
     }
+}
+
+function InitSettingsUI() {
+    ///////////////////////////////////////////////////////////////////
+    // Set up the settings button and dialog
+    ///////////////////////////////////////////////////////////////////
+    let settingsDialog = document.getElementById("settings-modal");
+    // Get the settings open button
+    let settingsButton = document.getElementById("settings-button");
+    // Get the <span> element that closes settings
+    let span = document.getElementsByClassName("settings-close")[0];
+    let mapIconSelector = document.getElementById("map-icon-selector");
+    let settingsModalContent = document.getElementById("settings-modal-content");
+    let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
+    let settingsIconFieldset = document.getElementById("settings-form-fieldset");
+    let settingsIconPreview = document.getElementById("settings-icon-2d");
+    let settingsIconLegend = document.getElementById("settings-map-icon2d");
+
+
+    mapIconSelector.value = AppMapData.imageIcon2D;
+
+    let settingsIcon2d = document.getElementById("settings-icon-2d");
+
+    settingsButton.onclick = function (event) {
+        event.preventDefault = true;
+        settingsDialog.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        settingsDialog.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == settingsButton) { return; }
+
+        if (settingsDialog.style.display == 'block') {
+            if ((event.target != settingsDialog) && (event.target != mapIconSelector) &&
+                (event.target != settingsIcon2d) && (event.target != settingsModalContent) &&
+                (event.target != settingsModalContentIcon) &&
+                (event.target != settingsIconFieldset) &&
+                (event.target != settingsIconPreview) &&
+                (event.target != settingsIconLegend)) {
+                settingsDialog.style.display = 'none';
+            }
+        }
+    }
+
+    mapIconSelector.onchange = function (event) {
+        console.log("event.target.value: ", event.target.value)
+
+        switch (event.target.value) {
+            case 'thumbnail':
+                settingsIcon2d.src = 'images/image-thumb.png';
+                break;
+            case 'drone2d':
+                settingsIcon2d.src = 'images/drone-icon.jpg';
+                break;
+        }
+
+        AppMapData.imageIcon2D = event.target.value;
+
+        UpdateMap2D(AppMapData.geoJSONFileData);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    // End of settings UI
+    ///////////////////////////////////////////////////////////////////
+
 }

@@ -1,25 +1,49 @@
 .map-body {
-    width: 100%;
-    height: 100%;
-    display: block;
-    background-image: url(../images/dark-geometry.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-image: url(../images/dark-geometry.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
-  .map-h1 {
-    text-align: center;
-    color: azure;
-  }
-  
-  .map-h2 {
-    text-align: center;
-    color: white;
-    background-color: black;
-    z-index: 1000;
-  }
-  
+.map-controls {
+  width:75%;
+}
+
+.map-span-buttons {
+  width:75%;
+}
+.map-button-2d {
+  margin-left:25px; 
+  margin-right:25px
+}
+
+.map-button-3d{
+  padding-top: 0px;
+}
+
+.map-loading-image {
+  display: flex;
+  margin-top: -30px;
+  width: 50px;
+  height: 50px;
+  margin-left: 65%;
+}
+
+.map-h1 {
+  text-align: center;
+  color: azure;
+}
+
+.map-h2 {
+  text-align: center;
+  color: white;
+  background-color: black;
+  z-index: 1000;
+}
+
 .map-base {
   max-width: 96%;
   min-width: 600px;
@@ -48,72 +72,64 @@
   min-height: 75px;
 }
 
-div.leaflet-popup-content{
+div.leaflet-popup-content {
   width: 260px;
   height: 360px;
 }
 
-.map-loading-image {
-  display: flex;
-  margin-top: -30px;
+.map-form-loading-image {
+  margin-top: -45px;
   width: 50px;
   height: 50px;
-  margin-left: 45%;
+  margin-left: 55%;
 }
 
-.map-form-loading-image {
-    margin-top: -45px;
-    width: 50px;
-    height: 50px;
-    margin-left: 55%;
- }
-
- .map-form-input{
-    font-size: large;
-    max-width: max-content;
-    margin-left: 15px;
-    color:white;
+.map-form-input {
+  font-size: large;
+  max-width: max-content;
+  margin-left: 15px;
+  color: white;
 }
 
-.map-form-input-text{
-    font-size: large;
-    height: 25px;
+.map-form-input-text {
+  font-size: large;
+  height: 25px;
 }
 
 .map-drop-zone {
-	width: 100%;
-	height: 85dvh;
-	/* padding: 25px; */
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	font-family: "Quicksand", sans-serif;
-	font-weight: 500;
-	font-size: 20px;
-	cursor: pointer;
-	color: #cccccc;
-	border: 4px dashed #009578;
-	border-radius: 10px;
+  width: 100%;
+  height: 85dvh;
+  /* padding: 25px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  cursor: pointer;
+  color: #cccccc;
+  border: 4px dashed #009578;
+  border-radius: 10px;
 }
 
 .map-drop-zone-3d {
   display: block;
-	padding: 0px;
-	margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .map-drop-zone-2d {
-  display:block;
-	padding: 0px;
-	margin: 0px;
+  display: block;
+  padding: 0px;
+  margin: 0px;
 }
 
 .map-drop-zone--over {
-	border-style: solid;
-	border-color: limegreen;
+  border-style: solid;
+  border-color: limegreen;
 }
 
 .map-drop-zone__input {
-	display: none;
+  display: none;
 }

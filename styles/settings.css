@@ -1,0 +1,74 @@
+.settings-button{
+    vertical-align: middle;
+    padding-top: 0px;
+    width:25px;
+    height:25px;
+}
+
+.settings-map-icon-selector {
+    height: fit-content;
+    background-color: #aaaaaa;
+}
+
+.settings-modal {
+    color: #aaaaaa;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 33%;
+    top: 0;
+    width: fit-content; /* Full width */
+    height: fit-content; /* Full height */
+    overflow: none; /* Enable scroll if needed */
+    background-color: none;
+  }
+
+.settings-form-fieldset {
+  display:flex;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}  
+
+.settings-map-icon2d {
+   border-style: none;
+}
+
+.settings-icon-2d {
+    margin-left: 25px;
+    border: 3px solid aaaaaa;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+}
+
+
+  /* Modal Content */
+  .settings-modal-content {
+    display: flex;
+    background-color: rgb(54, 54, 54);
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-left: 10px;
+  }
+  
+  /* The Close Button */
+  .settings-close {
+    margin-top: 0px;
+    margin-left: 15px;
+    margin-right: 10px;
+    vertical-align: top;
+    padding: 0px;
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .settings-close:hover,
+  .settings-close:focus {
+    color: rgb(0, 252, 0);
+    text-decoration: none;
+    cursor: pointer;
+  }
+

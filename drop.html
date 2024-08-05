@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Drag and Drop File Image Mapper</title>
+    <title>Image Mapper</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -16,22 +16,45 @@
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Cesium.js" defer></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/nc-map.css" />
+    <link rel="stylesheet" href="styles/settings.css" />
     <script src="./src/geojson/geojson.min.js" defer></script>
-    <script src="./src/geo-map.js" type="module" defer></script>
+    <script src="./src/geo-map-clientonly.js" type="module" defer></script>
 </head>
 
 <body class="map-body">
     <header id="loading-header" name="loading-header" class="map-loading">
-        <h2 class="map-h2">Drag & Drop images on Map Below</h2>
-        <img id="loading-image" name="loading-image" src="images/loading.gif" class="map-loading-image" />
+        <h2 class="map-h2">Geo-code images on map by dropping image file(s) on the map</h2>
+        <div class="map-controls">
+            <img id="settings-button" alt="Map Settings" src="images/global-settings.png" class="settings-button">
+            <span class="map-span-buttons">
+                <button id="view2d" class="map-button-2d">View 2D Map</button>
+                <button id="view3d" class="map-button-3d">View 3D Map</button>
+                <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
+            </span>
+        </div>
+        <div id="settings-modal" class="settings-modal">
+            <!-- Modal settings dialog -->
+            <form id="settings-modal-content" class="settings-modal-content">
+                <fieldset id="settings-form-fieldset" class="settings-form-fieldset">
+                <legend id="settings-map-icon2d" class="settings-map-icon2d">2D Map Icon</legend>
+                    <!-- <label for="map-icon-selector"></label> -->
+                    <select id="map-icon-selector" class="settings-map-icon-selector" title="Mapping Icon">
+                        <option value="thumbnail">Image Thumbnail</option>
+                        <option value="drone2d">Drone</option>
+                    </select>
+                    <img id="settings-icon-2d" class="settings-icon-2d" src="images/image-thumb.png">
+                    </figure>
+            </fieldset>
+            <span class="settings-close">&times;</span>
+            </form>
+        </div>
     </header>
     <div class="map-drop-with-loading">
         <div class="drop-zone">
-            <span>To See Map, Drop Image File(s) Here</span>
             <form id="uploadForm" method="post" enctype="multipart/form-data" action="" target="results" hidden="true">
                 <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
-                <!-- <input id="redirectCGI" name="redirectCGI" hidden="true"
-                    value="image-geo/image-mapper.js?dir=%s&response_type=html" /> -->
+                <input id="redirectCGI" name="redirectCGI" hidden="true"
+                    value="image-geo/image-mapper.js?dir=%s&response_type=html" />
                 <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
                 <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
                 <label for="directory" hidden="false">Directory Name:</label>
@@ -44,103 +67,8 @@
             </form>
         </div>
     </div>
-    <div id="map2d" class="map-drop-zone map-base"></div>
-
-    <script type="module">
-        import { AppMapData, AppUIData, UpdateMapEvent } from "./src/app-data.js";
-        import { InitMap2D, UpdateMap2D } from "./src/map-drop-view2D.js";
-        import { nc_IsFileTypeAllowed } from "./src/nc_file_upload_client.js";
-        import { ImageData } from "./src/image-data.js"
-        import { ProcessImages } from "./src/image-processor.js"
-
-        let processingArrayCount = 0;
-        let resultArray = [];
-
-        const fileUploadForm = document.getElementById("uploadForm");
-
-        //console.log("fileUploadForm = ", fileUploadForm)
-        if (fileUploadForm) {
-            fileUploadForm.addEventListener("submit", OnImageDropped);
-        }
-
-        // var loadingImageEl = document.getElementById("loading-image");
-        if (AppUIData.loadingImageEl) {
-            AppUIData.loadingImageEl.style.display = "none";
-        }
-
-        let canvasEl = document.createElement('canvas');
-        let ThumbnailReadyArray = [];
-
-        canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
-
-          //  console.log("ThumbnailReadyEvent called: ", evt);
-
-            if (evt.detail.ImageData) {
-
-                //    console.log('evt.detail.imageData = ', evt.detail.ImageData);
-                ThumbnailReadyArray.push(evt.detail.ImageData);
-
-                console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
-
-                if (processingArrayCount == (ThumbnailReadyArray.length)) {
-
-                    console.log("Updating Map...")
-
-                    let geoJSONval = GeoJSON.parse(ThumbnailReadyArray, { Point: ['lat', 'lng', 'elevation'] });
-
-                    //    console.log("result geoJSONval = ", geoJSONval)
-
-                    UpdateMap2D(geoJSONval);
-
-                    if (AppUIData.loadingImageEl) {
-                        AppUIData.loadingImageEl.style.display = "none";
-                    }
-
-                    // clear the array and count for the next drop operation
-                    ThumbnailReadyArray = [];
-                    processingArrayCount = 0;
-                }
-                else {
-                    console.log("waiting for complete results array.... ")
-                }
-            }
-        });
-
-        async function OnImageDropped(event) {
-
-            // console.log("OnImageDropped called = ", event)
-
-            if (fileUploadForm) {
-                event.preventDefault();
-
-                if (AppUIData.loadingImageEl) {
-                    AppUIData.loadingImageEl.style.display = "flex";
-                }
-
-                let startTime = performance.now();
-
-                var filesEl = document.getElementById("file");
-                const files = filesEl.files;
-
-                resultArray = await ProcessImages(files, canvasEl);
-
-                processingArrayCount = resultArray.length;
-
-//                console.log("clicked result resultArray = ", resultArray)
-                console.log("OnDrop processingArrayCount = ", processingArrayCount)
-
-                let endTime = performance.now();
-
-                console.log(`OnDrop ProcessImages took ${endTime - startTime}ms`)
-
-                if (processingArrayCount == 0) {
-                    if (AppUIData.loadingImageEl) {
-                        AppUIData.loadingImageEl.style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
+    <div id="map2d" class="map-drop-zone map-base map-drop-zone-2d"></div>
+    <div id="map3d" class="map-drop-zone map-base map-drop-zone-3d"></div>
 </body>
 
 </html>

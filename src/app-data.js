@@ -20,6 +20,7 @@ export const AppMapData = {
     imagesLayer: null,
     layerControl: null,
     imageLayerGroup: null,
+    imageIcon2D: "thumbnail",
     droneIcon: L.icon({
         iconUrl: 'images/drone-icon.jpg',
         iconSize: [24, 24],

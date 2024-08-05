@@ -17,36 +17,36 @@ export async function InitMap2D() {
     });
 
 
-    let googleHybrid = L.gridLayer
-        .googleMutant({
-            type: "hybrid", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
-            maxZoom: 20,
-        })
+    // let googleHybrid = L.gridLayer
+    //     .googleMutant({
+    //         type: "hybrid", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+    //         maxZoom: 20,
+    //     })
 
-    let googleRoadmap = L.gridLayer
-        .googleMutant({
-            type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
-            maxZoom: 20,
-        })
+    // let googleRoadmap = L.gridLayer
+    //     .googleMutant({
+    //         type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+    //         maxZoom: 20,
+    //     })
 
-    let googleSatellite = L.gridLayer
-        .googleMutant({
-            type: "satellite", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
-            maxZoom: 20,
-        })
+    // let googleSatellite = L.gridLayer
+    //     .googleMutant({
+    //         type: "satellite", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+    //         maxZoom: 20,
+    //     })
 
     AppMapData.map2D = L.map('map2d', {
         center: [AppMapData.defaultLatitude, AppMapData.defaultLongitude],
         zoom: 18,
         maxZoom: 19,
-        layers: [osm, Esri_Imagery, googleHybrid, googleRoadmap, googleSatellite]
+        layers: [osm, Esri_Imagery /*, googleHybrid, googleRoadmap, googleSatellite */]
     });
 
     let baseMaps = {
         "  Esri SatImg": Esri_Imagery,
-        " Google Roads": googleRoadmap,
-        "Google SatImg": googleSatellite,
-        "Google Hybrid": googleHybrid,
+        // " Google Roads": googleRoadmap,
+        // "Google SatImg": googleSatellite,
+        // "Google Hybrid": googleHybrid,
         "OpenStreetMap": osm
     };
 
@@ -89,31 +89,32 @@ export async function UpdateMap2D(geoJSONResults) {
 
         AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
             pointToLayer: function (point, latlng) {
-                // console.log("point = ", point)
+                //console.log("AppMapData.imageIcon2D = ", AppMapData.imageIcon2D)
                 // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
                 let currentDroneIcon = AppMapData.droneIcon;
 
-                if (point.properties.thumbFileName) {
-                    let maxIconSize = 64;
-                    let iconWidth = maxIconSize;
-                    let iconHeight = maxIconSize;
+                if (AppMapData.imageIcon2D == "thumbnail") {
+                    if (point.properties.thumbFileName) {
+                        let maxIconSize = 64;
+                        let iconWidth = maxIconSize;
+                        let iconHeight = maxIconSize;
 
-                    if (point.properties.imageRatio < 1.0) {
-                        iconHeight /= point.properties.imageRatio;
+                        if (point.properties.imageRatio < 1.0) {
+                            iconHeight /= point.properties.imageRatio;
+                        }
+                        else {
+                            iconWidth *= point.properties.imageRatio;
+                        }
+
+                        //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
+                        currentDroneIcon = L.icon({
+                            iconUrl: point.properties.thumbFileName,
+                            iconSize: [iconWidth, iconHeight],
+                            iconAnchor: [iconWidth / 2, iconHeight / 2],
+                            popupAnchor: [0, 112]
+                        });
                     }
-                    else {
-                        iconWidth *= point.properties.imageRatio;
-                    }
-
-                    //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
-
-                    currentDroneIcon = L.icon({
-                        iconUrl: point.properties.thumbFileName,
-                        iconSize: [iconWidth, iconHeight],
-                        iconAnchor: [iconWidth / 2, iconHeight / 2],
-                        popupAnchor: [0, 112]
-                    });
                 }
 
                 return L.marker(latlng, { icon: currentDroneIcon });
