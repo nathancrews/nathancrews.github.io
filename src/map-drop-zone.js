@@ -9,7 +9,7 @@ function InitDropElements(dropElements) {
 function ProcessDropElement(dropZoneElement) {
 
 	//console.log("setting up drop zone element:", dropZoneElement)
-	let inputElement = document.querySelector(".map-drop-zone__input");
+	let inputElement = document.getElementById("upload-files");
 
 	inputElement.onchange = function (event) {
 		event.preventDefault();

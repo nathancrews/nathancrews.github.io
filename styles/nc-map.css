@@ -41,6 +41,13 @@
   height:25px;
 }
 
+.map-file-upload-button {
+  vertical-align: middle;
+  margin: 5px;
+  width: 100px;
+  height: 25px;
+}
+
 .settings-button:hover {
   background-color: gainsboro;
 }

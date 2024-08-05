@@ -218,13 +218,21 @@ function InitAppUI() {
 
 	let uploadFilesButton = document.getElementById("upload-files");
 
-	uploadFilesButton.onclick = function (event) {
+	uploadFilesButton.onchange = function (event) {
 		event.preventDefault();
-        let inputElement = document.querySelector(".map-drop-zone__input");
-		if (inputElement){
-			inputElement.click();
-		}
+
+        AppUIData.fileInputEl = uploadFilesButton;
+
+        OnImageDropped(event);
 	};
+
+	// uploadFilesButton.onclick = function (event) {
+	// 	event.preventDefault();
+    //     let inputElement = document.querySelector(".map-drop-zone__input");
+	// 	if (inputElement){
+	// 		inputElement.click();
+	// 	}
+	// };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {

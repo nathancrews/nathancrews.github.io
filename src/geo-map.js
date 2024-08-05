@@ -53,7 +53,7 @@ function InitUI() {
     AppUIData.formEl = document.getElementById("uploadForm");
     AppUIData.dirInputEl = document.getElementById("directory");
     AppUIData.loadingImageEl = document.getElementById("loading-image");
-    AppUIData.fileInputEl = document.getElementById("file");
+    AppUIData.fileInputEl = document.getElementById("upload-files");
 
     //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
 
