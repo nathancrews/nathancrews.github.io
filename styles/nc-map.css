@@ -9,7 +9,7 @@
 }
 
 .map-menu-bar {
-  display:flex;
+  display: block;
   width: fit-content;
   color: #aaaaaa;
   background-color: #aaaaaa;

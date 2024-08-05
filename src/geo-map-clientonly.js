@@ -192,6 +192,23 @@ function InitSettingsUI() {
     let settingsIconPreview = document.getElementById("settings-icon-2d");
     let settingsIconLegend = document.getElementById("settings-map-icon2d");
 
+    let mapMenu = document.getElementById("map-menu");
+    let mapMenuBar = document.getElementById("map-menu-bar");
+
+    if (mapMenu && mapMenuBar) {
+        mapMenu.onclick = function (event) {
+            event.preventDefault = true;
+
+            //console.log("mapMenuBar.style.display: ", mapMenuBar.style.display)
+
+            if (!mapMenuBar.style.display || mapMenuBar.style.display === "block") {
+                mapMenuBar.style.display = "none";
+            }
+            else {
+                mapMenuBar.style.display = "block";
+            }
+        }
+    }
 
     mapIconSelector.value = AppMapData.imageIcon2D;
 
@@ -206,6 +223,16 @@ function InitSettingsUI() {
     span.onclick = function () {
         settingsDialog.style.display = "none";
     }
+
+	let uploadFilesButton = document.getElementById("upload-files");
+
+	uploadFilesButton.onclick = function (event) {
+		event.preventDefault();
+        let inputElement = document.querySelector(".map-drop-zone__input");
+		if (inputElement){
+			inputElement.click();
+		}
+	};
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
@@ -224,7 +251,7 @@ function InitSettingsUI() {
     }
 
     mapIconSelector.onchange = function (event) {
-        console.log("event.target.value: ", event.target.value)
+       // console.log("event.target.value: ", event.target.value)
 
         switch (event.target.value) {
             case 'thumbnail':

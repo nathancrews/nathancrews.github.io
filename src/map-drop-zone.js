@@ -9,6 +9,16 @@ function InitDropElements(dropElements) {
 function ProcessDropElement(dropZoneElement) {
 
 	//console.log("setting up drop zone element:", dropZoneElement)
+	let inputElement = document.querySelector(".map-drop-zone__input");
+
+	inputElement.onchange = function (event) {
+		event.preventDefault();
+		let sb = document.querySelectorAll("[type=submit]")[0];
+
+		if (sb) {
+			sb.click();
+		}
+	};
 
 	dropZoneElement.addEventListener("dragover", (e) => {
 		e.preventDefault();
@@ -31,36 +41,31 @@ function ProcessDropElement(dropZoneElement) {
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
 
-		let inputElement = document.querySelector(".map-drop-zone__input");
-		//console.log("using inputElement:", inputElement)
-
 		if (inputElement) {
 
 			if (e.dataTransfer.files.length) {
 				inputElement.files = e.dataTransfer.files;
 
-				var sb = document.querySelectorAll("[type=submit]")[0];
-
-				//console.log("calling click on:", sb)
+				let sb = document.querySelectorAll("[type=submit]")[0];
 
 				if (sb) {
-					//	console.log("calling click on:", sb)
 					sb.click();
 				}
 			}
 			else {
 				let fileUrl = e.dataTransfer.getData('Text');
 
-//				url2blob(fileUrl);
+				//				url2blob(fileUrl);
 
 				console.log("e.dataTransfer.getData('Text'): ", fileUrl);
 
-				var response = fetch(fileUrl, { mode: "no-cors"
+				let response = fetch(fileUrl, {
+					mode: "no-cors"
 				}).then(res => { console.log(res); res.blob() })
 					.then(blob => {
 						console.log(blob);
 
-						let fileFromUrl = new File([blob], 'image', {type: blob.type});
+						let fileFromUrl = new File([blob], 'image', { type: blob.type });
 						console.log(fileFromUrl);
 
 						let resFile = ReadDataFile(fileFromUrl);
@@ -92,7 +97,7 @@ function ReadDataFile(urlToRead) {
 	});
 
 	console.log(fr.readAsDataURL(urlToRead));
-	
+
 }
 
 async function url2blob(url) {
