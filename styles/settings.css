@@ -6,7 +6,7 @@
 }
 
 .settings-modal {
-    color: #aaaaaa;
+    color: black;
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1000; /* Sit on top */
@@ -31,7 +31,7 @@
 
 .settings-icon-2d {
     margin-left: 25px;
-    border: 3px solid aaaaaa;
+    border: 3px solid #aaaaaa;
     text-align: center;
     width: 50px;
     height: 50px;
@@ -41,7 +41,8 @@
   /* Modal Content */
   .settings-modal-content {
     display: flex;
-    background-color: rgb(54, 54, 54);
+    width:fit-content;
+    background-color: #aaaaaa;
     margin-top: 25px;
     margin-bottom: 25px;
     padding-left: 10px;
@@ -54,7 +55,7 @@
     margin-right: 10px;
     vertical-align: top;
     padding: 0px;
-    color: #aaaaaa;
+    color:black;
     float: right;
     font-size: 28px;
     font-weight: bold;

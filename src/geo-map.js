@@ -1,7 +1,7 @@
 import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
-import { InitMap2D, UpdateMap2D, ResetMap2DView } from "./map-view2D.js";
-import { InitMap3D, UpdateMap3D, ResetMap3DView } from "./map-view3D.js";
+import { InitMap2D, UpdateMap2D } from "./map-view2D.js";
+import { InitMap3D, UpdateMap3D } from "./map-view3D.js";
 import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
 
 
@@ -10,16 +10,6 @@ import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_uplo
 // Main Image Drop Map Initialization
 //
 ///////////////////////////////////////////////////////////////
-
-let view2D_button_el = document.getElementById("view2d");
-let view3D_button_el = document.getElementById("view3d");
-
-if (view2D_button_el) {
-    view2D_button_el.addEventListener('click', go2D);
-}
-if (view3D_button_el) {
-    view3D_button_el.addEventListener('click', go3D);
-}
 
 InitUI();
 
@@ -54,37 +44,6 @@ export async function UpdateMaps(event) {
 if (AppUIData.formEl) {
     AppUIData.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
 }
-
-go3D(null);
-
-function go2D(event) {
-    let map2D_div_el = document.getElementById("map2d");
-    let map3D_div_el = document.getElementById("map3d");
-
-    if (map2D_div_el && map3D_div_el) {
-        map3D_div_el.style.display = "none";
-        map2D_div_el.style.display = "block";
-        ResetMap2DView();
-        console.log("view set to 2D");
-    }
-}
-
-function go3D(event) {
-    let map2D_div_el = document.getElementById("map2d");
-    let map3D_div_el = document.getElementById("map3d");
-
-    if (map2D_div_el && map3D_div_el) {
-        map2D_div_el.style.display = "none";
-        map3D_div_el.style.display = "block";
-        console.log("view set to 3D");
-        ResetMap3DView();
-    }
-}
-
-///////////////////////////////////////////////////////////////
-//
-///////////////////////////////////////////////////////////////
-
 
 //************************************
 // Attach event listeners

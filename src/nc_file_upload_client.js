@@ -107,7 +107,7 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
             if (doAction === true && response && response.status >= 200 && response.status < 300) {
 
                 var responseRes = await response.text();
-                   //console.log("responseRes=", responseRes)
+                console.log("responseRes=", responseRes)
                 return responseRes;
             }
 

@@ -4,7 +4,8 @@ import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
 // set AppUIData.clientSideOnly = false (default) for server-side image uploading and processing
 AppUIData.clientSideOnly = true;
 
-import { InitMap2D, UpdateMap2D } from "./map-view2D.js";
+import { UpdateMap2D, ResetMap2DView } from "./map-view2D.js";
+import { UpdateMap3D, ResetMap3DView } from "./map-view3D.js";
 import { ImageData } from "./image-data.js"
 import { nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
 import { ProcessImages } from "./image-processor.js"
@@ -24,41 +25,9 @@ if (AppUIData.loadingImageEl) {
     AppUIData.loadingImageEl.style.display = "none";
 }
 
-InitSettingsUI();
+InitAppUI();
 
-const saveMapButton = document.getElementById("save-map");
-const loadMapButton = document.getElementById("load-map");
-
-if (saveMapButton) {
-    saveMapButton.addEventListener("click", SaveMap);
-}
-
-if (loadMapButton) {
-    loadMapButton.addEventListener("click", LoadMap);
-}
-
-function SaveMap() {
-    const geoJSON = JSON.stringify(AppMapData.geoJSONFileData);
-    window.localStorage.setItem("imapper:geoJSON", geoJSON);
-    console.log("saved: ", geoJSON);
-}
-
-function LoadMap() {
-    let geoJSON = window.localStorage.getItem("imapper:geoJSON");
-    AppMapData.geoJSONFileData = JSON.parse(geoJSON);
-    console.log("loaded: ", AppMapData.geoJSONFileData);
-
-    if (AppUIData.formEl) {
-        let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-            { detail: { AppMapData: AppMapData } });
-
-        if (AppUIData.loadingImageEl) {
-            AppUIData.loadingImageEl.style.display = "block";
-        }
-
-        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
-    }
-}
+Show3D(null);
 
 let canvasEl = document.createElement('canvas');
 let ThumbnailReadyArray = [];
@@ -176,7 +145,7 @@ async function OnImageDropped(event) {
     }
 }
 
-function InitSettingsUI() {
+function InitAppUI() {
     ///////////////////////////////////////////////////////////////////
     // Set up the settings button and dialog
     ///////////////////////////////////////////////////////////////////
@@ -210,6 +179,29 @@ function InitSettingsUI() {
         }
     }
 
+    const saveMapButton = document.getElementById("save-map");
+    const loadMapButton = document.getElementById("load-map");
+    
+    if (saveMapButton) {
+        saveMapButton.addEventListener("click", SaveMap);
+    }
+    
+    if (loadMapButton) {
+        loadMapButton.addEventListener("click", LoadMap);
+    }
+    
+    let view2D_button_el = document.getElementById("view2d");
+    let view3D_button_el = document.getElementById("view3d");
+    
+    if (view2D_button_el) {
+        view2D_button_el.addEventListener('click', Show2D);
+    }
+    if (view3D_button_el) {
+        view3D_button_el.addEventListener('click', Show3D);
+    }
+    
+
+    // Settings dialog UI
     mapIconSelector.value = AppMapData.imageIcon2D;
 
     let settingsIcon2d = document.getElementById("settings-icon-2d");
@@ -271,4 +263,51 @@ function InitSettingsUI() {
     // End of settings UI
     ///////////////////////////////////////////////////////////////////
 
+}
+
+function Show2D(event) {
+    let map2D_div_el = document.getElementById("map2d");
+    let map3D_div_el = document.getElementById("map3d");
+
+    if (map2D_div_el && map3D_div_el) {
+        map3D_div_el.style.display = "none";
+        map2D_div_el.style.display = "block";
+        ResetMap2DView();
+        console.log("view set to 2D");
+    }
+}
+
+function Show3D(event) {
+    let map2D_div_el = document.getElementById("map2d");
+    let map3D_div_el = document.getElementById("map3d");
+
+    if (map2D_div_el && map3D_div_el) {
+        map2D_div_el.style.display = "none";
+        map3D_div_el.style.display = "block";
+        ResetMap3DView();
+        console.log("view set to 3D");
+    }
+}
+
+function SaveMap() {
+    const geoJSON = JSON.stringify(AppMapData.geoJSONFileData);
+    window.localStorage.setItem("imapper:geoJSON", geoJSON);
+    console.log("saved: ", geoJSON);
+}
+
+function LoadMap() {
+    let geoJSON = window.localStorage.getItem("imapper:geoJSON");
+    AppMapData.geoJSONFileData = JSON.parse(geoJSON);
+    console.log("loaded: ", AppMapData.geoJSONFileData);
+
+    if (AppUIData.formEl) {
+        let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
+            { detail: { AppMapData: AppMapData } });
+
+        if (AppUIData.loadingImageEl) {
+            AppUIData.loadingImageEl.style.display = "block";
+        }
+
+        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
+    }
 }
