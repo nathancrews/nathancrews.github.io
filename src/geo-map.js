@@ -43,6 +43,10 @@ export async function UpdateMaps(event) {
 
     await UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
 
+    if (AppUIData.loadingImageEl) {
+        AppUIData.loadingImageEl.style.display = "none";
+    }
+    
     endTime = performance.now();
     console.log(`UpdateMap3D took ${endTime - startTime}ms`)
 }

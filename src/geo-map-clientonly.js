@@ -26,6 +26,40 @@ if (AppUIData.loadingImageEl) {
 
 InitSettingsUI();
 
+const saveMapButton = document.getElementById("save-map");
+const loadMapButton = document.getElementById("load-map");
+
+if (saveMapButton) {
+    saveMapButton.addEventListener("click", SaveMap);
+}
+
+if (loadMapButton) {
+    loadMapButton.addEventListener("click", LoadMap);
+}
+
+function SaveMap() {
+    const geoJSON = JSON.stringify(AppMapData.geoJSONFileData);
+    window.localStorage.setItem("imapper:geoJSON", geoJSON);
+    console.log("saved: ", geoJSON);
+}
+
+function LoadMap() {
+    let geoJSON = window.localStorage.getItem("imapper:geoJSON");
+    AppMapData.geoJSONFileData = JSON.parse(geoJSON);
+    console.log("loaded: ", AppMapData.geoJSONFileData);
+
+    if (AppUIData.formEl) {
+        let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
+            { detail: { AppMapData: AppMapData } });
+
+        if (AppUIData.loadingImageEl) {
+            AppUIData.loadingImageEl.style.display = "block";
+        }
+
+        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
+    }
+}
+
 let canvasEl = document.createElement('canvas');
 let ThumbnailReadyArray = [];
 
