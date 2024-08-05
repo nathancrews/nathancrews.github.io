@@ -27,7 +27,7 @@ if (AppUIData.loadingImageEl) {
 
 InitAppUI();
 
-Show3D(null);
+Show2D(null);
 
 let canvasEl = document.createElement('canvas');
 let ThumbnailReadyArray = [];
