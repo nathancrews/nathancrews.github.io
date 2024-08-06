@@ -193,7 +193,7 @@ function ResetFileInputElement(existingFileInputEl) {
 
     if (newFileInputEl) {
         newFileInputEl.setAttribute('type', 'file');
-        newFileInputEl.setAttribute('id', 'file');
+        newFileInputEl.setAttribute('id', 'upload-files');
         newFileInputEl.setAttribute('name', 'file');
         newFileInputEl.setAttribute('class', 'map-drop-zone__input');
         newFileInputEl.setAttribute('multiple', 'true');

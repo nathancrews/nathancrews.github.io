@@ -217,5 +217,5 @@ div.leaflet-popup-content {
 }
 
 .map-drop-zone__input {
-  display: none;
+  display: flex;
 }
