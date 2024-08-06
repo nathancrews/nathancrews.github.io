@@ -169,11 +169,11 @@ function InitAppUI() {
         mapMenu.onclick = function (event) {
             event.preventDefault = true;
 
-            if (!mapMenuBar.style.display || mapMenuBar.style.display === "block") {
+            if (!mapMenuBar.style.display || mapMenuBar.style.display === "flex") {
                 mapMenuBar.style.display = "none";
             }
             else {
-                mapMenuBar.style.display = "block";
+                mapMenuBar.style.display = "flex";
             }
         }
     }

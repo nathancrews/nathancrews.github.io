@@ -9,7 +9,11 @@
     <meta name="keywords" content="client-side, image rendering, 2D, 3D, map, geolocate, GPS, drone, survey, HTML, CSS, JavaScript">
     <meta name="keywords" content="cesium, leaflet, geospatial, GIS, EXIF, photo, mapping, photogrammetry, civil engineer, land development">
     <meta name="keywords" content="arial, imagery, memory, memories, where, was, picture, taken, photo, jpeg, jpg, png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Nathan Crews">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -25,19 +29,20 @@
 
 <body class="map-body">
     <header id="loading-header" name="loading-header" class="map-loading">
-        <h3 class="map-h3">Drop photos (.jpg or .png) on the map below or click the choose files button</h3>
+        <h3 class="map-h3">Drop on map or choose photos</h3>
         <div class="map-controls">
             <img id="map-menu" title="Show Map Menu" alt="Map Menu" src="images/menu.svg" class="map-menu-button" />
             <div id="map-menu-bar" class="map-menu-bar">
-                <img id="settings-button" title="Edit Settings" alt="Map Settings" src="images/settings.png" class="settings-button" />
-                <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="save-map-button" />
-                <img id="load-map" title="Load Map" alt="Load Map" src="images/load.svg" class="load-map-button" />
-                <img id="view2d" title="Zoom to images on 2D Map" alt="Show 2D Map" src="images/map2d.svg" class="map-button-2d" />
-                <img id="view3d" title="Zoom to images on 3D Map" alt="Show 3D Map" src="images/map3d.svg" class="map-button-3d" />
-                <input id="upload-files" class="map-file-upload-button map-drop-zone__input" title="Pick images" type="file" name="upload-files" class="map-upload-files" multiple="true">
+                <img id="settings-button" title="Edit Settings" alt="Map Settings" src="images/settings.png" class="map-menu-button" />
+                <img id="view2d" title="Zoom to images on 2D Map" alt="Show 2D Map" src="images/map2d.svg" class="map-menu-button map-button-2d" />
+                <img id="view3d" title="Zoom to images on 3D Map" alt="Show 3D Map" src="images/map3d.svg" class="map-menu-button map-button-3d" />
+                <input id="upload-files" class="map-menu-button map-file-upload-button map-drop-zone__input" title="Pick images" type="file" name="upload-files" 
+                class="map-upload-files map-file-upload-button" multiple="true">
+                <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="map-menu-button" />
+                <img id="load-map" title="Load Map" alt="Load Map" src="images/load.svg" class="map-menu-button" />
             </div>
         </div>
-        <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
+        <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />     
         <div id="settings-modal" class="settings-modal">
             <!-- Modal settings dialog -->
             <form id="settings-modal-content" class="settings-modal-content">
