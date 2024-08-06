@@ -27,7 +27,7 @@ export async function ProcessImages(FilesDataArray, canvasEl) {
         }
     }
 
-    console.log("Worker process images count: = ", resultImageDataArr.length);
+    //console.log("Worker process images count: = ", resultImageDataArr.length);
 
     for (let ii = 0; ii < resultImageDataArr.length; ii++) {
         //       console.log("creating thumbnail : ", resultImageDataArr[ii].name);
@@ -47,12 +47,11 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     }
 
     let imageEl = document.createElement('img');
-    let reader = new FileReader();
+//    let reader = new FileReader();
 
-    if (!imageEl || !reader) {
+    if (!imageEl) {
         console.log('CreateImageThumbnail: invalid data!');
         console.log('imageEl:', imageEl);
-        console.log('reader:', reader);
         return;
     }
 
@@ -108,12 +107,14 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         //console.log('fileImageData.imageURLData = ', fileImageData.imageURLData);
 
         // remove large data object before creating GeoJSON data
+        //console.log('fileImageData.imageFileData = ', fileImageData.imageFileData);
+        URL.revokeObjectURL(fileImageData.imageFileData);
         fileImageData.imageFileData = null;
         fileImageData.imageData = null;
 
         let ThumbnailReadyEvent = new CustomEvent("ThumbnailReadyEvent", { async: true, detail: { ImageData: fileImageData } });
 
-        console.log('Worker calling ThumbnailReadyEvent');
+        //console.log('Worker calling ThumbnailReadyEvent');
 
         canvasEl.dispatchEvent(ThumbnailReadyEvent);
 
@@ -123,6 +124,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     const url = URL.createObjectURL(fileImageData.imageFileData);
 
     if (url) {
+        fileImageData.imageFileData = url;
         imageEl.onload = FinalizeThumbnailImage;
         imageEl.src = url;
     }

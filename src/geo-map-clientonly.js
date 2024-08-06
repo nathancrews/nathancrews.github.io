@@ -49,11 +49,11 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
             ThumbnailReadyArray.push(evt.detail.ImageData);
         }
 
-        console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
+        //        console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
 
         if (processingArrayCount == (ThumbnailReadyArray.length)) {
 
-            console.log("Updating Map...")
+            //            console.log("Updating Map...")
 
             AppMapData.imageDataArray = AppMapData.imageDataArray.concat(ThumbnailReadyArray);
 
@@ -79,7 +79,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
             processingArrayCount = 0;
         }
         else {
-            console.log("waiting for complete results array.... ")
+            // console.log("waiting for complete results array.... ")
         }
     }
 });
@@ -88,7 +88,7 @@ async function OnImageDropped(event) {
 
     //console.log("OnImageDropped called = ", event)
 
-    if (fileUploadForm) {
+    if (fileUploadForm && AppUIData.fileInputEl) {
         event.preventDefault();
 
         if (AppUIData.loadingImageEl) {
@@ -180,18 +180,18 @@ function InitAppUI() {
 
     const saveMapButton = document.getElementById("save-map");
     const loadMapButton = document.getElementById("load-map");
-    
+
     if (saveMapButton) {
         saveMapButton.addEventListener("click", SaveMap);
     }
-    
+
     if (loadMapButton) {
         loadMapButton.addEventListener("click", LoadMap);
     }
-    
+
     let view2D_button_el = document.getElementById("view2d");
     let view3D_button_el = document.getElementById("view3d");
-    
+
     if (view2D_button_el) {
         view2D_button_el.addEventListener('click', Show2D);
     }
@@ -201,14 +201,16 @@ function InitAppUI() {
 
     let uploadFilesButton = document.getElementById("upload-files");
 
-	uploadFilesButton.onchange = function (event) {
-		event.preventDefault();
+    AppUIData.fileInputEl = uploadFilesButton;
+
+    uploadFilesButton.onchange = function (event) {
+        event.preventDefault();
 
         AppUIData.fileInputEl = uploadFilesButton;
 
         OnImageDropped(event);
-	};
-  
+    };
+
 
     // Settings dialog UI
     mapIconSelector.value = AppMapData.imageIcon2D;
@@ -242,7 +244,7 @@ function InitAppUI() {
     }
 
     mapIconSelector.onchange = function (event) {
-       // console.log("event.target.value: ", event.target.value)
+        // console.log("event.target.value: ", event.target.value)
 
         switch (event.target.value) {
             case 'thumbnail':
@@ -290,24 +292,89 @@ function Show3D(event) {
 }
 
 function SaveMap() {
-    const geoJSON = JSON.stringify(AppMapData.geoJSONFileData);
-    window.localStorage.setItem("imapper:geoJSON", geoJSON);
-    console.log("saved: ", geoJSON);
+
+    try {
+        //        console.log("AppMapData.geoJSONFileData = ", AppMapData.geoJSONFileData);
+        let maxSingleLength = 5200000 - 1;
+
+        if (AppMapData.geoJSONFileData) {
+            const geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
+            if (geoJSONStr) {
+                let saveLength = geoJSONStr.length;
+                console.log("Map save geoJSON.length = ", saveLength);
+
+                if (saveLength > maxSingleLength) {
+                    // let parts = saveLength / maxSingleLength;
+                    // console.log("need to save parts = ", parts);
+                    // let partStr = geoJSONStr.slice(0, maxSingleLength);
+
+                    // console.log("Map save partStr.length = ", partStr.length);
+
+                    // let partStr2 = geoJSONStr.slice(maxSingleLength);
+
+                    // console.log("Map save partStr2.length = ", partStr2.length);
+
+                    // window.localStorage.setItem("imapper:geoJSON", partStr);
+                    // window.localStorage.setItem("imapper:geoJSON2", partStr2);
+                }
+                else {
+                    window.localStorage.setItem("imapper:geoJSON", geoJSONStr);
+                }
+            }
+        }
+    }
+    catch (error) {
+        console.log("Error map data to large to save: ", error);
+    }
 }
 
 function LoadMap() {
-    let geoJSON = window.localStorage.getItem("imapper:geoJSON");
-    AppMapData.geoJSONFileData = JSON.parse(geoJSON);
-    console.log("loaded: ", AppMapData.geoJSONFileData);
+    try {
+        let maxSingleLength = 5200000 - 1;
+        let maxLocalStr = "";
 
-    if (AppUIData.formEl) {
-        let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-            { detail: { AppMapData: AppMapData } });
+        let geoJSONStr = window.localStorage.getItem("imapper:geoJSON");
 
-        if (AppUIData.loadingImageEl) {
-            AppUIData.loadingImageEl.style.display = "block";
+        if (geoJSONStr) {
+            console.log("Map load geoJSON.length = ", geoJSONStr.length);
+
+            // maxLocalStr = geoJSONStr;
+
+            // if (geoJSONStr.length == maxSingleLength) {
+            //     let geoJSONStr2 = window.localStorage.getItem("imapper:geoJSON2");
+            //     if(geoJSONStr2){
+                    
+            //         console.log("Map geoJSONStr2.length = ", geoJSONStr2.length);
+
+            //         maxLocalStr = String.concat(geoJSONStr, geoJSONStr2);
+            //     }
+
+            //     console.log("Map maxLocalStr.length = ", maxLocalStr.length);
+
+            //     AppMapData.geoJSONFileData = JSON.parse(maxLocalStr);
+
+            // }
+            // else {
+                AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
+            //}
+
+            if (AppMapData.geoJSONFileData) {
+                if (AppUIData.formEl) {
+                    let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
+                        { detail: { AppMapData: AppMapData } });
+
+                    if (AppUIData.loadingImageEl) {
+                        AppUIData.loadingImageEl.style.display = "block";
+                    }
+
+                    if (UpdateMapEvent) {
+                        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
+                    }
+                }
+            }
         }
-
-        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
+    }
+    catch (error) {
+        console.log("Error loading map data: ", error);
     }
 }

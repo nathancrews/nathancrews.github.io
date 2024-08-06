@@ -75,7 +75,7 @@ export async function UpdateMap2D(geoJSONResults) {
 
     if (localgeoJSONResults) {
         AppMapData.geoJSONFileData = localgeoJSONResults;
-        console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+       // console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
     if (AppMapData.geoJSONFileData) {
