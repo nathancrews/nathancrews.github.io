@@ -1,5 +1,5 @@
 function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
-    var ret = false;
+    let ret = false;
 
     if ((allowedFileTypes == undefined) || (allowedFileTypes.length < 1)
         || (allowedFileTypes == "*") || (allowedFileTypes == "*.*")
@@ -7,13 +7,13 @@ function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
         return true;
     }
 
-    var allowedExts = allowedFileTypes.split(',');
+    let allowedExts = allowedFileTypes.split(',');
     //console.log("ftypes: ", allowedExts);
 
-    var fext = '.' + fileName.split('.').pop();
+    let fext = '.' + fileName.split('.').pop();
     //console.log("file type to upload: ", fext);
 
-    for (var ii = 0; ii < allowedExts.length; ii++) {
+    for (let ii = 0; ii < allowedExts.length; ii++) {
         if (allowedExts[ii] == fext) {
             ret = true;
             break;
@@ -33,9 +33,9 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
     //console.log(formEl);
 
-    var formAction = formEl.getAttribute("action");
-    var allowedFileTypes = fileInputEl.getAttribute("accept");
-    var doAction = false;
+    let formAction = formEl.getAttribute("action");
+    let allowedFileTypes = fileInputEl.getAttribute("accept");
+    let doAction = false;
 
     if (formAction == undefined) {
         console.log("Error: nc_ChunkFileUploadRequests: invalid Form 'action' attribute value!")
@@ -43,18 +43,18 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
     }
     if (formAction) {
 
-        var formData = new FormData(formEl);
-        var filesArray = [];
-        var redirectCGIKey = "redirectCGI";
-        var redirectCGIValue = formData.get(redirectCGIKey);
+        let formData = new FormData(formEl);
+        let filesArray = [];
+        let redirectCGIKey = "redirectCGI";
+        let redirectCGIValue = formData.get(redirectCGIKey);
 
-        var maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
+        let maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
 
         if (maxFilesPerRequest == 0) {
             maxFilesPerRequest = 50;
         }
 
-        var fileEntries = formData.getAll("file");
+        let fileEntries = formData.getAll("file");
 
         //console.log(fileEntries);
 
@@ -66,8 +66,8 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
         // console.log("files array now stored: ", filesArray);
 
-        var maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
-        var requestCount = 1;
+        let maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
+        let requestCount = 1;
 
         //console.log("maxRequest number : ", maxRequestCount);
 
@@ -75,11 +75,11 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
             formData.delete(redirectCGIKey)
         }
 
-        for (var ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
+        for (let ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
             formData.getAll("file").forEach((fileEntry) => { formData.delete("file"); })
             //console.log("TOP of loop, files array removed from form: ", formData.getAll("file"));
 
-            for (var yy = 0; yy < (maxFilesPerRequest); yy++) {
+            for (let yy = 0; yy < (maxFilesPerRequest); yy++) {
                 //console.log('ii= ', ii, ' yy= ', yy);
 
                 if (ii + yy < filesArray.length) {
@@ -95,7 +95,7 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
             //console.log("sending request # ", requestCount, " of ", maxRequestCount);
 
-            var response = await fetch(formAction, {
+            let response = await fetch(formAction, {
                 method: "POST",
                 body: formData
             }).catch(error => {
@@ -106,7 +106,7 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
             if (doAction === true && response && response.status >= 200 && response.status < 300) {
 
-                var responseRes = await response.text();
+                let responseRes = await response.text();
                 console.log("responseRes=", responseRes)
                 return responseRes;
             }

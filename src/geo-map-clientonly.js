@@ -12,6 +12,8 @@ import { ProcessImages } from "./image-processor.js"
 
 let processingArrayCount = 0;
 let resultArray = [];
+let canvasEl = document.createElement('canvas');
+let ThumbnailReadyArray = [];
 
 const fileUploadForm = document.getElementById("uploadForm");
 
@@ -20,17 +22,10 @@ if (fileUploadForm) {
     fileUploadForm.addEventListener("submit", OnImageDropped);
 }
 
-// var loadingImageEl = document.getElementById("loading-image");
-if (AppUIData.loadingImageEl) {
-    AppUIData.loadingImageEl.style.display = "none";
-}
-
 InitAppUI();
 
-Show2D(null);
 
-let canvasEl = document.createElement('canvas');
-let ThumbnailReadyArray = [];
+
 
 function findImageDataInArray(nameStr, imageArray) {
     let existsInArray = false;
@@ -146,6 +141,12 @@ async function OnImageDropped(event) {
 }
 
 function InitAppUI() {
+
+    // var loadingImageEl = document.getElementById("loading-image");
+    if (AppUIData.loadingImageEl) {
+        AppUIData.loadingImageEl.style.display = "none";
+    }
+
     ///////////////////////////////////////////////////////////////////
     // Set up the settings button and dialog
     ///////////////////////////////////////////////////////////////////
@@ -161,14 +162,14 @@ function InitAppUI() {
     let settingsIconPreview = document.getElementById("settings-icon-2d");
     let settingsIconLegend = document.getElementById("settings-map-icon2d");
 
+
+    // Setup map menu bar icon commands
     let mapMenu = document.getElementById("map-menu");
     let mapMenuBar = document.getElementById("map-menu-bar");
 
     if (mapMenu && mapMenuBar) {
         mapMenu.onclick = function (event) {
             event.preventDefault = true;
-
-            //console.log("mapMenuBar.style.display: ", mapMenuBar.style.display)
 
             if (!mapMenuBar.style.display || mapMenuBar.style.display === "block") {
                 mapMenuBar.style.display = "none";
@@ -199,7 +200,17 @@ function InitAppUI() {
     if (view3D_button_el) {
         view3D_button_el.addEventListener('click', Show3D);
     }
-    
+
+    let uploadFilesButton = document.getElementById("upload-files");
+
+	uploadFilesButton.onchange = function (event) {
+		event.preventDefault();
+
+        AppUIData.fileInputEl = uploadFilesButton;
+
+        OnImageDropped(event);
+	};
+  
 
     // Settings dialog UI
     mapIconSelector.value = AppMapData.imageIcon2D;
@@ -215,24 +226,6 @@ function InitAppUI() {
     span.onclick = function () {
         settingsDialog.style.display = "none";
     }
-
-	let uploadFilesButton = document.getElementById("upload-files");
-
-	uploadFilesButton.onchange = function (event) {
-		event.preventDefault();
-
-        AppUIData.fileInputEl = uploadFilesButton;
-
-        OnImageDropped(event);
-	};
-
-	// uploadFilesButton.onclick = function (event) {
-	// 	event.preventDefault();
-    //     let inputElement = document.querySelector(".map-drop-zone__input");
-	// 	if (inputElement){
-	// 		inputElement.click();
-	// 	}
-	// };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
@@ -271,6 +264,7 @@ function InitAppUI() {
     // End of settings UI
     ///////////////////////////////////////////////////////////////////
 
+    Show2D(null);
 }
 
 function Show2D(event) {

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Image Mapper</title>
+    <title>Photo Mapper</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -20,7 +20,7 @@
 
 <body class="map-body">
     <header id="loading-header" name="loading-header" class="map-loading">
-        <h3 class="map-h3">Geo-code images by dropping image file(s) on the map</h3>
+        <h3 class="map-h3">Drop photos (.jpg or .png) on the map below or click the choose files button</h3>
         <div class="map-controls">
             <img id="map-menu" title="Show Map Menu" alt="Map Menu" src="images/menu.svg" class="map-menu-button" />
             <div id="map-menu-bar" class="map-menu-bar">
@@ -29,8 +29,7 @@
                 <img id="load-map" title="Load Map" alt="Load Map" src="images/load.svg" class="load-map-button" />
                 <img id="view2d" title="Zoom to images on 2D Map" alt="Show 2D Map" src="images/map2d.svg" class="map-button-2d" />
                 <img id="view3d" title="Zoom to images on 3D Map" alt="Show 3D Map" src="images/map3d.svg" class="map-button-3d" />
-                <input id="upload-files" class="map-file-upload-button" title="Pick images" type="file" name="upload-files" class="map-upload-files" multiple="true"
-                accept=".jpg,.png,.JPG,.PNG" >
+                <input id="upload-files" class="map-file-upload-button" title="Pick images" type="file" name="upload-files" class="map-upload-files" multiple="true">
             </div>
         </div>
         <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
