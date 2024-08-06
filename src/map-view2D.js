@@ -75,7 +75,7 @@ export async function UpdateMap2D(geoJSONResults) {
 
     if (localgeoJSONResults) {
         AppMapData.geoJSONFileData = localgeoJSONResults;
-        //console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+        console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
     if (AppMapData.geoJSONFileData) {
@@ -95,7 +95,7 @@ export async function UpdateMap2D(geoJSONResults) {
                 let currentDroneIcon = AppMapData.droneIcon;
 
                 if (AppMapData.imageIcon2D == "thumbnail") {
-                    if (point.properties.thumbFileName) {
+                    if (point.properties.imageURLData) {
                         let maxIconSize = 64;
                         let iconWidth = maxIconSize;
                         let iconHeight = maxIconSize;
@@ -109,7 +109,7 @@ export async function UpdateMap2D(geoJSONResults) {
 
                         //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
                         currentDroneIcon = L.icon({
-                            iconUrl: point.properties.thumbFileName,
+                            iconUrl: point.properties.imageURLData,
                             iconSize: [iconWidth, iconHeight],
                             iconAnchor: [iconWidth / 2, iconHeight / 2],
                             popupAnchor: [0, 112]
@@ -121,8 +121,8 @@ export async function UpdateMap2D(geoJSONResults) {
             },
         }).bindPopup(function (layer) {
             return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
-        <a href='" + layer.feature.properties.URLName + "' target='window'><img style=max-width: 250px; max-height:350px;' src='" +
-                layer.feature.properties.thumbFileName + "' /></a></div>";
+                    <img style=max-width: 250px; max-height:350px;' src='" +
+                    layer.feature.properties.imageURLData + "' /></a></div>";
         });
 
         if (AppUIData.imagesLayer) {
@@ -133,24 +133,6 @@ export async function UpdateMap2D(geoJSONResults) {
     }
 
     return retVal;
-}
-
-function AddPointToLayer(point, latlng) {
-    // console.log("point = ", point)
-    // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
-
-    let currentDroneIcon = AppMapData.droneIcon;
-
-    if (point.properties.thumbFileName) {
-        currentDroneIcon = L.icon({
-            iconUrl: point.properties.thumbFileName,
-            iconSize: [48, 48],
-            iconAnchor: [24, 24],
-            popupAnchor: [0, 112]
-        });
-    }
-
-    return L.marker(latlng, { icon: currentDroneIcon });
 }
 
 export async function ResetMap2DView() {

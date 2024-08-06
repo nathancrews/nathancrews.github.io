@@ -25,8 +25,6 @@ if (fileUploadForm) {
 InitAppUI();
 
 
-
-
 function findImageDataInArray(nameStr, imageArray) {
     let existsInArray = false;
 

@@ -1,7 +1,6 @@
 export function ImageData() {
         this.name = "";
-        this.URLName = "";
-        this.thumbFileName = "";
+        this.imageURLData = "";
         this.lat = 0.0;
         this.lng = 0.0;
         this.elevation = 0.0;
@@ -9,10 +8,9 @@ export function ImageData() {
         this.cameraDirection = 0.0;
         this.cameraPitch = 0.0;
         this.date = null;
-        this.geoJSONval = null;
-        this.imageFileData = null;
         this.imageHeight = 1.0;
         this.imageWidth = 1.0;
         this.imageRatio = 1.0;
+        this.imageFileData = null;
 }
 

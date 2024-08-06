@@ -39,8 +39,22 @@ export async function ProcessImages(FilesDataArray, canvasEl) {
 
 async function CreateImageThumbnail(fileImageData, canvasEl) {
 
+    if (!fileImageData || !canvasEl) {
+        console.log('CreateImageThumbnail: invalid data!');
+        console.log('fileImageData:', fileImageData);
+        console.log('canvasEl:', canvasEl);
+        return;
+    }
+
     let imageEl = document.createElement('img');
     let reader = new FileReader();
+
+    if (!imageEl || !reader) {
+        console.log('CreateImageThumbnail: invalid data!');
+        console.log('imageEl:', imageEl);
+        console.log('reader:', reader);
+        return;
+    }
 
     imageEl.style.display = 'none';
     imageEl.id = fileImageData.name;
@@ -61,7 +75,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         canvasEl.width = max_thumb_width;
         canvasEl.height = (max_thumb_height * (largeImageRatio));
 
-        if (canvasEl.height > max_thumb_height){
+        if (canvasEl.height > max_thumb_height) {
             canvasEl.width /= largeImageRatio;
             canvasEl.height = max_thumb_height;
         }
@@ -86,62 +100,65 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         }
 
         canvasContext.drawImage(imageEl, 0, 0, canvasEl.width, canvasEl.height);
-        //        console.log('fileImageData = ', fileImageData);
-        thumbnail_image_data = canvasEl.toDataURL('image/jpeg', 50);
 
-        thumbnail_local_file = URLToFile(thumbnail_image_data);
-        thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
+        // thumbnail_local_file = URLToFile(thumbnail_image_data);
+        // thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
 
-        fileImageData.thumbFileName = thumbnail_local_file_url;
-        //        console.log('fileImageData.thumbFileName = ', fileImageData.thumbFileName);
+        fileImageData.imageURLData = canvasEl.toDataURL('image/jpeg', 75);;
+        //console.log('fileImageData.imageURLData = ', fileImageData.imageURLData);
 
+        // remove large data object before creating GeoJSON data
+        fileImageData.imageFileData = null;
+        fileImageData.imageData = null;
 
         let ThumbnailReadyEvent = new CustomEvent("ThumbnailReadyEvent", { async: true, detail: { ImageData: fileImageData } });
 
         console.log('Worker calling ThumbnailReadyEvent');
 
         canvasEl.dispatchEvent(ThumbnailReadyEvent);
+
+        imageEl = null;
     }
 
-    imageEl.onload = FinalizeThumbnailImage;
+    const url = URL.createObjectURL(fileImageData.imageFileData);
 
-    const file = fileImageData.imageFileData;
-    const url = URL.createObjectURL(file);
-
-    fileImageData.URLName = url;
-
-    imageEl.src = "";
-    imageEl.src = url;
+    if (url) {
+        imageEl.onload = FinalizeThumbnailImage;
+        imageEl.src = url;
+    }
 }
 
 function URLToFile(imageData) {
 
     if (!imageData) return null;
-
     //    console.log('url = ', imageData);
 
-    let dataArray = imageData.split(',');
+    try {
+        let dataArray = imageData.split(',');
+        //    console.log('dataArray = ', dataArray);
 
-    //    console.log('dataArray = ', dataArray);
+        if (dataArray.length < 2) return null;
 
-    if (dataArray.length < 2) return null;
+        let mimeType = dataArray[0].match(/:(.*?);/)[1];
+        let data = dataArray[1];
 
-    let mimeType = dataArray[0].match(/:(.*?);/)[1];
-    let data = dataArray[1];
+        let dataStr = atob(data);
+        let count = dataStr.length;
 
-    let dataStr = atob(data);
-    let count = dataStr.length;
+        let imageArray = new Uint8Array(count);
+        if (!imageArray) return null;
 
-    let imageArray = new Uint8Array(count);
-    if (!imageArray) return null;
+        while (count--) {
+            imageArray[count] = dataStr.charCodeAt(count);
+        }
 
-    while (count--) {
-        imageArray[count] = dataStr.charCodeAt(count);
+        return new File([imageArray], imageData.name, { type: mimeType })
+    }
+    catch (error) {
+        console.log('URLToFile function eror: ', error);
+        console.log('imageData: ', imageData);
     }
 
-    let ret_file = new File([imageArray], "thumb.jpg", { type: mimeType })
-
-    return ret_file;
 }
 
 export async function ReadImageEXIFTags(FileData) {
@@ -199,7 +216,7 @@ export async function ReadImageEXIFTags(FileData) {
             addMe.imageHeight = tags.file['Image Height'].value;
             addMe.imageWidth = tags.file['Image Width'].value;
 
-            addMe.imageRatio = addMe.imageWidth/addMe.imageHeight;
+            addMe.imageRatio = addMe.imageWidth / addMe.imageHeight;
 
             return addMe;
         }
