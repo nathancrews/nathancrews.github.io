@@ -84,6 +84,7 @@ nav li:first-child {
 }
 
 .project {
+  display: grid;
   text-align: left;
   width: min-content;
   border: azure;

@@ -73,9 +73,7 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
             AppUIData.formEl.dispatchEvent(UpdateMapEvent);
 
-            if (AppUIData.loadingImageEl) {
-                AppUIData.loadingImageEl.style.display = "none";
-            }
+            ShowLoadingImage(false);
 
             // clear the array and count for the next drop operation
             ThumbnailReadyArray = [];
@@ -87,6 +85,19 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
     }
 });
 
+function ShowLoadingImage(setVisible){
+
+    if (AppUIData && AppUIData.loadingImageEl) {
+        if (setVisible)
+        {
+            AppUIData.loadingImageEl.style.display = "block";
+        }
+        else {
+            AppUIData.loadingImageEl.style.display = "none";
+        }
+    }
+}
+
 async function OnImageDropped(event) {
 
     //console.log("OnImageDropped called = ", event)
@@ -94,9 +105,7 @@ async function OnImageDropped(event) {
     if (fileUploadForm && AppUIData.fileInputEl) {
         event.preventDefault();
 
-        if (AppUIData.loadingImageEl) {
-            AppUIData.loadingImageEl.style.display = "flex";
-        }
+        ShowLoadingImage(true);
 
         let startTime = performance.now();
 
@@ -133,9 +142,7 @@ async function OnImageDropped(event) {
         console.log(`OnDrop ProcessImages took ${endTime - startTime}ms`)
 
         if (processingArrayCount == 0) {
-            if (AppUIData.loadingImageEl) {
-                AppUIData.loadingImageEl.style.display = "none";
-            }
+            ShowLoadingImage(false);
             alert("Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!");
         }
     }
@@ -143,10 +150,7 @@ async function OnImageDropped(event) {
 
 function InitAppUI() {
 
-    // var loadingImageEl = document.getElementById("loading-image");
-    if (AppUIData.loadingImageEl) {
-        AppUIData.loadingImageEl.style.display = "none";
-    }
+     ShowLoadingImage(false);
 
     ///////////////////////////////////////////////////////////////////
     // Set up the settings button and dialog
@@ -408,9 +412,7 @@ function LoadMap() {
                     let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
                         { detail: { AppMapData: AppMapData } });
 
-                    if (AppUIData.loadingImageEl) {
-                        AppUIData.loadingImageEl.style.display = "block";
-                    }
+                        ShowLoadingImage(true);
 
                     if (UpdateMapEvent) {
                         AppUIData.formEl.dispatchEvent(UpdateMapEvent);
