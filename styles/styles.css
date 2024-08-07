@@ -5,8 +5,8 @@
 }
 
 body {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: block;
   background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
@@ -15,7 +15,6 @@ body {
 }
 
 h1 {
-  width:100%;
   text-align: center;
   color: azure;
 }
@@ -52,7 +51,7 @@ nav li {
 }
 
 nav a {
-  color: darkblue;
+  color: black;
   height: 100%;
   padding: 0 30px;
   display: flex;
@@ -74,14 +73,56 @@ nav li:first-child {
 }
 
 div.projectBox {
-  background-color: cornsilk;
-  margin-left: 0px;
-  margin-top: 10px;
-  width: 100%;
-  height: 100%;
-  padding-top: 0px;
-  padding-bottom: 10px;
+  display: flex;
+  background-color: #aaaaaa;
+  padding: 1rem;
+  width:auto;
+  height: auto;
+
 }
+
+div.project {
+  text-align: left;
+  width: min-content;
+  border: azure;
+  border-width: medium;
+  border-style: ridge;
+}
+
+.project-title {
+  text-align: center;
+}
+
+a.project-image {
+  text-align: left;
+  padding: 1rem;
+}
+
+img.project-image {
+  align-self: center;
+  padding: 0.5rem;
+}
+
+.description-text {
+  text-align: left;
+  margin: 1rem;
+}
+
+.project-details {
+  display: flex;
+  flex-flow: row;
+  text-align: justify;
+  margin: 1rem;
+}
+
+div.project-details {
+  text-align: justify;
+  margin: 0.5rem;
+  border: azure;
+  border-width: medium;
+  border-style: ridge;
+}
+
 
 img.ImageResultPanel {
   margin: 10px;
@@ -90,14 +131,14 @@ img.ImageResultPanel {
 }
 
 div.ImageResultPanel {
-  background-color: cornsilk;
+  background-color: lightslategray;
   min-width: 700px;
   min-height: 600px;
 }
 
 div.image-preview {
   border: groove 5px;
-  background-color: cornsilk;
+  background-color: lightslategray;
   display: flex;
   justify-content: flex=flex-end;
   align-items: top;

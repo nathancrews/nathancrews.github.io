@@ -6,21 +6,26 @@ export const UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail:
 //************************************
 // Define Application Data
 //************************************
-export const AppUIData = {
+export let AppUIData = {
     formEl: document.getElementById("uploadForm"),
     dirInputEl: document.getElementById("directory"),
     loadingImageEl: document.getElementById("loading-image"),
-    fileInputEl: document.getElementById("file"),
+    fileInputEl: document.getElementById("upload-files"),
     clientSideOnly: true
 }
 
-export const AppMapData = {
+function AppSettingsData() {
+    this.imageIcon2D = "thumbnail";
+    this.droneIcon2D = 'images/drone-icon.jpg';
+}
+
+export let AppMapData = {
     map2D: null,
     map3D: null,
     imagesLayer: null,
     layerControl: null,
     imageLayerGroup: null,
-    imageIcon2D: "thumbnail",
+    appSettings : new AppSettingsData(),
     droneIcon: L.icon({
         iconUrl: 'images/drone-icon.jpg',
         iconSize: [24, 24],
@@ -36,3 +41,4 @@ export const AppMapData = {
     geoJSONFileName: "geo-images.json",
     imageDataArray: [],
 }
+

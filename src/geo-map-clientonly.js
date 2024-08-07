@@ -4,11 +4,14 @@ import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
 // set AppUIData.clientSideOnly = false (default) for server-side image uploading and processing
 AppUIData.clientSideOnly = true;
 
-import { UpdateMap2D, ResetMap2DView } from "./map-view2D.js";
-import { UpdateMap3D, ResetMap3DView } from "./map-view3D.js";
+import { UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
+import { UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
 import { ImageData } from "./image-data.js"
 import { nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
 import { ProcessImages } from "./image-processor.js"
+
+const MAP_DATA_SAVE_KEY = "nc_imapper:geoJSON";
+const APP_DATA_SAVE_KEY = "nc_imapper:appJSON";
 
 let processingArrayCount = 0;
 let resultArray = [];
@@ -153,15 +156,19 @@ function InitAppUI() {
     let settingsButton = document.getElementById("settings-button");
     // Get the <span> element that closes settings
     let span = document.getElementsByClassName("settings-close")[0];
-    let mapIconSelector = document.getElementById("map-icon-selector");
-    let settingsModalContent = document.getElementById("settings-modal-content");
-    let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
-    let settingsIconFieldset = document.getElementById("settings-form-fieldset");
-    let settingsIconPreview = document.getElementById("settings-icon-2d");
-    let settingsIconLegend = document.getElementById("settings-map-icon2d");
-
 
     // Setup map menu bar icon commands
+
+    settingsButton.onclick = function (event) {
+        event.preventDefault = true;
+        settingsDialog.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        settingsDialog.style.display = "none";
+    }
+
     let mapMenu = document.getElementById("map-menu");
     let mapMenuBar = document.getElementById("map-menu-bar");
 
@@ -199,32 +206,48 @@ function InitAppUI() {
         view3D_button_el.addEventListener('click', Show3D);
     }
 
-    let uploadFilesButton = document.getElementById("upload-files");
+    const resetMapButton = document.getElementById("reset-map");
+    if (resetMapButton) {
+        resetMapButton.addEventListener('click', ResetMap);
+    }
 
-    AppUIData.fileInputEl = uploadFilesButton;
+    AppUIData.fileInputEl = document.getElementById("upload-files");
 
-    uploadFilesButton.onchange = function (event) {
+    AppUIData.fileInputEl.onchange = function (event) {
         event.preventDefault();
-
-        AppUIData.fileInputEl = uploadFilesButton;
 
         OnImageDropped(event);
     };
 
-
     // Settings dialog UI
-    mapIconSelector.value = AppMapData.imageIcon2D;
+    InitAppSettingsUI();
 
-    let settingsIcon2d = document.getElementById("settings-icon-2d");
+    Show2D(null);
+}
 
-    settingsButton.onclick = function (event) {
-        event.preventDefault = true;
-        settingsDialog.style.display = "block";
-    }
+function InitAppSettingsUI() {
+    // Settings dialog UI
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        settingsDialog.style.display = "none";
+    let settingsDialog = document.getElementById("settings-modal");
+    let settingsButton = document.getElementById("settings-button");
+    let mapIconSelector = document.getElementById("map-icon-selector");
+    let settingsModalContent = document.getElementById("settings-modal-content");
+    let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
+    let settingsIconFieldset = document.getElementById("settings-form-fieldset");
+    let settingsIconPreview = document.getElementById("settings-icon-2d");
+    let settingsIconLegend = document.getElementById("settings-map-icon2d");
+
+    LoadAppSettings();
+
+    mapIconSelector.value = AppMapData.appSettings.imageIcon2D;
+
+    switch (mapIconSelector.value) {
+        case 'thumbnail':
+            settingsIconPreview.src = 'images/image-thumb.png';
+            break;
+        case 'drone2d':
+            settingsIconPreview.src = 'images/drone-icon.jpg';
+            break;
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -233,7 +256,7 @@ function InitAppUI() {
 
         if (settingsDialog.style.display == 'block') {
             if ((event.target != settingsDialog) && (event.target != mapIconSelector) &&
-                (event.target != settingsIcon2d) && (event.target != settingsModalContent) &&
+                (event.target != settingsIconPreview) && (event.target != settingsModalContent) &&
                 (event.target != settingsModalContentIcon) &&
                 (event.target != settingsIconFieldset) &&
                 (event.target != settingsIconPreview) &&
@@ -248,23 +271,19 @@ function InitAppUI() {
 
         switch (event.target.value) {
             case 'thumbnail':
-                settingsIcon2d.src = 'images/image-thumb.png';
+                settingsIconPreview.src = 'images/image-thumb.png';
                 break;
             case 'drone2d':
-                settingsIcon2d.src = 'images/drone-icon.jpg';
+                settingsIconPreview.src = 'images/drone-icon.jpg';
                 break;
         }
 
-        AppMapData.imageIcon2D = event.target.value;
+        AppMapData.appSettings.imageIcon2D = event.target.value;
+
+        SaveAppSettings();
 
         UpdateMap2D(AppMapData.geoJSONFileData);
     }
-
-    ///////////////////////////////////////////////////////////////////
-    // End of settings UI
-    ///////////////////////////////////////////////////////////////////
-
-    Show2D(null);
 }
 
 function Show2D(event) {
@@ -291,40 +310,80 @@ function Show3D(event) {
     }
 }
 
-function SaveMap() {
+async function ResetMap() {
 
+    if (window.confirm("Do you really want to erase ALL photos from the Map?")) {
+
+        await ResetMap2D();
+        await ResetMap3D();
+
+        AppMapData.geoJSONFileData = null;
+        AppMapData.imageDataArray = [];
+
+        if (AppUIData.fileInputEl) {
+
+        }
+    }
+
+}
+
+function SaveAppSettings() {
+    if (AppMapData.appSettings) {
+        let appJSONStr = JSON.stringify(AppMapData.appSettings);
+        if (appJSONStr && appJSONStr.length > 0) {
+            window.localStorage.setItem(APP_DATA_SAVE_KEY, appJSONStr);
+            console.log("saved app settings data: ", appJSONStr);
+        }
+    }
+}
+
+function LoadAppSettings() {
+    let appJSONStr = window.localStorage.getItem(APP_DATA_SAVE_KEY);
+
+    if (appJSONStr && appJSONStr.length > 0) {
+        let localAppSettingsData = JSON.parse(appJSONStr);
+
+        AppMapData.appSettings.droneIcon = localAppSettingsData.droneIcon;
+        AppMapData.appSettings.imageIcon2D = localAppSettingsData.imageIcon2D;
+    }
+}
+
+
+function SaveMap() {
     try {
         //        console.log("AppMapData.geoJSONFileData = ", AppMapData.geoJSONFileData);
         let maxSingleLength = 5200000 - 1;
 
+        SaveAppSettings();
+
         if (AppMapData.geoJSONFileData) {
             const geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
+
             if (geoJSONStr) {
+
                 let saveLength = geoJSONStr.length;
-                console.log("Map save geoJSON.length = ", saveLength);
+                console.log(`Map save geoJSON size: ${(saveLength / 1024 * 2)} kb`);
 
                 if (saveLength > maxSingleLength) {
-                    // let parts = saveLength / maxSingleLength;
-                    // console.log("need to save parts = ", parts);
-                    // let partStr = geoJSONStr.slice(0, maxSingleLength);
-
-                    // console.log("Map save partStr.length = ", partStr.length);
-
-                    // let partStr2 = geoJSONStr.slice(maxSingleLength);
-
-                    // console.log("Map save partStr2.length = ", partStr2.length);
-
-                    // window.localStorage.setItem("imapper:geoJSON", partStr);
-                    // window.localStorage.setItem("imapper:geoJSON2", partStr2);
+                    window.alert(":( Map size too large to save locally, try reducing the number of photos.")
                 }
                 else {
-                    window.localStorage.setItem("imapper:geoJSON", geoJSONStr);
+                    window.localStorage.setItem(MAP_DATA_SAVE_KEY, geoJSONStr);
+                    window.alert("SUCCESS, Map data saved locally");
                 }
             }
+            else {
+                window.alert("Sorry, there was no map data saved.");
+            }
         }
+        else {
+            window.alert("Sorry, there is no map data to save. Try adding another photo.");
+        }
+
     }
     catch (error) {
         console.log("Error map data to large to save: ", error);
+        window.alert(":( ERROR map data to large to save: ", error);
     }
 }
 
@@ -333,30 +392,16 @@ function LoadMap() {
         let maxSingleLength = 5200000 - 1;
         let maxLocalStr = "";
 
-        let geoJSONStr = window.localStorage.getItem("imapper:geoJSON");
+        LoadAppSettings();
+        InitAppSettingsUI();
+
+        let geoJSONStr = window.localStorage.getItem(MAP_DATA_SAVE_KEY);
 
         if (geoJSONStr) {
-            console.log("Map load geoJSON.length = ", geoJSONStr.length);
 
-            // maxLocalStr = geoJSONStr;
+            console.log(`Map load geoJSON size: ${(geoJSONStr.length / 1024) * 2} kb`);
 
-            // if (geoJSONStr.length == maxSingleLength) {
-            //     let geoJSONStr2 = window.localStorage.getItem("imapper:geoJSON2");
-            //     if(geoJSONStr2){
-                    
-            //         console.log("Map geoJSONStr2.length = ", geoJSONStr2.length);
-
-            //         maxLocalStr = String.concat(geoJSONStr, geoJSONStr2);
-            //     }
-
-            //     console.log("Map maxLocalStr.length = ", maxLocalStr.length);
-
-            //     AppMapData.geoJSONFileData = JSON.parse(maxLocalStr);
-
-            // }
-            // else {
-                AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
-            //}
+            AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
 
             if (AppMapData.geoJSONFileData) {
                 if (AppUIData.formEl) {
@@ -373,8 +418,14 @@ function LoadMap() {
                 }
             }
         }
+        else {
+            window.alert("Sorry, there is no local map data to load");
+        }
+
     }
     catch (error) {
         console.log("Error loading map data: ", error);
+        window.alert(`:( ${error} unable to load map data`)
     }
 }
+

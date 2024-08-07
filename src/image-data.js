@@ -8,6 +8,7 @@ export function ImageData() {
         this.cameraDirection = 0.0;
         this.cameraPitch = 0.0;
         this.date = null;
+        this.originalDataSize = 0;
         this.imageHeight = 1.0;
         this.imageWidth = 1.0;
         this.imageRatio = 1.0;

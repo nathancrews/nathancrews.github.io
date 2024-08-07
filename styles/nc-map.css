@@ -4,6 +4,23 @@
 
 }
 
+div.leaflet-popup-content-wrapper{
+  width: auto;
+  max-width: 500px;
+
+}
+
+div.leaflet-popup{
+  width: auto;
+  max-width: 500px;
+}
+
+div.leaflet-popup-content {
+  width: auto;
+  max-width: 500px;
+  min-width: 350px;
+} 
+
 .map-body {
   margin-right: 0.5rem;
   margin-left: 1.5rem;
@@ -36,6 +53,11 @@
 
 .map-menu-button:hover {
   background-color: gold;
+}
+
+.map-erase-button {
+  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .map-file-upload-button {
@@ -91,10 +113,6 @@
   z-index: 1000;
 }
 
-div.leaflet-popup-content {
-  width: 260px;
-  height: 360px;
-}
 
 .map-form-input {
   font-size: large;

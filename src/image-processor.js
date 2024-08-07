@@ -61,11 +61,13 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     async function FinalizeThumbnailImage(event) {
         let thumbnail_local_file_url = '';
         let thumbnail_local_file;
-        let max_thumb_width = 250;
-        let max_thumb_height = 300;
+        let max_thumb_width = 350;
+        let max_thumb_height = 450;
         let thumbnail_image_data;
 
         //    console.log('Worker FinalizeThumbnailImage called, event = ', event);
+
+        //console.log(`imageEl.size = ${((imageEl.naturalWidth * imageEl.naturalHeight)/1024)*2} kb`);
 
         let canvasContext = canvasEl.getContext('2d');
         let largeImageRatio = imageEl.naturalHeight / imageEl.naturalWidth;
@@ -103,8 +105,9 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         // thumbnail_local_file = URLToFile(thumbnail_image_data);
         // thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
 
-        fileImageData.imageURLData = canvasEl.toDataURL('image/jpeg', 75);;
-        //console.log('fileImageData.imageURLData = ', fileImageData.imageURLData);
+        fileImageData.imageURLData = canvasEl.toDataURL('image/webp', 0.33);
+        
+       // console.log(`fileImageData.imageURLData.length = ${(fileImageData.imageURLData.length/1024)*2} kb`);
 
         // remove large data object before creating GeoJSON data
         //console.log('fileImageData.imageFileData = ', fileImageData.imageFileData);

@@ -1,5 +1,5 @@
 
-function InitDropElements(dropElements) {
+export function InitDropElements(dropElements) {
 
 	dropElements.forEach((dropElement) => {
 		ProcessDropElement(dropElement);
@@ -52,31 +52,30 @@ function ProcessDropElement(dropZoneElement) {
 					sb.click();
 				}
 			}
-			else {
-				let fileUrl = e.dataTransfer.getData('Text');
+			//else {
+				// let fileUrl = e.dataTransfer.getData('Text');
 
-				//				url2blob(fileUrl);
+				// //				url2blob(fileUrl);
 
-				console.log("e.dataTransfer.getData('Text'): ", fileUrl);
+				// console.log("e.dataTransfer.getData('Text'): ", fileUrl);
 
-				let response = fetch(fileUrl, {
-					mode: "no-cors"
-				}).then(res => { console.log(res); res.blob() })
-					.then(blob => {
-						console.log(blob);
+				// let response = fetch(fileUrl, {
+				// 	mode: "no-cors"
+				// }).then(res => { console.log(res); res.blob() })
+				// 	.then(blob => {
+				// 		console.log(blob);
 
-						let fileFromUrl = new File([blob], 'image', { type: blob.type });
-						console.log(fileFromUrl);
+				// 		let fileFromUrl = new File([blob], 'image', { type: blob.type });
+				// 		console.log(fileFromUrl);
 
-						let resFile = ReadDataFile(fileFromUrl);
-						console.log(resFile);
+				// 		let resFile = ReadDataFile(fileFromUrl);
+				// 		console.log(resFile);
 
-					}).catch(error => {
-						console.log("Error: downloading image file: fetch error: ");
-						console.log(error);
-					});
-
-			}
+				// 	}).catch(error => {
+				// 		console.log("Error: downloading image file: fetch error: ");
+				// 		console.log(error);
+				// 	});
+			//}
 
 
 		}
@@ -119,5 +118,3 @@ async function url2blob(url) {
 		console.error(err.name, err.message);
 	}
 }
-
-export { InitDropElements }

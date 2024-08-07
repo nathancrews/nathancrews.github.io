@@ -89,12 +89,12 @@ export async function UpdateMap2D(geoJSONResults) {
 
         AppUIData.imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
             pointToLayer: function (point, latlng) {
-                //console.log("AppMapData.imageIcon2D = ", AppMapData.imageIcon2D)
+                //console.log("AppMapData.appSettings.droneIcon = ", AppMapData.appSettings.droneIcon)
                 // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
 
                 let currentDroneIcon = AppMapData.droneIcon;
 
-                if (AppMapData.imageIcon2D == "thumbnail") {
+                if (AppMapData.appSettings.imageIcon2D == "thumbnail") {
                     if (point.properties.imageURLData) {
                         let maxIconSize = 64;
                         let iconWidth = maxIconSize;
@@ -112,7 +112,7 @@ export async function UpdateMap2D(geoJSONResults) {
                             iconUrl: point.properties.imageURLData,
                             iconSize: [iconWidth, iconHeight],
                             iconAnchor: [iconWidth / 2, iconHeight / 2],
-                            popupAnchor: [0, 112]
+                            popupAnchor: [0, (350/2)]
                         });
                     }
                 }
@@ -120,8 +120,8 @@ export async function UpdateMap2D(geoJSONResults) {
                 return L.marker(latlng, { icon: currentDroneIcon });
             },
         }).bindPopup(function (layer) {
-            return "<div style='width:max-contents;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
-                    <img style=max-width: 250px; max-height:350px;' src='" +
+            return "<div style='width:auto;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+                    <img ' src='" +
                     layer.feature.properties.imageURLData + "' /></a></div>";
         });
 
@@ -133,6 +133,18 @@ export async function UpdateMap2D(geoJSONResults) {
     }
 
     return retVal;
+}
+
+export async function ResetMap2D() {
+
+    if (AppUIData.imagesLayer) {
+        console.log("removing imageLayerGroup");
+        AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);
+        AppMapData.map2D.removeLayer(AppUIData.imagesLayer);
+        AppUIData.imagesLayer = null;
+    }
+
+    AppMapData.map2D.setView([AppMapData.defaultLatitude, AppMapData.defaultLongitude], 18);
 }
 
 export async function ResetMap2DView() {
