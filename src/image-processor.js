@@ -61,7 +61,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     async function FinalizeThumbnailImage(event) {
         let thumbnail_local_file_url = '';
         let thumbnail_local_file;
-        let max_thumb_width = 350;
+        let max_thumb_width = 300;
         let max_thumb_height = 450;
         let thumbnail_image_data;
 

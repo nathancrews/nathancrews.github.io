@@ -52,9 +52,19 @@ async function LoadCesium3D(viewer3D) {
 
             Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYmVjM2RmMy01MTVmLTQxNTctYjk0OC1jNmM2ZTFmMzkwZDYiLCJpZCI6MTc0MzI1LCJpYXQiOjE2OTgzOTQxNjh9.qw8O6-GM1BxdYdPyUFz7MLKH3KTh52edzeS_K0EmmZQ";
 
+
             retView = await new Cesium.Viewer('map3d', {
+                imageryProvider: false,
+                baseLayerPicker: false,
+                homeButton: false,
+                skyAtmosphere: new Cesium.SkyAtmosphere(),
                 terrain: Cesium.Terrain.fromWorldTerrain()
             });
+
+            const imageryLayer = retView.imageryLayers.addImageryProvider(
+                await Cesium.IonImageryProvider.fromAssetId(3),
+              );
+              await retView.zoomTo(imageryLayer);            
 
             retView.scene.globe.show = true;
 

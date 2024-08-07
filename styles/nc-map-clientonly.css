@@ -5,19 +5,19 @@
 }
 
 div.leaflet-popup-content-wrapper{
-  width: auto;
-  max-width: 50vw;
+  width: fit-content;
+  max-width: 55vw;
 
 }
 
 div.leaflet-popup{
-  width: auto;
-  max-width: 50vw;
+  width: fit-content;
+  max-width: 55vw;
 }
 
 div.leaflet-popup-content {
-  width: auto;
-  max-width: 50vw;
+  width: fit-content;
+  max-width: 55vw;
   min-width: 35vw;
 } 
 
