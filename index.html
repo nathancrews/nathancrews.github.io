@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Nathan Crews">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/styles-clientonly.css" />
 </head>
 
 <body>
@@ -27,15 +27,39 @@
        </ul>
     </nav>
   </div> -->
-  <div id="projects" class="projectBox">
-    <div class="project">
+  <div id="projects" class="projectBox grid-container">
+    <box class="project">
       <h3 class="project-title">Photo Mapper</h3>
       <article class="description-text">Quickly map photos with GPS data. Simply Drag and drop photo image files onto
-        the displayed 2D or 3D map. You can also choose the files to map.</article>
-      <a href="./drop.html" target="_blank" class="project-image">Launch Project<img src="./images/photomapper-screenshot.jpg"
-        class="project-image" width="300" /></a>
-      <details class="project-details"><summary>Project Details</summary><div class="project-details">put details here</div></details>
-    </div>
+        the displayed 2D or 3D map. You can also choose the files to map. Uses only client-side rendering code.</article>
+      <a href="./drop.html" target="_blank" class="project-image">Launch Project<img
+          src="./images/photomapper-screenshot.jpg" class="project-image" width="300" /></a>
+      <details class="project-details">
+        <summary>Project Details</summary>
+        <div class="project-details">put details here</div>
+      </details>
+    </box>
+    <box class="project">
+      <h3 class="project-title">Photo Mapper Server</h3>
+      <article class="description-text">Quickly map photos with GPS data. Simply Drag and drop photo image files onto
+        the displayed 2D or 3D map. You can also choose the files to map. Uses server-side rendering code.</article>
+      <a href="#" target="_blank" class="project-image">Launch Video Demo<img
+          src="./images/photomapper-screenshot.jpg" class="project-image" width="300" /></a>
+      <details class="project-details">
+        <summary>Project Details</summary>
+        <div class="project-details">put details here</div>
+      </details>
+    </box>
+    <box class="project">
+      <h3 class="project-title">Windows GLTF/GLB Shell Extension</h3>
+      <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick thumbnail images.</article>
+      <a href="#" target="_blank" class="project-image">Launch Video Demo<img
+          src="./images/photomapper-screenshot.jpg" class="project-image" width="300" /></a>
+      <details class="project-details">
+        <summary>Project Details</summary>
+        <div class="project-details">put details here</div>
+      </details>
+    </box>
   </div>
 </body>
 

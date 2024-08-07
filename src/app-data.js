@@ -16,6 +16,8 @@ export let AppUIData = {
 
 function AppSettingsData() {
     this.imageIcon2D = "thumbnail";
+    this.imageIcon2DWidth = 350;
+    this.imageIcon3DWidth = 64;
     this.droneIcon2D = 'images/drone-icon.jpg';
 }
 

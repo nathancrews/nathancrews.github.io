@@ -65,7 +65,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         let max_thumb_height = 450;
         let thumbnail_image_data;
 
-        //    console.log('Worker FinalizeThumbnailImage called, event = ', event);
+        //console.log('Worker FinalizeThumbnailImage called, event = ', event);
 
         //console.log(`imageEl.size = ${((imageEl.naturalWidth * imageEl.naturalHeight)/1024)*2} kb`);
 

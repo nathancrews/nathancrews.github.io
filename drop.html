@@ -21,7 +21,7 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Cesium.js" defer></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/nc-map.css" />
+    <link rel="stylesheet" href="styles/nc-map-clientonly.css" />
     <link rel="stylesheet" href="styles/settings.css" />
     <script src="./src/geojson/geojson.min.js" defer></script>
     <script src="./src/geo-map-clientonly.js" type="module" defer></script>
@@ -70,10 +70,6 @@
                 <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
                 <label for="directory" hidden="true">Directory Name:</label>
                 <input id="directory" name="directory" value="test_drop" type="text" hidden="true">
-                <br />
-                <!-- <label hidden="false" for="file">File(s):</label>
-                <input id="file" type="file" name="file" class="map-drop-zone__input" multiple="true"
-                    accept=".jpg,.png,.JPG,.PNG" hidden="false"> -->
                 <button id="submit-button" name="submit-button" type="submit">Upload</button>
             </form>
         </div>

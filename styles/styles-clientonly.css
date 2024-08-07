@@ -72,16 +72,18 @@ nav li:first-child {
   font-size: large;
 }
 
-div.projectBox {
-  display: flex;
-  background-color: #aaaaaa;
-  padding: 1rem;
-  width:auto;
-  height: auto;
-
+.grid-container {
+  margin: 2rem;
+  display: grid;
+  grid-template-columns: auto auto auto;
 }
 
-div.project {
+.projectBox {
+  background-color: #aaaaaa;
+  padding: 1rem;
+}
+
+.project {
   text-align: left;
   width: min-content;
   border: azure;
