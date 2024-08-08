@@ -81,7 +81,8 @@ div.leaflet-popup-content {
 }
 
 .map-menu-button:hover {
-  background-color: gold;
+  border: 0.1rem solid white; 
+  box-shadow:gray 0.1rem;
 }
 
 .map-erase-button {
