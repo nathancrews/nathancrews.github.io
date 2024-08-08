@@ -1,69 +1,64 @@
-
-
-.settings-map-icon-selector {
-    height: fit-content;
-    background-color: #aaaaaa;
+.settings-modal {
+  display: none;
+  position: fixed; 
+  left: 25vw;
+  top: 25vh;
+  padding-left: 1rem;
+  width: fit-content; 
+  height: fit-content; 
+  background-color: #aaaaaa;
+  z-index: 1000; 
 }
 
-.settings-modal {
-    color: black;
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 33%;
-    top: 0;
-    width: fit-content; /* Full width */
-    height: fit-content; /* Full height */
-    overflow: none; /* Enable scroll if needed */
-    background-color: none;
-  }
+/* Modal Content */
 
 .settings-form-fieldset {
-  display:flex;
+  display: flex;
   margin-top: 25px;
   margin-bottom: 25px;
-}  
+  padding: 0.5rem;
+  vertical-align: top;
+  border: 2px solid black;
+}
 
-.settings-map-icon2d {
-   border-style: none;
+.settings-legend {
+  color: black;
+  font-size: 1.5rem;
+  padding: 0;
+  margin-top: -0.5rem;
+}
+
+.settings-map-icon-selector {
+  margin-left: 1rem;
+  margin-right:1rem;
+  height: fit-content;
+  background-color: #aaaaaa;
 }
 
 .settings-icon-2d {
-    margin-left: 25px;
-    border: 3px solid #aaaaaa;
-    text-align: center;
-    width: 50px;
-    height: 50px;
+  margin-right: 0.5rem;
+  border: 2px solid black;
+  text-align: center;
+  width: 50px;
+  height: 50px;
 }
 
-  /* Modal Content */
-  .settings-modal-content {
-    display: flex;
-    width:fit-content;
-    background-color: #aaaaaa;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    padding-left: 10px;
-  }
-  
-  /* The Close Button */
-  .settings-close {
-    margin-top: 0px;
-    margin-left: 15px;
-    margin-right: 10px;
-    vertical-align: top;
-    padding: 0px;
-    color:black;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .settings-close:hover,
-  .settings-close:focus {
-    color: rgb(0, 252, 0);
-    text-decoration: none;
-    cursor: pointer;
-  }
+/* The Close Button */
+.settings-close {
+  margin-top: 0px;
+  margin-left: 15px;
+  margin-right: 10px;
+  vertical-align: top;
+  padding: 0px;
+  color: black;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
 
+.settings-close:hover,
+.settings-close:focus {
+  color: rgb(0, 252, 0);
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -39,7 +39,7 @@
             <img id="map-menu" title="Show Map Menu" alt="Map Menu" src="images/menu.svg" class="map-menu-button" />
             <div id="map-menu-bar-1" class="map-menu-bar">
                 <img id="settings-button" title="Edit Settings" alt="Map Settings" src="images/settings.png"
-                    class="map-menu-button" />
+                    class="map-menu-button map-settings-button" />
                 <img id="view2d" title="Zoom to images on 2D Map" alt="Show 2D Map" src="images/map2d.svg"
                     class="map-menu-button map-button-2d" />
                 <img id="view3d" title="Zoom to images on 3D Map" alt="Show 3D Map" src="images/map3d.svg"
@@ -59,11 +59,11 @@
         </div>
         </div>
         <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
-        <div id="settings-modal" class="settings-modal">
+        <!-- <div id="settings-modal" class="settings-modal"> -->
             <!-- Modal settings dialog -->
-            <form id="settings-modal-content" class="settings-modal-content">
+            <form id="settings-modal" class="settings-modal">
                 <fieldset id="settings-form-fieldset" class="settings-form-fieldset">
-                    <legend id="settings-map-icon2d" class="settings-map-icon2d">2D Map Icon</legend>
+                    <legend id="settings-legend" class="settings-legend">2D Map Icon</legend>
                     <select id="map-icon-selector" class="settings-map-icon-selector" title="Mapping Icon">
                         <option value="thumbnail">Image Thumbnail</option>
                         <option value="drone2d">Drone</option>
@@ -73,7 +73,7 @@
                 </fieldset>
                 <span class="settings-close">&times;</span>
             </form>
-        </div>
+        <!-- </div> -->
     </header>
     <div class="map-drop-with-loading">
         <div class="drop-zone">

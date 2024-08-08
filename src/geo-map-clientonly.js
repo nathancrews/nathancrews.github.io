@@ -85,11 +85,10 @@ canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
     }
 });
 
-function ShowLoadingImage(setVisible){
+function ShowLoadingImage(setVisible) {
 
     if (AppUIData && AppUIData.loadingImageEl) {
-        if (setVisible)
-        {
+        if (setVisible) {
             AppUIData.loadingImageEl.style.display = "block";
         }
         else {
@@ -150,27 +149,22 @@ async function OnImageDropped(event) {
 
 function InitAppUI() {
 
-     ShowLoadingImage(false);
+    ShowLoadingImage(false);
 
-    ///////////////////////////////////////////////////////////////////
-    // Set up the settings button and dialog
-    ///////////////////////////////////////////////////////////////////
-    let settingsDialog = document.getElementById("settings-modal");
     // Get the settings open button
-    let settingsButton = document.getElementById("settings-button");
-    // Get the <span> element that closes settings
-    let span = document.getElementsByClassName("settings-close")[0];
+    let settingsButton = document.getElementsByClassName("map-settings-button")[0];
 
     // Setup map menu bar icon commands
 
     settingsButton.onclick = function (event) {
         event.preventDefault = true;
-        settingsDialog.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        settingsDialog.style.display = "none";
+        let settingsDialog = document.getElementsByClassName("settings-modal")[0];
+        if (!settingsDialog.style.display || settingsDialog.style.display == 'none') {
+            settingsDialog.style.display = "flex";
+        }
+        else {
+            settingsDialog.style.display = 'none';
+        }
     }
 
     let mapMenu = document.getElementById("map-menu");
@@ -248,16 +242,24 @@ function InitAppUI() {
 function InitAppSettingsUI() {
     // Settings dialog UI
 
-    let settingsDialog = document.getElementById("settings-modal");
-    let settingsButton = document.getElementById("settings-button");
+    let settingsDialog = document.getElementsByClassName("settings-modal")[0];
+    let settingsButton = document.getElementsByClassName("map-settings-button")[0];
     let mapIconSelector = document.getElementById("map-icon-selector");
-    let settingsModalContent = document.getElementById("settings-modal-content");
     let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
     let settingsIconFieldset = document.getElementById("settings-form-fieldset");
     let settingsIconPreview = document.getElementById("settings-icon-2d");
     let settingsIconLegend = document.getElementById("settings-map-icon2d");
 
     LoadAppSettings();
+
+    // Get the <span> element that closes settings
+    let span = document.getElementsByClassName("settings-close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        settingsDialog.style.display = "none";
+    }
+
 
     mapIconSelector.value = AppMapData.appSettings.imageIcon2D;
 
@@ -274,9 +276,9 @@ function InitAppSettingsUI() {
     window.onclick = function (event) {
         if (event.target == settingsButton) { return; }
 
-        if (settingsDialog.style.display == 'block') {
+        if (settingsDialog.style.display == 'flex') {
             if ((event.target != settingsDialog) && (event.target != mapIconSelector) &&
-                (event.target != settingsIconPreview) && (event.target != settingsModalContent) &&
+                (event.target != settingsIconPreview) &&
                 (event.target != settingsModalContentIcon) &&
                 (event.target != settingsIconFieldset) &&
                 (event.target != settingsIconPreview) &&
@@ -334,11 +336,10 @@ async function ResetMap(showUserConfirm) {
 
     let userConfirmed = true;
 
-    if (showUserConfirm)
-    {
+    if (showUserConfirm) {
         userConfirmed = window.confirm("Do you really want to erase ALL photos from the Map?");
     }
-    
+
     if (userConfirmed) {
         await ResetMap2D();
         await ResetMap3D();
@@ -436,7 +437,7 @@ function LoadMap() {
                     let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
                         { detail: { AppMapData: AppMapData } });
 
-                        ShowLoadingImage(true);
+                    ShowLoadingImage(true);
 
                     if (UpdateMapEvent) {
                         AppUIData.formEl.dispatchEvent(UpdateMapEvent);

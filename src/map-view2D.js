@@ -122,7 +122,7 @@ export async function UpdateMap2D(geoJSONResults) {
         }).bindPopup(function (layer) {
             return "<div style='width:min-content'><p><b>" + layer.feature.properties.name + "</b></p> \
                     <img ' src='" +
-                    layer.feature.properties.imageURLData + "' /></a></div>";
+                    layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
         });
 
         if (AppUIData.imagesLayer) {
