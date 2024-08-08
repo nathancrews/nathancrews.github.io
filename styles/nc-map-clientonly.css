@@ -26,12 +26,12 @@ div.leaflet-popup-content {
 } 
 
 .leaflet-marker-icon{
-  border: 0.25rem solid darkblue;
+  border: 0.20rem solid darkblue;
 }
 
 .map-thumb-2d {
   padding: 0.1rem;
-  background-color: black;
+  background-color: darkblue;
 }
 
 .map-body {
