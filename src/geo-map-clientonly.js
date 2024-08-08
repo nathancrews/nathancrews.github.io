@@ -168,33 +168,19 @@ function InitAppUI() {
     }
 
     let mapMenu = document.getElementById("map-menu");
-    let mapMenuBar1 = document.getElementById("map-menu-bar-1");
-    let mapMenuBar2 = document.getElementById("map-menu-bar-2");
-    let mapMenuBar3 = document.getElementById("map-menu-bar-3");
 
-    if (mapMenu && mapMenuBar1 && mapMenuBar2 && mapMenuBar3) {
+    if (mapMenu) {
         mapMenu.onclick = function (event) {
             event.preventDefault = true;
 
-            if (!mapMenuBar1.style.display || mapMenuBar1.style.display === "flex") {
-                mapMenuBar1.style.display = "none";
-            }
-            else {
-                mapMenuBar1.style.display = "flex";
-            }
-
-            if (!mapMenuBar2.style.display || mapMenuBar2.style.display === "flex") {
-                mapMenuBar2.style.display = "none";
-            }
-            else {
-                mapMenuBar2.style.display = "flex";
-            }
-
-            if (!mapMenuBar3.style.display || mapMenuBar3.style.display === "flex") {
-                mapMenuBar3.style.display = "none";
-            }
-            else {
-                mapMenuBar3.style.display = "flex";
+            let mapMenuBars = document.getElementsByClassName("map-menu-bar");
+            for (let ii=0; ii < mapMenuBars.length; ii++){
+                if (!mapMenuBars[ii].style.display || mapMenuBars[ii].style.display === "flex") {
+                    mapMenuBars[ii].style.display = "none";
+                }
+                else {
+                    mapMenuBars[ii].style.display = "flex";
+                }
             }
         }
     }
