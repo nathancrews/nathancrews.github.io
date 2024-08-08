@@ -174,17 +174,33 @@ function InitAppUI() {
     }
 
     let mapMenu = document.getElementById("map-menu");
-    let mapMenuBar = document.getElementById("map-menu-bar");
+    let mapMenuBar1 = document.getElementById("map-menu-bar-1");
+    let mapMenuBar2 = document.getElementById("map-menu-bar-2");
+    let mapMenuBar3 = document.getElementById("map-menu-bar-3");
 
-    if (mapMenu && mapMenuBar) {
+    if (mapMenu && mapMenuBar1 && mapMenuBar2 && mapMenuBar3) {
         mapMenu.onclick = function (event) {
             event.preventDefault = true;
 
-            if (!mapMenuBar.style.display || mapMenuBar.style.display === "flex") {
-                mapMenuBar.style.display = "none";
+            if (!mapMenuBar1.style.display || mapMenuBar1.style.display === "flex") {
+                mapMenuBar1.style.display = "none";
             }
             else {
-                mapMenuBar.style.display = "flex";
+                mapMenuBar1.style.display = "flex";
+            }
+
+            if (!mapMenuBar2.style.display || mapMenuBar2.style.display === "flex") {
+                mapMenuBar2.style.display = "none";
+            }
+            else {
+                mapMenuBar2.style.display = "flex";
+            }
+
+            if (!mapMenuBar3.style.display || mapMenuBar3.style.display === "flex") {
+                mapMenuBar3.style.display = "none";
+            }
+            else {
+                mapMenuBar3.style.display = "flex";
             }
         }
     }
@@ -314,10 +330,16 @@ function Show3D(event) {
     }
 }
 
-async function ResetMap() {
+async function ResetMap(showUserConfirm) {
 
-    if (window.confirm("Do you really want to erase ALL photos from the Map?")) {
+    let userConfirmed = true;
 
+    if (showUserConfirm)
+    {
+        userConfirmed = window.confirm("Do you really want to erase ALL photos from the Map?");
+    }
+    
+    if (userConfirmed) {
         await ResetMap2D();
         await ResetMap3D();
 
@@ -404,6 +426,8 @@ function LoadMap() {
         if (geoJSONStr) {
 
             console.log(`Map load geoJSON size: ${(geoJSONStr.length / 1024) * 2} kb`);
+
+            ResetMap(false);
 
             AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
 

@@ -31,14 +31,14 @@ export async function ResetMap3DView() {
         let dataSource = AppMapData.map3D.dataSources.get(0);
         //console.log("dataSource...: ", dataSource);
         //console.log("AppMapData.map3D.camera: ", AppMapData.map3D.camera);
-        await AppMapData.map3D.flyTo(dataSource, { duration: 2 });
+//        await AppMapData.map3D.flyTo(dataSource, { duration: 0 });
 
         // if (dataSource.entities._entities.length < 2) {
         //     console.log("Zooming single image");
         //     await AppMapData.map3D.zoomTo(dataSource, new Cesium.HeadingPitchRange(0.0, -0.650, 500.0));
         // }
         // else {
-        console.log("Zooming images");
+        // console.log("Zooming images");
         await AppMapData.map3D.zoomTo(dataSource);
         //}
     }
@@ -74,6 +74,8 @@ async function LoadCesium3D(viewer3D) {
             });
 
             retView.camera.defaultZoomAmount = 50.0;
+
+            await ResetMap3DView();
 
         } catch (error) {
             console.log(error);

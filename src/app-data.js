@@ -14,11 +14,13 @@ export let AppUIData = {
     clientSideOnly: true
 }
 
-function AppSettingsData() {
-    this.imageIcon2D = "thumbnail";
-    this.imageIcon2DWidth = 300;
-    this.imageIcon3DWidth = 64;
-    this.droneIcon2D = 'images/drone-icon.jpg';
+class AppSettingsData {
+    constructor() {
+        this.imageIcon2D = "thumbnail";
+        this.imageIcon2DWidth = 300;
+        this.imageIcon3DWidth = 64;
+        this.droneIcon2D = 'images/drone-icon.jpg';
+    }
 }
 
 export let AppMapData = {

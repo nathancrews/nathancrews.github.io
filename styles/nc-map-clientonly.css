@@ -6,18 +6,20 @@
 
 div.leaflet-popup-content-wrapper{
   width: fit-content;
-  max-width: 55vw;
+  max-width: 50vw;
+  min-width: 35vw;
 
 }
 
 div.leaflet-popup{
   width: fit-content;
-  max-width: 55vw;
+  max-width: 50vw;
+  min-width: 35vw;
 }
 
 div.leaflet-popup-content {
   width: fit-content;
-  max-width: 55vw;
+  max-width: 50vw;
   min-width: 35vw;
 } 
 
@@ -34,21 +36,37 @@ div.leaflet-popup-content {
   background-position: center;
 }
 
+.map-controls {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 0.5rem; 
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+  height: auto;
+  background-color: #aaaaaa;
+}
+
 .map-menu-bar {
   display: flex;
-  width: auto;
+  width: fit-content;
+  height: auto;
   color: #aaaaaa;
   background-color: #aaaaaa;
   align-items: center;
   vertical-align: middle;
+  border: 0.10rem black;
+  border-style: solid;
 }
 
 .map-menu-button {
   color: black;
   margin: 0.25rem;
   vertical-align: middle;
-  width: 1.5rem;
-  height: 1.5rem;
+  width:2rem;
+  height: 2rem;
 }
 
 .map-menu-button:hover {
@@ -63,18 +81,7 @@ div.leaflet-popup-content {
 .map-file-upload-button {
   margin-right: 1rem;
   margin-left: 1rem;
-  width: 15rem;
-}
-
-.map-controls {
-  display: flex;
-  background-color: #aaaaaa;
-  width: max-content;
-  min-width: 50vw;
-  max-width: 95vw;
-  min-width: 2rem;
-  max-height: 2rem;
-  margin-top: 1rem;
+  width: 14rem;
 }
 
 .map-button-2d {
@@ -131,6 +138,7 @@ div.leaflet-popup-content {
 }
 
 .map-base {
+  margin-top: 2rem;
   width: 95vw;
   height: 90vh;
 }

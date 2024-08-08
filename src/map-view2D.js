@@ -120,7 +120,7 @@ export async function UpdateMap2D(geoJSONResults) {
                 return L.marker(latlng, { icon: currentDroneIcon });
             },
         }).bindPopup(function (layer) {
-            return "<div style='width:auto;margin:0px; padding:0px;'><p><b>" + layer.feature.properties.name + "</b></p> \
+            return "<div style='width:min-content'><p><b>" + layer.feature.properties.name + "</b></p> \
                     <img ' src='" +
                     layer.feature.properties.imageURLData + "' /></a></div>";
         });
