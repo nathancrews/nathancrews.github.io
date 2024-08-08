@@ -36,7 +36,7 @@ div.leaflet-popup-content {
 
 .map-body {
   margin-right: 0.5rem;
-  margin-left: 1.5rem;
+  margin-left: 0.5rem;
   color: gainsboro;
   width: 98vw;
   height: 90vh;
@@ -45,6 +45,25 @@ div.leaflet-popup-content {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.map-base {
+  margin-top: 2rem;
+  width: 98%;
+  height: 85%;
+  overflow: none;
+}
+
+@media screen and (max-width: 635px) {
+  .map-base {
+    height: 80%;
+  }
+}
+
+@media screen and (max-width: 365px) {
+  .map-base {
+    height: 70%;
+  }
 }
 
 .map-controls {
@@ -154,12 +173,6 @@ div.leaflet-popup-content {
   display: flex;
 }
 
-.map-base {
-  margin-top: 2rem;
-  width: 95vw;
-  height: 90vh;
-}
-
 .map-drop-zone {
   cursor: pointer;
   border: 4px dashed #009578;
@@ -167,13 +180,13 @@ div.leaflet-popup-content {
 }
 
 .map-drop-zone-3d {
-  display: block;
+  display: flex;
   padding: 0px;
   margin: 0px;
 }
 
 .map-drop-zone-2d {
-  display: block;
+  display: flex;
   padding: 0px;
   margin: 0px;
 }
