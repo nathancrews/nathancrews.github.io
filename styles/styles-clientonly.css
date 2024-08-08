@@ -5,8 +5,11 @@
 }
 
 body {
-  width: 100vw;
-  height: 100vh;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  color: gainsboro;
+  width: 98vw;
+  height: 90vh;
   display: block;
   background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
@@ -26,9 +29,74 @@ h2 {
   z-index: 1000;
 }
 
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 0.5rem; 
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+  height: auto;
+  background-color: #aaaaaa;
+}
+
+.projectBox {
+  background-color: #aaaaaa;
+}
+
+.project {
+  display: flow;
+  grid-auto-flow: column;
+  max-width: 350px;
+  min-width: 300px;
+  height: auto;
+  text-align: left;
+  border: azure;
+  border-width: medium;
+  border-style: ridge;
+}
+
+.project-title {
+  color:darkblue;
+  text-align: center;
+}
+
+a.project-image {
+  text-align: left;
+  padding: 1rem;
+}
+
+img.project-image {
+  align-self: center;
+  padding: 0.5rem;
+}
+
+.description-text {
+  text-align: left;
+  margin: 1rem;
+}
+
+.project-details {
+  display: flex;
+  flex-flow: row;
+  text-align: justify;
+  margin: 1rem;
+}
+
+div.project-details {
+  text-align: justify;
+  margin: 0.5rem;
+  border: azure;
+  border-width: medium;
+  border-style: ridge;
+}
+
+
 
 nav {
-  width: 'fit-content';
+  width: fit-content;
   position: 0px;
   background-color: lightslategray;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
@@ -72,111 +140,4 @@ nav li:first-child {
   font-size: large;
 }
 
-.grid-container {
-  margin: 2rem;
-  display: grid;
-  grid-template-columns: auto auto auto;
-}
-
-.projectBox {
-  background-color: #aaaaaa;
-  padding: 1rem;
-}
-
-.project {
-  display: grid;
-  text-align: left;
-  width: min-content;
-  border: azure;
-  border-width: medium;
-  border-style: ridge;
-}
-
-.project-title {
-  text-align: center;
-}
-
-a.project-image {
-  text-align: left;
-  padding: 1rem;
-}
-
-img.project-image {
-  align-self: center;
-  padding: 0.5rem;
-}
-
-.description-text {
-  text-align: left;
-  margin: 1rem;
-}
-
-.project-details {
-  display: flex;
-  flex-flow: row;
-  text-align: justify;
-  margin: 1rem;
-}
-
-div.project-details {
-  text-align: justify;
-  margin: 0.5rem;
-  border: azure;
-  border-width: medium;
-  border-style: ridge;
-}
-
-
-img.ImageResultPanel {
-  margin: 10px;
-  width: 900px;
-  height: 600px;
-}
-
-div.ImageResultPanel {
-  background-color: lightslategray;
-  min-width: 700px;
-  min-height: 600px;
-}
-
-div.image-preview {
-  border: groove 5px;
-  background-color: lightslategray;
-  display: flex;
-  justify-content: flex=flex-end;
-  align-items: top;
-}
-
-img.img_results {
-  align-items: top;
-  margin: 0px;
-  padding: 0px;
-}
-
-img.img_loader {
-  align-items: right;
-  width: 50px;
-  height: 50px;
-}
-
-div.file_list {
-  margin-top: 0px;
-  vertical-align: top;
-  font-size: small;
-  min-width: 235px;
-  max-width: 250px;
-  overflow-y: scroll;
-}
-
-.nolabel {
-  list-style: none;
-  max-height: 25%;
-}
-
-div.img_result {
-  vertical-align: top;
-  align-items: top;
-  margin: 0px;
-  padding: 0px;
-}
 
