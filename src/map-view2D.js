@@ -1,6 +1,6 @@
 
 import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
-import { LoadGeoJSONFile } from "./geo-map.js";
+import { LoadGeoJSONFile } from "./nc_file_upload_client.js";
 
 //************************************
 // Define Application Methods
@@ -144,7 +144,7 @@ export async function ResetMap2D() {
         AppUIData.imagesLayer = null;
     }
 
-    AppMapData.map2D.setView([AppMapData.defaultLatitude, AppMapData.defaultLongitude], 18);
+    await AppMapData.map2D.setView([AppMapData.defaultLatitude, AppMapData.defaultLongitude], 18);
 }
 
 export async function ResetMap2DView() {

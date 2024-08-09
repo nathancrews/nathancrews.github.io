@@ -1,32 +1,31 @@
-import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
-
-// set AppUIData.clientSideOnly = true for client-side image processing
-// set AppUIData.clientSideOnly = false (default) for server-side image uploading and processing
-AppUIData.clientSideOnly = true;
-
-import { UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
-import { UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
-import { ImageData } from "./image-data.js"
+import { AppMapData, AppUIData, UpdateMapEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
+import { InitDropElements } from "./map-drop-zone.js";
+import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
+import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
 import { nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
 import { ProcessImages } from "./image-processor.js"
 
-const MAP_DATA_SAVE_KEY = "nc_imapper:geoJSON";
-const APP_DATA_SAVE_KEY = "nc_imapper:appJSON";
+await InitAppUI();
 
-let processingArrayCount = 0;
-let resultArray = [];
-let canvasEl = document.createElement('canvas');
-let ThumbnailReadyArray = [];
+export async function UpdateMaps(event) {
+    console.log("updating maps...");
 
-const fileUploadForm = document.getElementById("uploadForm");
+    let startTime = performance.now();
 
-//console.log("fileUploadForm = ", fileUploadForm)
-if (fileUploadForm) {
-    fileUploadForm.addEventListener("submit", OnImageDropped);
+    await UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
+
+    let endTime = performance.now();
+    console.log(`UpdateMap2D took ${endTime - startTime}ms`)
+
+    startTime = performance.now();
+
+    await UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
+
+    ShowLoadingImage(false);
+
+    endTime = performance.now();
+    console.log(`UpdateMap3D took ${endTime - startTime}ms`)
 }
-
-InitAppUI();
-
 
 function findImageDataInArray(nameStr, imageArray) {
     let existsInArray = false;
@@ -40,68 +39,9 @@ function findImageDataInArray(nameStr, imageArray) {
     return existsInArray;
 }
 
-canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
-
-    //  console.log("ThumbnailReadyEvent called: ", evt);
-
-    if (evt.detail.ImageData) {
-
-        //console.log('evt.detail.imageData = ', evt.detail.ImageData);
-
-        if (evt.detail.ImageData) {
-            ThumbnailReadyArray.push(evt.detail.ImageData);
-        }
-
-        //        console.log(`processingArrayCount: ${processingArrayCount}, ThumbnailReadyArray.length: ${ThumbnailReadyArray.length}`);
-
-        if (processingArrayCount == (ThumbnailReadyArray.length)) {
-
-            //            console.log("Updating Map...")
-
-            AppMapData.imageDataArray = AppMapData.imageDataArray.concat(ThumbnailReadyArray);
-
-            // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
-
-            let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
-
-            //console.log("result geoJSONval = ", geoJSONval)
-
-            AppMapData.geoJSONFileData = geoJSONval;
-
-            let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                { detail: { AppMapData: AppMapData } });
-
-            AppUIData.formEl.dispatchEvent(UpdateMapEvent);
-
-            ShowLoadingImage(false);
-
-            // clear the array and count for the next drop operation
-            ThumbnailReadyArray = [];
-            processingArrayCount = 0;
-        }
-        else {
-            // console.log("waiting for complete results array.... ")
-        }
-    }
-});
-
-function ShowLoadingImage(setVisible) {
-
-    if (AppUIData && AppUIData.loadingImageEl) {
-        if (setVisible) {
-            AppUIData.loadingImageEl.style.display = "block";
-        }
-        else {
-            AppUIData.loadingImageEl.style.display = "none";
-        }
-    }
-}
-
 async function OnImageDropped(event) {
 
-    //console.log("OnImageDropped called = ", event)
-
-    if (fileUploadForm && AppUIData.fileInputEl) {
+    if (AppUIData.fileInputEl) {
         event.preventDefault();
 
         ShowLoadingImage(true);
@@ -116,7 +56,7 @@ async function OnImageDropped(event) {
         // console.log("allowedFiles = ", allowedFiles)
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
-            if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppUIData.allowedFileTypes)) {
+            if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.appSettings.allowedFileTypes)) {
                 // don't allow duplicate file names to be processed
                 if (!findImageDataInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                     files.push(allowedFiles[ii]);
@@ -126,30 +66,102 @@ async function OnImageDropped(event) {
 
         console.log("Allowed image files to process: ", files.length);
 
-        processingArrayCount = files.length;
+        AppUIData.processingArrayCount = files.length;
 
         if (files.length > 0) {
-            resultArray = await ProcessImages(files, canvasEl);
-            processingArrayCount = resultArray.length;
+            AppUIData.resultArray = await ProcessImages(files, AppUIData.canvasEl);
+            AppUIData.processingArrayCount = AppUIData.resultArray.length;
         }
 
-        //                console.log("clicked result resultArray = ", resultArray)
-        console.log("OnDrop processingArrayCount = ", processingArrayCount)
+        console.log("OnDrop AppUIData.processingArrayCount = ", AppUIData.processingArrayCount)
 
         let endTime = performance.now();
 
         console.log(`OnDrop ProcessImages took ${endTime - startTime}ms`)
 
-        if (processingArrayCount == 0) {
+        if (AppUIData.processingArrayCount == 0) {
             ShowLoadingImage(false);
             alert("Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!");
         }
     }
 }
 
-function InitAppUI() {
+AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
+
+    //  console.log("ThumbnailReadyEvent called: ", evt);
+
+    if (evt.detail.ImageData) {
+
+        //console.log('evt.detail.imageData = ', evt.detail.ImageData);
+
+        if (evt.detail.ImageData) {
+            AppUIData.ThumbnailReadyArray.push(evt.detail.ImageData);
+        }
+
+        // console.log(`processingArrayCount: ${processingArrayCount}, AppUIData.ThumbnailReadyArray.length: ${AppUIData.ThumbnailReadyArray.length}`);
+
+        if (AppUIData.processingArrayCount == (AppUIData.ThumbnailReadyArray.length)) {
+
+            AppMapData.imageDataArray = AppMapData.imageDataArray.concat(AppUIData.ThumbnailReadyArray);
+            // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
+
+            let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
+            //console.log("result geoJSONval = ", geoJSONval)
+
+            if (geoJSONval) {
+                AppMapData.geoJSONFileData = geoJSONval;
+
+                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
+                    { detail: { AppMapData: AppMapData } });
+
+                AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+            }
+
+            ShowLoadingImage(false);
+            // clear the array and count for the next drop operation
+            AppUIData.ThumbnailReadyArray = [];
+            AppUIData.processingArrayCount = 0;
+        }
+        else {
+            // console.log("waiting for complete results array.... ")
+        }
+    }
+});
+
+
+async function InitAppUI() {
 
     ShowLoadingImage(false);
+
+    ///////////////////////////////////////////////////////////
+    // Set up both drop event and user choosing files manually
+    // critial: without these two elements and events, nothing works!
+    ///////////////////////////////////////////////////////////
+
+    // This DROP (on class map-drop-zone) message handler calls this 
+    // event to load the dropped files.
+    AppUIData.submitButton = document.getElementById("submit-button");
+    if (AppUIData.submitButton) {
+        AppUIData.submitButton.addEventListener("click", OnImageDropped);
+        AppUIData.submitButton.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
+    }
+
+
+    // This CHANGE message handler loads the user choosen files
+    AppUIData.fileInputEl = document.getElementById("upload-files");
+
+    if (AppUIData.fileInputEl) {
+        AppUIData.fileInputEl.onchange = function (event) {
+            event.preventDefault();
+
+            OnImageDropped(event);
+        };
+    }
+    ///////////////////////////////////////////////////////////
+
+    // set up the map drop event elements
+    let dropElements = document.querySelectorAll(".map-drop-zone");
+    InitDropElements(dropElements);
 
     // Get the settings open button
     let settingsButton = document.getElementsByClassName("map-settings-button")[0];
@@ -174,7 +186,7 @@ function InitAppUI() {
             event.preventDefault = true;
 
             let mapMenuBars = document.getElementsByClassName("map-menu-bar");
-            for (let ii=0; ii < mapMenuBars.length; ii++){
+            for (let ii = 0; ii < mapMenuBars.length; ii++) {
                 if (!mapMenuBars[ii].style.display || mapMenuBars[ii].style.display === "flex") {
                     mapMenuBars[ii].style.display = "none";
                 }
@@ -211,18 +223,13 @@ function InitAppUI() {
         resetMapButton.addEventListener('click', ResetMap);
     }
 
-    AppUIData.fileInputEl = document.getElementById("upload-files");
-
-    AppUIData.fileInputEl.onchange = function (event) {
-        event.preventDefault();
-
-        OnImageDropped(event);
-    };
-
     // Settings dialog UI
     InitAppSettingsUI();
 
-    Show2D(null);
+    await InitMap2D();
+    await InitMap3D();
+
+    await Show2D(null);
 }
 
 function InitAppSettingsUI() {
@@ -245,7 +252,6 @@ function InitAppSettingsUI() {
     span.onclick = function () {
         settingsDialog.style.display = "none";
     }
-
 
     mapIconSelector.value = AppMapData.appSettings.imageIcon2D;
 
@@ -294,26 +300,38 @@ function InitAppSettingsUI() {
     }
 }
 
-function Show2D(event) {
+function ShowLoadingImage(setVisible) {
+
+    if (AppUIData && AppUIData.loadingImageEl) {
+        if (setVisible) {
+            AppUIData.loadingImageEl.style.display = "block";
+        }
+        else {
+            AppUIData.loadingImageEl.style.display = "none";
+        }
+    }
+}
+
+async function Show2D(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
         map3D_div_el.style.display = "none";
         map2D_div_el.style.display = "block";
-        ResetMap2DView();
+        await ResetMap2DView();
         console.log("view set to 2D");
     }
 }
 
-function Show3D(event) {
+async function Show3D(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
     if (map2D_div_el && map3D_div_el) {
         map2D_div_el.style.display = "none";
         map3D_div_el.style.display = "block";
-        ResetMap3DView();
+        await ResetMap3DView();
         console.log("view set to 3D");
     }
 }
@@ -337,10 +355,10 @@ async function ResetMap(showUserConfirm) {
 
         }
     }
-
 }
 
 function SaveAppSettings() {
+
     if (AppMapData.appSettings) {
         let appJSONStr = JSON.stringify(AppMapData.appSettings);
         if (appJSONStr && appJSONStr.length > 0) {
@@ -351,6 +369,7 @@ function SaveAppSettings() {
 }
 
 function LoadAppSettings() {
+
     let appJSONStr = window.localStorage.getItem(APP_DATA_SAVE_KEY);
 
     if (appJSONStr && appJSONStr.length > 0) {
@@ -363,9 +382,8 @@ function LoadAppSettings() {
 
 
 function SaveMap() {
+
     try {
-        //        console.log("AppMapData.geoJSONFileData = ", AppMapData.geoJSONFileData);
-        let maxSingleLength = 5200000 - 1;
 
         SaveAppSettings();
 
@@ -402,8 +420,6 @@ function SaveMap() {
 
 function LoadMap() {
     try {
-        let maxSingleLength = 5200000 - 1;
-        let maxLocalStr = "";
 
         LoadAppSettings();
         InitAppSettingsUI();
@@ -418,21 +434,23 @@ function LoadMap() {
 
             AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
 
-            if (AppMapData.geoJSONFileData) {
-                if (AppUIData.formEl) {
-                    let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                        { detail: { AppMapData: AppMapData } });
+            if (AppMapData.geoJSONFileData && AppUIData.submitButton) {
 
-                    ShowLoadingImage(true);
+                ShowLoadingImage(true);
 
-                    if (UpdateMapEvent) {
-                        AppUIData.formEl.dispatchEvent(UpdateMapEvent);
-                    }
+                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
+                    { detail: { AppMapData: AppMapData } });
+
+                if (UpdateMapEvent) {
+                    AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
                 }
+            }
+            else {
+                window.alert("ERROR, loading local map data.");
             }
         }
         else {
-            window.alert("Sorry, there is no local map data to load");
+            window.alert("Sorry, there is no local map data to load.");
         }
 
     }

@@ -46,8 +46,7 @@ function ProcessDropElement(dropZoneElement) {
 			if (e.dataTransfer.files.length) {
 				inputElement.files = e.dataTransfer.files;
 
-				let sb = document.querySelectorAll("[type=submit]")[0];
-
+				let sb = document.getElementById("submit-button");
 				if (sb) {
 					sb.click();
 				}

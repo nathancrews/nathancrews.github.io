@@ -90,12 +90,11 @@ div.project-details {
   border-style: ridge;
 }
 
-
-
-
 nav {
-  width: fit-content;
-  position: 0px;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  width: 50%;
   background-color: lightslategray;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
 }
@@ -104,7 +103,7 @@ nav ul {
   width: 100%;
   list-style: none;
   display: flex;
-  justify-content: flex=flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -129,13 +128,9 @@ nav a:hover {
   background-color: lightgrey;
 }
 
-nav li:first-child {
+/* nav li:first-child {
   margin-right: auto;
-}
+} */
 
-.directory-name {
-  font-weight: bold;
-  font-size: large;
-}
 
 

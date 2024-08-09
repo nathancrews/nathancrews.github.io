@@ -1,4 +1,4 @@
-function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
+export function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
     let ret = false;
 
     if ((allowedFileTypes == undefined) || (allowedFileTypes.length < 1)
@@ -14,7 +14,7 @@ function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
     //console.log("file type to upload: ", fext);
 
     for (let ii = 0; ii < allowedExts.length; ii++) {
-        if (allowedExts[ii] == fext) {
+        if (allowedExts[ii].toLowerCase() == fext.toLowerCase()) {
             ret = true;
             break;
         }
@@ -22,7 +22,27 @@ function nc_IsFileTypeAllowed(fileName, allowedFileTypes) {
     return ret;
 }
 
-async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
+export async function LoadGeoJSONFile(jsonFileURL) {
+    let fetchData = "";
+
+    console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
+
+    let fetchResponse = await fetch(jsonFileURL);
+    if (fetchResponse.status === 200) {
+        fetchData = await fetchResponse.json();
+    }
+    else {
+        console.log("Load GeoJSON file failed: ", jsonFileURL)
+    }
+
+    // console.log("LoadGeoJSONFile: fetchData=", fetchData);
+
+    return fetchData;
+}
+
+
+
+export async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
     if ((formEl == undefined) || (fileInputEl == undefined)) {
         console.log("Error: NC_ChunkFileUploadRequests: called with undefined argument!")
@@ -117,5 +137,3 @@ async function nc_ChunkFileUploadRequests(formEl, fileInputEl) {
 
     return;
 }
-
-export { nc_IsFileTypeAllowed, nc_ChunkFileUploadRequests }

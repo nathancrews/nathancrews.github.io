@@ -1,4 +1,10 @@
 //************************************
+// Define Application Constants
+//************************************
+export const MAP_DATA_SAVE_KEY = "nc_imapper:geoJSON";
+export const APP_DATA_SAVE_KEY = "nc_imapper:appJSON";
+
+//************************************
 // Define Application Events
 //************************************
 export const UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail: { AppMapData: {} } });
@@ -7,10 +13,14 @@ export const UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail:
 // Define Application Data
 //************************************
 export let AppUIData = {
-    formEl: document.getElementById("uploadForm"),
-    dirInputEl: document.getElementById("directory"),
+    submitButton: document.getElementById("submit-button"),
     loadingImageEl: document.getElementById("loading-image"),
     fileInputEl: document.getElementById("upload-files"),
+    processingArrayCount: 0,
+    resultArray: [],
+    canvasEl: document.createElement('canvas'),
+    ThumbnailReadyArray: [], 
+    dirInputEl: document.getElementById("directory"),
     clientSideOnly: true
 }
 
@@ -20,6 +30,7 @@ class AppSettingsData {
         this.imageIcon2DWidth = 300;
         this.imageIcon3DWidth = 64;
         this.droneIcon2D = 'images/drone-icon.jpg';
+        this.allowedFileTypes = ".jpg,.png,.jfif,.tif,.geojson";
     }
 }
 

@@ -55,7 +55,7 @@ function InitUI() {
     AppUIData.loadingImageEl = document.getElementById("loading-image");
     AppUIData.fileInputEl = document.getElementById("upload-files");
 
-    //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
+    console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
 
     if (AppUIData.formEl && AppUIData.clientSideOnly == false) {
         AppUIData.formEl.addEventListener("submit", SubmitClicked);

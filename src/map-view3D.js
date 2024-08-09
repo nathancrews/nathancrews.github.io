@@ -55,13 +55,13 @@ async function LoadCesium3D(viewer3D) {
             const imageryLayer = retView.imageryLayers.addImageryProvider(
                 await Cesium.IonImageryProvider.fromAssetId(3),
               );
-              await retView.zoomTo(imageryLayer);            
+            //  await retView.zoomTo(imageryLayer);            
 
             retView.scene.globe.show = true;
 
             await retView.camera.flyTo({
                 destination: Cesium.Cartesian3.fromDegrees(AppMapData.defaultLongitude, AppMapData.defaultLatitude, 1000.0),
-                duration: 1,
+                duration: 0,
             });
 
             retView.camera.defaultZoomAmount = 50.0;
@@ -112,7 +112,15 @@ async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
             let entity = newEntities[i];
 
             entity.billboard.position = entity.position;
-            entity.billboard.position._value.z += 75;
+            
+            if (entity.properties.elevation != 0)
+            {
+                entity.billboard.position._value.z += entity.properties.elevation;
+            }
+            else{
+                entity.billboard.position._value.z += 75;
+            }
+            
             entity.billboard.height = entity.properties.imageHeight;
             entity.billboard.width = entity.properties.imageWidth;
             entity.billboard.image = entity.properties.imageURLData;

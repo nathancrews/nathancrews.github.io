@@ -11,6 +11,7 @@
     <meta name="keywords"
         content="cesium, leaflet, geospatial, GIS, EXIF, photo, mapping, photogrammetry, civil engineer, land development">
     <meta name="keywords" content="arial, imagery, memory, memories, where, was, picture, taken, photo, jpeg, jpg, png">
+    <meta name="keywords" content="java, script, html, css, programming, application, nathan, crews, software, development">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Nathan Crews">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
@@ -49,13 +50,13 @@
             </div>
             <div id="map-menu-bar-2" class="map-menu-bar">
                 <input id="upload-files" class="map-menu-button map-file-upload-button map-drop-zone__input"
-                    title="Pick images" type="file" name="upload-files" class="map-upload-files map-file-upload-button"
-                    multiple="true">
+                    title="Pick images" type="file" name="upload-files" multiple="true">
             </div>
             <div id="map-menu-bar-3" class="map-menu-bar">
                 <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="map-menu-button" />
                 <img id="load-map" title="Load Map" alt="Load Map" src="images/load.svg" class="map-menu-button" />
             </div>
+            <button id="submit-button" name="submit-button" type="submit" hidden="true"></button>
         </div>
         <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
         <!-- <div id="settings-modal" class="settings-modal"> -->
@@ -72,22 +73,7 @@
             </fieldset>
             <span class="settings-close">&times;</span>
         </form>
-        <!-- </div> -->
     </header>
-    <div class="map-drop-with-loading">
-        <div class="drop-zone">
-            <form id="uploadForm" method="post" enctype="multipart/form-data" action="" target="results" hidden="true">
-                <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
-                <input id="redirectCGI" name="redirectCGI" hidden="true"
-                    value="image-geo/image-mapper.js?dir=%s&response_type=html" />
-                <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.jpg,.png,.JPG,.PNG" />
-                <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
-                <label for="directory" hidden="true">Directory Name:</label>
-                <input id="directory" name="directory" value="test_drop" type="text" hidden="true">
-                <button id="submit-button" name="submit-button" type="submit">Upload</button>
-            </form>
-        </div>
-    </div>
     <div id="map2d" class="map-drop-zone map-base map-drop-zone-2d"></div>
     <div id="map3d" class="map-drop-zone map-base map-drop-zone-3d"></div>
 </body>
