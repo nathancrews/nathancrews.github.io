@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData, UpdateMapEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
+import { AppMapData, AppUIData, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
 import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
 import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
@@ -39,7 +39,7 @@ function findImageDataInArray(nameStr, imageArray) {
     return existsInArray;
 }
 
-async function OnImageDropped(event) {
+async function HandleImagesAddedEvent(event) {
 
     if (AppUIData.fileInputEl) {
         event.preventDefault();
@@ -90,14 +90,10 @@ AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
 
     //  console.log("ThumbnailReadyEvent called: ", evt);
 
-    if (evt.detail.ImageData) {
+    if (evt.detail.ImageData && AppUIData.ThumbnailReadyArray) {
 
         //console.log('evt.detail.imageData = ', evt.detail.ImageData);
-
-        if (evt.detail.ImageData) {
-            AppUIData.ThumbnailReadyArray.push(evt.detail.ImageData);
-        }
-
+        AppUIData.ThumbnailReadyArray.push(evt.detail.ImageData);
         // console.log(`processingArrayCount: ${processingArrayCount}, AppUIData.ThumbnailReadyArray.length: ${AppUIData.ThumbnailReadyArray.length}`);
 
         if (AppUIData.processingArrayCount == (AppUIData.ThumbnailReadyArray.length)) {
@@ -114,7 +110,9 @@ AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
                 let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
                     { detail: { AppMapData: AppMapData } });
 
-                AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                if (UpdateMapEvent) {
+                    AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                }
             }
 
             ShowLoadingImage(false);
@@ -142,7 +140,7 @@ async function InitAppUI() {
     // event to load the dropped files.
     AppUIData.submitButton = document.getElementById("submit-button");
     if (AppUIData.submitButton) {
-        AppUIData.submitButton.addEventListener("click", OnImageDropped);
+        AppUIData.submitButton.addEventListener("click", HandleImagesAddedEvent);
         AppUIData.submitButton.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
     }
 
@@ -154,7 +152,7 @@ async function InitAppUI() {
         AppUIData.fileInputEl.onchange = function (event) {
             event.preventDefault();
 
-            OnImageDropped(event);
+            HandleImagesAddedEvent(event);
         };
     }
     ///////////////////////////////////////////////////////////

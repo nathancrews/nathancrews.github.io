@@ -3,7 +3,7 @@
   position: fixed; 
   left: 25vw;
   top: 25vh;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
   width: fit-content; 
   height: fit-content; 
   background-color: #aaaaaa;
@@ -15,8 +15,8 @@
 
 .settings-form-fieldset {
   display: flex;
-  margin-top: 25px;
-  margin-bottom: 25px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   padding: 0.5rem;
   vertical-align: top;
   border: 2px solid black;
@@ -25,7 +25,7 @@
 
 .settings-legend {
   color: black;
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 0;
   margin-top: -0.5rem;
 }
@@ -45,16 +45,28 @@
   height: 50px;
 }
 
+.settings-title-text {
+  margin-top: 0rem;
+  margin-left: 0.5rem;
+  margin-right: 0rem;
+  vertical-align: top;
+  padding: 0px;
+  color: black;
+  float: left;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
 /* The Close Button */
 .settings-close {
   margin-top: 0px;
-  margin-left: 15px;
-  margin-right: 10px;
+  margin-left: 0px;
+  margin-right: 0.5rem;
   vertical-align: top;
   padding: 0px;
   color: black;
   float: right;
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
