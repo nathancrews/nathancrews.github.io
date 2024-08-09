@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
+import { AppMapData, AppUIData } from "./app-data.js";
 
 export async function InitMap3D() {
     if (!AppMapData.map3D) {
@@ -42,7 +42,6 @@ async function LoadCesium3D(viewer3D) {
         try {
 
             Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYmVjM2RmMy01MTVmLTQxNTctYjk0OC1jNmM2ZTFmMzkwZDYiLCJpZCI6MTc0MzI1LCJpYXQiOjE2OTgzOTQxNjh9.qw8O6-GM1BxdYdPyUFz7MLKH3KTh52edzeS_K0EmmZQ";
-
 
             retView = await new Cesium.Viewer('map3d', {
                 imageryProvider: false,

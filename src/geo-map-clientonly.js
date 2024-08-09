@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
+import { AppMapData, AppUIData, GetGeoJSONDataChangedEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY} from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
 import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
 import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
@@ -11,21 +11,17 @@ export async function UpdateMaps(event) {
     console.log("updating maps...");
 
     let startTime = performance.now();
-
     await UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
-
     let endTime = performance.now();
-    console.log(`UpdateMap2D took ${endTime - startTime}ms`)
+    console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
     startTime = performance.now();
-
     await UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
-
     ShowLoadingImage(false);
-
     endTime = performance.now();
-    console.log(`UpdateMap3D took ${endTime - startTime}ms`)
+    console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
 }
+
 
 function findImageDataInArray(nameStr, imageArray) {
     let existsInArray = false;
@@ -38,6 +34,7 @@ function findImageDataInArray(nameStr, imageArray) {
     }
     return existsInArray;
 }
+
 
 async function HandleImagesAddedEvent(event) {
 
@@ -86,10 +83,8 @@ async function HandleImagesAddedEvent(event) {
     }
 }
 
-AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
-
-    //  console.log("ThumbnailReadyEvent called: ", evt);
-
+async function HandleThumbnailReadyEvent(evt) {
+    //console.log("ThumbnailReadyEvent called: ", evt);
     if (evt.detail.ImageData && AppUIData.ThumbnailReadyArray) {
 
         //console.log('evt.detail.imageData = ', evt.detail.ImageData);
@@ -107,8 +102,7 @@ AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
             if (geoJSONval) {
                 AppMapData.geoJSONFileData = geoJSONval;
 
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                    { detail: { AppMapData: AppMapData } });
+                let UpdateMapEvent = GetGeoJSONDataChangedEvent(AppMapData);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -124,8 +118,7 @@ AppUIData.canvasEl.addEventListener("ThumbnailReadyEvent", (evt) => {
             // console.log("waiting for complete results array.... ")
         }
     }
-});
-
+}
 
 async function InitAppUI() {
 
@@ -141,9 +134,13 @@ async function InitAppUI() {
     AppUIData.submitButton = document.getElementById("submit-button");
     if (AppUIData.submitButton) {
         AppUIData.submitButton.addEventListener("click", HandleImagesAddedEvent);
-        AppUIData.submitButton.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
+        AppUIData.submitButton.addEventListener(AppUIData.GeoJSONDataChangedEventStr, UpdateMaps);
     }
 
+    // this element is passed to the image processor and calls the callback when complete
+    if (AppUIData.canvasEl) {
+        AppUIData.canvasEl.addEventListener(AppUIData.ThumbnailReadyEventStr, HandleThumbnailReadyEvent);
+    }
 
     // This CHANGE message handler loads the user choosen files
     AppUIData.fileInputEl = document.getElementById("upload-files");
@@ -251,7 +248,7 @@ function InitAppSettingsUI() {
         settingsDialog.style.display = "none";
     }
 
-    mapIconSelector.value = AppMapData.appSettings.imageIcon2D;
+    mapIconSelector.value = AppMapData.appSettings.imageIcon2DType;
 
     switch (mapIconSelector.value) {
         case 'thumbnail':
@@ -290,7 +287,7 @@ function InitAppSettingsUI() {
                 break;
         }
 
-        AppMapData.appSettings.imageIcon2D = event.target.value;
+        AppMapData.appSettings.imageIcon2DType = event.target.value;
 
         SaveAppSettings();
 
@@ -334,7 +331,7 @@ async function Show3D(event) {
     }
 }
 
-async function ResetMap(showUserConfirm) {
+function ResetMap(showUserConfirm) {
 
     let userConfirmed = true;
 
@@ -343,8 +340,8 @@ async function ResetMap(showUserConfirm) {
     }
 
     if (userConfirmed) {
-        await ResetMap2D();
-        await ResetMap3D();
+        ResetMap2D();
+        ResetMap3D();
 
         AppMapData.geoJSONFileData = null;
         AppMapData.imageDataArray = [];
@@ -374,7 +371,7 @@ function LoadAppSettings() {
         let localAppSettingsData = JSON.parse(appJSONStr);
 
         AppMapData.appSettings.droneIcon = localAppSettingsData.droneIcon;
-        AppMapData.appSettings.imageIcon2D = localAppSettingsData.imageIcon2D;
+        AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2D;
     }
 }
 
@@ -436,8 +433,7 @@ function LoadMap() {
 
                 ShowLoadingImage(true);
 
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                    { detail: { AppMapData: AppMapData } });
+                let UpdateMapEvent = GetGeoJSONDataChangedEvent(AppMapData);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);

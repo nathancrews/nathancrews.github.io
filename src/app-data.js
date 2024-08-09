@@ -5,11 +5,6 @@ export const MAP_DATA_SAVE_KEY = "nc_imapper:geoJSON";
 export const APP_DATA_SAVE_KEY = "nc_imapper:appJSON";
 
 //************************************
-// Define Application Events
-//************************************
-export const UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail: { AppMapData: {} } });
-
-//************************************
 // Define Application Data
 //************************************
 export let AppUIData = {
@@ -19,15 +14,20 @@ export let AppUIData = {
     processingArrayCount: 0,
     resultArray: [],
     canvasEl: document.createElement('canvas'),
-    ThumbnailReadyArray: [], 
+    ThumbnailReadyArray: [],
     dirInputEl: document.getElementById("directory"),
-    clientSideOnly: true
+    clientSideOnly: true,
+    GeoJSONDataChangedEventStr : "GeoJSONDataChangedEvent",
+    ThumbnailReadyEventStr : "ThumbnailReadyEvent",
 }
 
 class AppSettingsData {
     constructor() {
-        this.imageIcon2D = "thumbnail";
+        this.imageIcon2DType = "thumbnail";
         this.imageIcon2DWidth = 300;
+        this.imageIcon2DHeight = 450;
+        this.imageIcon2DQuality = 0.25;
+        this.imageIcon2DFormat = 'image/webp';
         this.imageIcon3DWidth = 64;
         this.droneIcon2D = 'images/drone-icon.jpg';
         this.allowedFileTypes = ".jpg,.png,.jfif,.tif,.geojson";
@@ -40,7 +40,7 @@ export let AppMapData = {
     imagesLayer: null,
     layerControl: null,
     imageLayerGroup: null,
-    appSettings : new AppSettingsData(),
+    appSettings: new AppSettingsData(),
     droneIcon: L.icon({
         iconUrl: 'images/drone-icon.jpg',
         iconSize: [24, 24],
@@ -57,3 +57,14 @@ export let AppMapData = {
     imageDataArray: [],
 }
 
+//************************************
+// Define Application Events
+//************************************
+
+export function GetGeoJSONDataChangedEvent(inAppMapData) {
+    return new CustomEvent(AppUIData.GeoJSONDataChangedEventStr, { detail: { AppMapData: inAppMapData } });
+}
+
+export function GetThumbnailReadyEvent(fileImageData) {
+    return new CustomEvent(AppUIData.ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
+}

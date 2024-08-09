@@ -1,5 +1,5 @@
 
-import { AppMapData, AppUIData, UpdateMapEvent } from "./app-data.js";
+import { AppMapData, AppUIData } from "./app-data.js";
 import { LoadGeoJSONFile } from "./nc_file_upload_client.js";
 
 //************************************
@@ -94,9 +94,9 @@ export async function UpdateMap2D(geoJSONResults) {
 
                 let currentDroneIcon = AppMapData.droneIcon;
 
-                if (AppMapData.appSettings.imageIcon2D == "thumbnail") {
+                if (AppMapData.appSettings.imageIcon2DType == "thumbnail") {
                     if (point.properties.imageURLData) {
-                        let maxIconSize = 64;
+                        let maxIconSize = AppMapData.appSettings.imageIcon3DWidth;
                         let iconWidth = maxIconSize;
                         let iconHeight = maxIconSize;
 
@@ -112,7 +112,7 @@ export async function UpdateMap2D(geoJSONResults) {
                             iconUrl: point.properties.imageURLData,
                             iconSize: [iconWidth, iconHeight],
                             iconAnchor: [iconWidth / 2, iconHeight / 2],
-                            popupAnchor: [0, (350/2)]
+                            popupAnchor: [0, (AppMapData.appSettings.imageIcon2DHeight / 2)]
                         });
                     }
                 }

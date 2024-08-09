@@ -1,4 +1,5 @@
 
+import { AppMapData, AppUIData, GetThumbnailReadyEvent } from "./app-data.js";
 import { ImageData } from "./image-data.js"
 const ExifReader = await import('./exifreader/src/exif-reader.js')
 
@@ -6,7 +7,10 @@ export async function ProcessImages(FilesDataArray, canvasEl) {
 
     //  console.log("Worker FilesDataArray = ", FilesDataArray);
 
-    if (!FilesDataArray) {
+    if (!FilesDataArray || !canvasEl) {
+        console.log('ProcessImages: invalid data!');
+        console.log('FilesDataArray:', FilesDataArray);
+        console.log('canvasEl:', canvasEl);
         return null;
     }
 
@@ -51,7 +55,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
 
     if (!imageEl) {
         console.log('CreateImageThumbnail: invalid data!');
-        console.log('imageEl:', imageEl);
+        console.log('image Element:', imageEl);
         return;
     }
 
@@ -59,11 +63,8 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
     imageEl.id = fileImageData.name;
 
     async function FinalizeThumbnailImage(event) {
-        let thumbnail_local_file_url = '';
-        let thumbnail_local_file;
-        let max_thumb_width = 300;
-        let max_thumb_height = 450;
-        let thumbnail_image_data;
+        let max_thumb_width = AppMapData.appSettings.imageIcon2DWidth;
+        let max_thumb_height = AppMapData.appSettings.imageIcon2DHeight;
 
         //console.log('Worker FinalizeThumbnailImage called, event = ', event);
 
@@ -105,7 +106,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         // thumbnail_local_file = URLToFile(thumbnail_image_data);
         // thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
 
-        fileImageData.imageURLData = canvasEl.toDataURL('image/webp', 0.33);
+        fileImageData.imageURLData = canvasEl.toDataURL(AppMapData.appSettings.imageIcon2DFormat, AppMapData.appSettings.imageIcon2DQuality);
         
        // console.log(`fileImageData.imageURLData.length = ${(fileImageData.imageURLData.length/1024)*2} kb`);
 
@@ -115,7 +116,8 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         fileImageData.imageFileData = null;
         fileImageData.imageData = null;
 
-        let ThumbnailReadyEvent = new CustomEvent("ThumbnailReadyEvent", { async: true, detail: { ImageData: fileImageData } });
+        let ThumbnailReadyEvent = GetThumbnailReadyEvent(fileImageData);
+        // new CustomEvent(AppUIData.ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
 
         //console.log('Worker calling ThumbnailReadyEvent');
 
