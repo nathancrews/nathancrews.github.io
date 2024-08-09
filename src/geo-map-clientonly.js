@@ -363,7 +363,7 @@ function SaveAppSettings() {
         let appJSONStr = JSON.stringify(AppMapData.appSettings);
         if (appJSONStr && appJSONStr.length > 0) {
             window.localStorage.setItem(APP_DATA_SAVE_KEY, appJSONStr);
-            console.log("saved app settings data: ", appJSONStr);
+            //console.log("saved app settings data: ", appJSONStr);
         }
     }
 }
