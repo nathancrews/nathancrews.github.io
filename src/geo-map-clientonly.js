@@ -410,7 +410,6 @@ function SaveMap() {
         else {
             window.alert("Sorry, there is no map data to save. Try adding another photo.");
         }
-
     }
     catch (error) {
         console.log("Error map data to large to save: ", error);
@@ -419,6 +418,7 @@ function SaveMap() {
 }
 
 function LoadMap() {
+
     try {
 
         LoadAppSettings();
@@ -452,7 +452,6 @@ function LoadMap() {
         else {
             window.alert("Sorry, there is no local map data to load.");
         }
-
     }
     catch (error) {
         console.log("Error loading map data: ", error);
