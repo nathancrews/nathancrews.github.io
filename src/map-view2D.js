@@ -16,7 +16,6 @@ export async function InitMap2D() {
         maxZoom: 19,
     });
 
-
     // let googleHybrid = L.gridLayer
     //     .googleMutant({
     //         type: "hybrid", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
@@ -54,7 +53,6 @@ export async function InitMap2D() {
     AppUIData.layerControl = L.control.layers(baseMaps);
     AppUIData.layerControl.addOverlay(AppUIData.imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
     AppUIData.layerControl.addTo(AppMapData.map2D);
-
 }
 
 export async function UpdateMap2D(geoJSONResults) {

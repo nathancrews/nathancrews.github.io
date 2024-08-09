@@ -371,7 +371,7 @@ function LoadAppSettings() {
         let localAppSettingsData = JSON.parse(appJSONStr);
 
         AppMapData.appSettings.droneIcon = localAppSettingsData.droneIcon;
-        AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2D;
+        AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2DType;
     }
 }
 
