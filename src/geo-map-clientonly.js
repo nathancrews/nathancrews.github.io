@@ -377,8 +377,8 @@ function LoadAppSettings() {
 
 
 function SaveMap() {
-
     try {
+        let maxSingleLength = 5200000 - 1;
 
         SaveAppSettings();
 

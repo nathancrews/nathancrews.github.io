@@ -1,5 +1,5 @@
 
-import { AppMapData, AppUIData, GetThumbnailReadyEvent } from "./app-data.js";
+import { AppMapData, GetThumbnailReadyEvent } from "./app-data.js";
 import { ImageData } from "./image-data.js"
 const ExifReader = await import('./exifreader/src/exif-reader.js')
 
@@ -72,8 +72,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
 
         let canvasContext = canvasEl.getContext('2d');
         let largeImageRatio = imageEl.naturalHeight / imageEl.naturalWidth;
-        let imageRatio = max_thumb_width / max_thumb_height;
-
+   
         canvasEl.width = max_thumb_width;
         canvasEl.height = (max_thumb_height * (largeImageRatio));
 
