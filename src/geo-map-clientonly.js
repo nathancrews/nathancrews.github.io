@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData, GetGeoJSONDataChangedEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY} from "./app-data.js";
+import { AppMapData, AppUIData, GetGeoJSONDataChangedEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
 import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
 import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
@@ -20,6 +20,8 @@ export async function UpdateMaps(event) {
     ShowLoadingImage(false);
     endTime = performance.now();
     console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
+
+    event.detail.AppMapData = null;
 }
 
 
@@ -93,8 +95,11 @@ async function HandleThumbnailReadyEvent(evt) {
 
         if (AppUIData.processingArrayCount == (AppUIData.ThumbnailReadyArray.length)) {
 
+            //console.log("AppUIData.ThumbnailReadyArray =", AppUIData.ThumbnailReadyArray);
+
             AppMapData.imageDataArray = AppMapData.imageDataArray.concat(AppUIData.ThumbnailReadyArray);
-            // console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
+            
+            //console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
 
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
             //console.log("result geoJSONval = ", geoJSONval)
@@ -111,7 +116,10 @@ async function HandleThumbnailReadyEvent(evt) {
 
             ShowLoadingImage(false);
             // clear the array and count for the next drop operation
+            AppUIData.ThumbnailReadyArray = null;
             AppUIData.ThumbnailReadyArray = [];
+            AppUIData.resultArray = null;
+            AppUIData.resultArray = [];
             AppUIData.processingArrayCount = 0;
         }
         else {
@@ -311,8 +319,11 @@ async function Show2D(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
-    if (map2D_div_el && map3D_div_el) {
+    if (map3D_div_el) {
         map3D_div_el.style.display = "none";
+    }
+
+    if (map2D_div_el) {
         map2D_div_el.style.display = "block";
         await ResetMap2DView();
         console.log("view set to 2D");
@@ -323,8 +334,11 @@ async function Show3D(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
-    if (map2D_div_el && map3D_div_el) {
+    if (map2D_div_el) {
         map2D_div_el.style.display = "none";
+    }
+
+    if (map3D_div_el) {
         map3D_div_el.style.display = "block";
         await ResetMap3DView();
         console.log("view set to 3D");
@@ -344,10 +358,15 @@ function ResetMap(showUserConfirm) {
         ResetMap3D();
 
         AppMapData.geoJSONFileData = null;
+        AppMapData.imageDataArray = null;
         AppMapData.imageDataArray = [];
 
-        if (AppUIData.fileInputEl) {
-
+        if (AppUIData) {
+            AppUIData.ThumbnailReadyArray = null;
+            AppUIData.ThumbnailReadyArray = [];
+            AppUIData.resultArray = null;
+            AppUIData.resultArray = [];
+            AppUIData.processingArrayCount = 0;
         }
     }
 }
@@ -370,7 +389,7 @@ function LoadAppSettings() {
     if (appJSONStr && appJSONStr.length > 0) {
         let localAppSettingsData = JSON.parse(appJSONStr);
 
-        AppMapData.appSettings.droneIcon = localAppSettingsData.droneIcon;
+        AppMapData.appSettings.droneIconType = localAppSettingsData.droneIconType;
         AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2DType;
     }
 }
@@ -397,6 +416,8 @@ function SaveMap() {
                     window.localStorage.setItem(MAP_DATA_SAVE_KEY, geoJSONStr);
                     window.alert("SUCCESS, Map data saved locally");
                 }
+
+                geoJSONStr = null;
             }
             else {
                 window.alert("Sorry, there was no map data saved.");
@@ -442,6 +463,8 @@ function LoadMap() {
             else {
                 window.alert("ERROR, loading local map data.");
             }
+
+            geoJSONStr = null;
         }
         else {
             window.alert("Sorry, there is no local map data to load.");

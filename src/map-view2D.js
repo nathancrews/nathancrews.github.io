@@ -135,6 +135,8 @@ export async function UpdateMap2D(geoJSONResults) {
 
 export async function ResetMap2D() {
 
+    console.log("clearing 2D Map...");
+
     if (AppUIData.imagesLayer) {
         console.log("removing imageLayerGroup");
         AppUIData.imageLayerGroup.removeLayer(AppUIData.imagesLayer);

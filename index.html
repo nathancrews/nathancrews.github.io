@@ -24,17 +24,30 @@
 </head>
 
 <body>
-  <!-- <div style="align-self: center; text-align: center;">
+
+  <script>
+    let tabs = document.getElementsByClassName('tab-button');
+
+
+  </script>
+
+  <div class="nav-bar">
     <nav>
       <ul>
-        <li><button>About</button></li>
-        <li><button>Projects</button></li>
-        <li><button>Resume</button></li>
+        <li class="tab-button" data-item-id="about">About</li>
+        <li class="tab-button" data-item-id="projects">Projects</li>
+        <li class="tab-button" data-item-id="resume">Resume</li>
       </ul>
     </nav>
-  </div> -->
-  <div class="page_container">
-    <h1>Software Application Projects</h1>
+  </div>
+  <div id="about" class="inactive">
+    <h2>About</h2>
+  </div>
+  <div id="resume" class="inactive">
+    <h2>Resume</h2>
+  </div>
+  <div id="projects" class="page-container active">
+    <h2>Software Application Projects</h2>
     <div id="projects" class="grid-container projectBox">
       <box class="project">
         <h3 class="project-title">Photo Mapper</h3>
@@ -51,7 +64,8 @@
       </box>
       <box class="project">
         <h3 class="project-title">Photo Mapper Server</h3>
-        <article class="description-text">Quickly map photos with GPS data. Simply Drag and drop photo image files onto
+        <article class="description-text">Quickly map photos with GPS data. Simply Drag and drop photo image files
+          onto
           the displayed 2D or 3D map. You can also choose the files to map. Uses server-side rendering code.</article>
         <a href="#" target="_blank" class="project-image">Launch Video Demo<img
             src="./images/projects/webapps/photomapper-screenshot.jpg" class="project-image" width="250" /></a>
@@ -74,7 +88,6 @@
       </box>
     </div>
   </div>
-
 </body>
 
 </html>

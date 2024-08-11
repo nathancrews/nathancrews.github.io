@@ -120,9 +120,10 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
 
         //console.log('Worker calling ThumbnailReadyEvent');
 
-        canvasEl.dispatchEvent(ThumbnailReadyEvent);
-
+        imageEl.src = '';
         imageEl = null;
+
+        canvasEl.dispatchEvent(ThumbnailReadyEvent);
     }
 
     const url = URL.createObjectURL(fileImageData.imageFileData);
@@ -132,6 +133,7 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         imageEl.onload = FinalizeThumbnailImage;
         imageEl.src = url;
     }
+
 }
 
 function URLToFile(imageData) {
@@ -176,7 +178,7 @@ export async function ReadImageEXIFTags(FileData) {
     }
 
     try {
-        const tags = await ExifReader.load(FileData.imageFileData, { expanded: true });
+        let tags = await ExifReader.load(FileData.imageFileData, { expanded: true });
         if (!tags) {
             return null;
         }
@@ -223,13 +225,14 @@ export async function ReadImageEXIFTags(FileData) {
             addMe.imageWidth = tags.file['Image Width'].value;
 
             addMe.imageRatio = addMe.imageWidth / addMe.imageHeight;
-
+        
+            tags = null;
             return addMe;
         }
+        tags = null;
     }
     catch (error) {
         console.log(`Error reading EXIF tags filename[${FileData.name}]: ${error}`);
-        return null;
     }
 
     return null;

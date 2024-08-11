@@ -6,9 +6,9 @@
 
 body {
   color: cornsilk;
-  width: 98vw;
-  height: 98vh;
   display: block;
+  width: 100vw;
+  height: 100vh;
   background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -16,13 +16,61 @@ body {
 }
 
 h1 {
-  margin: 1rem;
   text-align: center;
 }
 
 h2 {
-  margin: 1rem;
   text-align: center;
+}
+
+.active {
+  display:flex;
+}
+
+.inactive {
+  display: none;
+}
+
+.nav-bar{
+  display: block;
+  align-items: center;
+} 
+
+nav {
+  margin: 1rem;
+  color: cornsilk;
+  display: flex;
+  width: 50vw;
+  min-width: fit-content;
+  grid-gap: 1rem; 
+  background-color: #444444;
+  box-shadow: 3px 3px 5px rgba(255,255,255, 0.1);
+}
+
+nav ul {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav li {
+  margin: 0.25rem;
+}
+
+nav li:hover {
+  cursor: pointer;
+  color:black;
+  background-color: azure;
+}
+
+.page-container {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 1rem; 
+  padding: 1rem;
+  margin: 0.5rem;
 }
 
 .grid-container {
@@ -32,7 +80,7 @@ h2 {
   padding: 1rem;
   margin: 0.5rem;
   width: fit-content;
-  height: auto;
+  height: fit-content;
 }
 
 .projectBox {
@@ -89,48 +137,5 @@ div.project-details {
   border-width: medium;
   border-style: ridge;
 }
-
-nav {
-  display: flex;
-  align-self: center;
-  justify-content: center;
-  width: 50%;
-  background-color: lightslategray;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
-}
-
-nav ul {
-  width: 100%;
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-nav li {
-  height: 30px;
-}
-
-.selector {
-  color: darkblue;
-}
-
-nav a {
-  color: black;
-  height: 100%;
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-nav a:hover {
-  background-color: lightgrey;
-}
-
-/* nav li:first-child {
-  margin-right: auto;
-} */
-
 
 
