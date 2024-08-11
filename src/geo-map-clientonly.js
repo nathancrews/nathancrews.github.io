@@ -402,7 +402,7 @@ function SaveMap() {
         SaveAppSettings();
 
         if (AppMapData.geoJSONFileData) {
-            const geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
+            let geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
 
             if (geoJSONStr) {
 
