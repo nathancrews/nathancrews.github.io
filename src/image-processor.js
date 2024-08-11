@@ -136,39 +136,6 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
 
 }
 
-function URLToFile(imageData) {
-
-    if (!imageData) return null;
-    //    console.log('url = ', imageData);
-
-    try {
-        let dataArray = imageData.split(',');
-        //    console.log('dataArray = ', dataArray);
-
-        if (dataArray.length < 2) return null;
-
-        let mimeType = dataArray[0].match(/:(.*?);/)[1];
-        let data = dataArray[1];
-
-        let dataStr = atob(data);
-        let count = dataStr.length;
-
-        let imageArray = new Uint8Array(count);
-        if (!imageArray) return null;
-
-        while (count--) {
-            imageArray[count] = dataStr.charCodeAt(count);
-        }
-
-        return new File([imageArray], imageData.name, { type: mimeType })
-    }
-    catch (error) {
-        console.log('URLToFile function eror: ', error);
-        console.log('imageData: ', imageData);
-    }
-
-}
-
 export async function ReadImageEXIFTags(FileData) {
 
     //  console.log("Worker FileData = ", FileData);
@@ -238,3 +205,35 @@ export async function ReadImageEXIFTags(FileData) {
     return null;
 }
 
+function URLToFile(imageData) {
+
+    if (!imageData) return null;
+    //    console.log('url = ', imageData);
+
+    try {
+        let dataArray = imageData.split(',');
+        //    console.log('dataArray = ', dataArray);
+
+        if (dataArray.length < 2) return null;
+
+        let mimeType = dataArray[0].match(/:(.*?);/)[1];
+        let data = dataArray[1];
+
+        let dataStr = atob(data);
+        let count = dataStr.length;
+
+        let imageArray = new Uint8Array(count);
+        if (!imageArray) return null;
+
+        while (count--) {
+            imageArray[count] = dataStr.charCodeAt(count);
+        }
+
+        return new File([imageArray], imageData.name, { type: mimeType })
+    }
+    catch (error) {
+        console.log('URLToFile function eror: ', error);
+        console.log('imageData: ', imageData);
+    }
+
+}
