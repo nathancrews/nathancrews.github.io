@@ -23,36 +23,57 @@ h2 {
   text-align: center;
 }
 
-.active {
+.active-tab {
+  padding: 0.25rem;
+  padding-bottom: 0rem;
+  background-color: darkblue;
+  color: cornsilk;
+  border-bottom: 2px solid azure;
+  border-radius: 6px;
+}
+
+.inactive-tab {
+  padding: 0.25rem;
+  background-color: #444444;
+  color: cornsilk;
+  border-bottom: none;
+  border-radius: 6px;
+}
+
+.active-page {
   display:flex;
 }
 
-.inactive {
+.inactive-page {
   display: none;
 }
 
 .nav-bar{
-  display: block;
-  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: center;
+  min-width: fit-content;
 } 
 
 nav {
-  margin: 1rem;
-  color: cornsilk;
   display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  margin: 1rem;
   width: 50vw;
   min-width: fit-content;
   grid-gap: 1rem; 
   background-color: #444444;
-  box-shadow: 3px 3px 5px rgba(255,255,255, 0.1);
+  border-radius: 15px;
 }
 
 nav ul {
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
   width: 100%;
   list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 nav li {
@@ -62,11 +83,16 @@ nav li {
 nav li:hover {
   cursor: pointer;
   color:black;
-  background-color: azure;
+  background-color: cornsilk;
+  border-bottom-color: blue;
+}
+
+.page{
+  padding: 0;
 }
 
 .page-container {
-  display: flex;
+ 
   flex-wrap: wrap;
   grid-gap: 1rem; 
   padding: 1rem;
