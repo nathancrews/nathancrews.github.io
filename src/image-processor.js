@@ -71,23 +71,27 @@ async function CreateImageThumbnail(fileImageData, canvasEl) {
         //console.log(`imageEl.size = ${((imageEl.naturalWidth * imageEl.naturalHeight)/1024)*2} kb`);
 
         let canvasContext = canvasEl.getContext('2d');
-        let largeImageRatio = imageEl.naturalHeight / imageEl.naturalWidth;
+        let largeImageRatio = imageEl.naturalWidth / imageEl.naturalHeight;
    
         canvasEl.width = max_thumb_width;
-        canvasEl.height = (max_thumb_height * (largeImageRatio));
+        canvasEl.height = (max_thumb_height / (largeImageRatio));
+
+        console.log('canvasEl.height = ', canvasEl.height);
 
         if (canvasEl.height > max_thumb_height) {
-            canvasEl.width /= largeImageRatio;
+            canvasEl.width *= largeImageRatio;
+            console.log('new canvasEl.width = ', canvasEl.width);
+
             canvasEl.height = max_thumb_height;
         }
 
         fileImageData.imageHeight = canvasEl.height;
         fileImageData.imageWidth = canvasEl.width;
 
-        fileImageData.imageRatio = fileImageData.imageWidth / fileImageData.imageHeight;
+        fileImageData.imageRatio = fileImageData.imageHeight / fileImageData.imageWidth;
 
-        //console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
-        //console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
+        console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
+        console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
 
         canvasContext.fillStyle = "white";
         canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);
@@ -150,15 +154,18 @@ export async function ReadImageEXIFTags(FileData) {
             return null;
         }
 
+        console.log("tags = ", tags);
+
         if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
             const addMe = new ImageData();
 
             addMe.name = FileData.imageFileData.name;
-            //            addMe.URLName = path.join(imageURL, imageFilename);
             addMe.lat = tags.gps.Latitude;
             addMe.lng = tags.gps.Longitude;
             addMe.elevation = tags.gps.Altitude;
-
+            addMe.imageHeight = tags.file['Image Height'].value;
+            addMe.imageWidth = tags.file['Image Width'].value;
+            addMe.imageRatio = addMe.imageWidth / addMe.imageHeight;
             addMe.imageFileData = FileData.imageFileData;
 
             if (tags.exif.DateTime) {
@@ -174,7 +181,6 @@ export async function ReadImageEXIFTags(FileData) {
                 }
                 else {
                     console.log("No EXIF XMP data... ");
-                    addMe.elevation = 0;
                     addMe.flightDirection = 0;
                     addMe.cameraDirection = 0;
                     addMe.cameraPitch = 90;
@@ -182,17 +188,11 @@ export async function ReadImageEXIFTags(FileData) {
             }
             catch (error) {
                 console.log(`Error reading EXIF XMP: ${error}`);
-                addMe.elevation = 0;
                 addMe.flightDirection = 0;
                 addMe.cameraDirection = 0;
                 addMe.cameraPitch = 90;
             }
 
-            addMe.imageHeight = tags.file['Image Height'].value;
-            addMe.imageWidth = tags.file['Image Width'].value;
-
-            addMe.imageRatio = addMe.imageWidth / addMe.imageHeight;
-        
             tags = null;
             return addMe;
         }

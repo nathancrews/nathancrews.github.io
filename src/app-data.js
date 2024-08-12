@@ -25,7 +25,7 @@ class AppSettingsData {
     constructor() {
         this.imageIcon2DType = "thumbnail";
         this.imageIcon2DWidth = 300;
-        this.imageIcon2DHeight = 450;
+        this.imageIcon2DHeight = 350;
         this.imageIcon2DQuality = 0.25;
         this.imageIcon2DFormat = 'image/webp';
         this.imageIcon3DWidth = 64;

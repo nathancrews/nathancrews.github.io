@@ -8,6 +8,8 @@ export async function InitMap3D() {
 
 export async function UpdateMap3D(geoJSONfileURL) {
 
+    // console.log("UpdateMap3D : ", geoJSONfileURL);
+
     if (AppMapData.map3D) {
         try {
             if (geoJSONfileURL) {
@@ -35,6 +37,80 @@ export async function ResetMap3DView() {
     }
 }
 
+async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
+
+    if (!view3D || (!fileUrl_OR_Data)) {
+        console.log("Error: data not set");
+        return;
+    }
+
+    if (view3D.dataSources && view3D.dataSources.length > 0) {
+        view3D.dataSources.removeAll();
+    }
+
+    //console.log("fileUrl_OR_Data: ", fileUrl_OR_Data);
+
+    const newDataSource = await Cesium.GeoJsonDataSource.load(fileUrl_OR_Data,
+        {
+            clampToGround: true,
+            markerSize: 100
+        });
+
+    if (!newDataSource) {
+        console.log("No data loaded", fileUrl_OR_Data);
+        return;
+    }
+
+    let newEntities = newDataSource.entities.values;
+
+    if (newEntities) {
+        for (let i = 0; i < newEntities.length; i++) {
+            let entity = newEntities[i];
+
+            entity.billboard.position = entity.position;
+
+            if (entity.properties.elevation != 0) {
+                entity.billboard.position._value.z += entity.properties.elevation;
+            }
+            else {
+                entity.billboard.position._value.z += 75;
+            }
+
+            entity.billboard.height = entity.properties.imageHeight;
+            entity.billboard.width = entity.properties.imageWidth;
+            entity.billboard.image = entity.properties.imageURLData;
+
+            entity.billboard.scale = 1.0;
+            entity.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+            entity.billboard.verticalOrigin = Cesium.VerticalOrigin.BASELINE;
+            entity.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY;
+            entity.billboard.scaleByDistance = new Cesium.NearFarScalar(50, 1.0, 500, 0.1)
+
+            // console.log("entity.properties.thumbFileName : ", entity.properties.thumbFileName);
+            // console.log("adding entity.billboard.image", entity.billboard.image);
+        }
+
+        await view3D.dataSources.add(newDataSource);
+    }
+}
+
+export async function ResetMap3D() {
+    // console.log("AppMapData.map3D : ", AppMapData.map3D);
+
+    if (!AppMapData.map3D) {
+        return;
+    }
+
+    if (AppMapData.map3D.dataSources && AppMapData.map3D.dataSources.length > 0) {
+        AppMapData.map3D.dataSources.removeAll();
+    }
+
+    await AppMapData.map3D.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(AppMapData.defaultLongitude, AppMapData.defaultLatitude, 1000.0),
+        duration: 1,
+    });
+}
+
 async function LoadCesium3D(viewer3D) {
     let retView = viewer3D;
 
@@ -53,7 +129,7 @@ async function LoadCesium3D(viewer3D) {
 
             const imageryLayer = retView.imageryLayers.addImageryProvider(
                 await Cesium.IonImageryProvider.fromAssetId(3),
-              );
+            );
             //  await retView.zoomTo(imageryLayer);            
 
             retView.scene.globe.show = true;
@@ -80,77 +156,4 @@ async function LoadCesium3D(viewer3D) {
     await ResetMap3DView();
 
     return retView;
-}
-
-async function LoadCesiumGeoJSON(view3D, fileUrl_OR_Data) {
-
-    if (!view3D || (!fileUrl_OR_Data)) {
-        console.log("Error: data not set");
-        return;
-    }
-
-    if (view3D.dataSources && view3D.dataSources.length > 0) {
-        view3D.dataSources.removeAll();
-    }
-
-    const newDataSource = await Cesium.GeoJsonDataSource.load(fileUrl_OR_Data,
-        {
-            clampToGround: true,
-            markerSize: 100
-        });
-
-    if (!newDataSource) {
-        console.log("No data loaded", fileUrl_OR_Data);
-        return;
-    }
-
-    let newEntities = newDataSource.entities.values;
-
-    if (newEntities) {
-        for (let i = 0; i < newEntities.length; i++) {
-            let entity = newEntities[i];
-
-            entity.billboard.position = entity.position;
-            
-            if (entity.properties.elevation != 0)
-            {
-                entity.billboard.position._value.z += entity.properties.elevation;
-            }
-            else{
-                entity.billboard.position._value.z += 75;
-            }
-            
-            entity.billboard.height = entity.properties.imageHeight;
-            entity.billboard.width = entity.properties.imageWidth;
-            entity.billboard.image = entity.properties.imageURLData;
-            entity.billboard.scale = 1.0;
-            entity.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
-            entity.billboard.verticalOrigin = Cesium.VerticalOrigin.BASELINE;
-            entity.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY;
-            entity.billboard.scaleByDistance = new Cesium.NearFarScalar(50, 1.0, 500, 0.1)
-
-            //console.log("entity.properties.thumbFileName : ", entity.properties.thumbFileName);
-            //console.log("adding entity.billboard.image", entity.billboard.image);
-        }
-
-        await view3D.dataSources.add(newDataSource);
-    }
-}
-
-export async function ResetMap3D() {
-    // console.log("AppMapData.map3D : ", AppMapData.map3D);
-
-    if (!AppMapData.map3D) {
-        return;
-    }
-
-    if (AppMapData.map3D.dataSources && AppMapData.map3D.dataSources.length > 0) {
-        AppMapData.map3D.dataSources.removeAll();
-    }
-
-    await AppMapData.map3D.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(AppMapData.defaultLongitude, AppMapData.defaultLatitude, 1000.0),
-        duration: 1,
-    });
-
 }

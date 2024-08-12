@@ -61,6 +61,8 @@ export async function UpdateMap2D(geoJSONResults) {
     let fetchDataJSON;
     let retVal = false;
 
+    // console.log("2DMap geoJSONResults=", geoJSONResults);
+    // console.log("AppUIData.clientSideOnly=", AppUIData.clientSideOnly);
     if (!localgeoJSONResults && AppMapData.geoJSONFileURL && AppUIData.clientSideOnly == false) {
         try {
 
@@ -73,7 +75,7 @@ export async function UpdateMap2D(geoJSONResults) {
 
     if (localgeoJSONResults) {
         AppMapData.geoJSONFileData = localgeoJSONResults;
-       // console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+        // console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
     }
 
     if (AppMapData.geoJSONFileData) {
@@ -93,25 +95,30 @@ export async function UpdateMap2D(geoJSONResults) {
                 let currentDroneIcon = AppMapData.droneIcon;
 
                 if (AppMapData.appSettings.imageIcon2DType == "thumbnail") {
+
                     if (point.properties.imageURLData) {
                         let maxIconSize = AppMapData.appSettings.imageIcon3DWidth;
                         let iconWidth = maxIconSize;
                         let iconHeight = maxIconSize;
 
+                        console.log("point.properties.imageRatio = ",point.properties.imageRatio)
+
                         if (point.properties.imageRatio < 1.0) {
-                            iconHeight /= point.properties.imageRatio;
+                            iconWidth = maxIconSize / point.properties.imageRatio;
                         }
                         else {
-                            iconWidth *= point.properties.imageRatio;
+                            iconHeight = maxIconSize * point.properties.imageRatio;
                         }
 
-                        //console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
+                        console.log(`icon W: ${iconWidth}, H: ${iconHeight}`)
+
                         currentDroneIcon = L.icon({
                             iconUrl: point.properties.imageURLData,
                             iconSize: [iconWidth, iconHeight],
                             iconAnchor: [iconWidth / 2, iconHeight / 2],
                             popupAnchor: [0, (AppMapData.appSettings.imageIcon2DHeight / 2)]
                         });
+
                     }
                 }
 
@@ -120,7 +127,7 @@ export async function UpdateMap2D(geoJSONResults) {
         }).bindPopup(function (layer) {
             return "<div style='width:min-content'><p><b>" + layer.feature.properties.name + "</b></p> \
                     <img ' src='" +
-                    layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
+                layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
         });
 
         if (AppUIData.imagesLayer) {
