@@ -16,6 +16,12 @@
     content="java, script, html, css, programming, application, nathan, crews, software, development">
   <meta name="author" content="Nathan Crews">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/styles-clientonly.css" />
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
@@ -85,41 +91,44 @@
   <script>
 
     function onTabClick(event) {
-
-      console.log("event.target.dataset: ", event.target.dataset.page);
-
-      let pages = document.getElementsByClassName('page');
-      //console.log(pages);
-      for (let ii = 0; ii < pages.length; ii++) {
-        if (pages[ii] != event.target) {
-          pages[ii].classList.remove("active-page");
-          pages[ii].classList.add("inactive-page");
-        }
-      };
-
-      let tabs = document.getElementsByClassName('tab-button');
-      console.log(tabs);
-      for (let ii = 0; ii < tabs.length; ii++) {
-        if (event.target != tabs[ii]) {
-          tabs[ii].classList.remove("active-tab");
-          tabs[ii].classList.add("inactive-tab");
-        }
-      };
-
+      event.preventDefault();
+      
       event.target.classList.remove("inactive-tab");
       event.target.classList.add("active-tab");
 
+      let pages = document.getElementsByClassName('page');
+      if (pages) {
+        for (let ii = 0; ii < pages.length; ii++) {
+          if (pages[ii] != event.target) {
+            pages[ii].classList.remove("active-page");
+            pages[ii].classList.add("inactive-page");
+          }
+        };
+      }
+
+      let tabs = document.getElementsByClassName('tab-button');
+      if (tabs) {
+        for (let ii = 0; ii < tabs.length; ii++) {
+          if (event.target != tabs[ii]) {
+            tabs[ii].classList.remove("active-tab");
+            tabs[ii].classList.add("inactive-tab");
+          }
+        };
+      }
+
       let pageEl = document.getElementById(event.target.dataset.page);
-      pageEl.classList.remove("inactive-page");
-      pageEl.classList.add('active-page');
-      //console.log("pageEl: ", pageEl);
+      if (pageEl) {
+        pageEl.classList.remove("inactive-page");
+        pageEl.classList.add('active-page');
+      }
     }
 
     let tabs = document.getElementsByClassName('tab-button');
-    console.log(tabs);
-    for (let ii = 0; ii < tabs.length; ii++) {
-      tabs[ii].addEventListener('click', onTabClick);
-    };
+    if (tabs) {
+      for (let ii = 0; ii < tabs.length; ii++) {
+        tabs[ii].addEventListener('click', onTabClick);
+      };
+    }
 
   </script>
 </body>

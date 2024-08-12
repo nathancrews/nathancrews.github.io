@@ -1,16 +1,15 @@
 * {
   font-size: 1rem;
+  font-family: 'Roboto';
+  font-weight: 400;
   margin:0rem;
   padding:0rem;
-  font-family:Arial, Helvetica, sans-serif;
-
 }
 
 div.leaflet-popup-content-wrapper{
   width: fit-content;
   max-width: 50vw;
   min-width: 35vw;
-
 }
 
 div.leaflet-popup{
@@ -37,45 +36,29 @@ div.leaflet-popup-content {
 .map-body {
   margin-right: 0.5rem;
   margin-left: 0.5rem;
-  color: gainsboro;
-  width: 98vw;
-  height: 90vh;
+  color: azure;
+  width: 98%;
+  height: 96%;
   display: block;
   background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-}
-
-.map-base {
-  margin-top: 2rem;
-  width: 98%;
-  height: 85%;
   overflow: none;
-}
-
-@media screen and (max-width: 635px) {
-  .map-base {
-    height: 80%;
-  }
-}
-
-@media screen and (max-width: 365px) {
-  .map-base {
-    height: 70%;
-  }
 }
 
 .map-controls {
   display: flex;
   flex-wrap: wrap;
   grid-gap: 0.5rem; 
-  padding: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
   margin-bottom: 0.5rem;
   width: fit-content;
   height: auto;
   background-color: #aaaaaa;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .map-menu-bar {
@@ -88,7 +71,7 @@ div.leaflet-popup-content {
   vertical-align: middle;
   border: 0.10rem black;
   border-style: solid;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .map-menu-button {
@@ -97,6 +80,7 @@ div.leaflet-popup-content {
   vertical-align: middle;
   width:2rem;
   height: 2rem;
+  border-radius: 6px;
 }
 
 .map-menu-button:hover {
@@ -140,19 +124,19 @@ div.leaflet-popup-content {
 
 .map-h1 {
   text-align: center;
-  color: gainsboro;
+  color: azure;
 }
 
 .map-h2 {
   text-align: center;
-  color: gainsboro;
+  color: azure;
   z-index: 1000;
 }
 
 .map-h3 {
   margin: 0.5rem;
   text-align: center;
-  color: gainsboro;
+  color: azure;
   z-index: 1000;
 }
 
@@ -173,6 +157,12 @@ div.leaflet-popup-content {
   display: flex;
 }
 
+.map-base {
+  margin-top: 2rem;
+  width: 95vw;
+  height: 90vh;
+}
+
 .map-drop-zone {
   cursor: pointer;
   border: 4px dashed #009578;
@@ -180,13 +170,13 @@ div.leaflet-popup-content {
 }
 
 .map-drop-zone-3d {
-  display: flex;
+  display: block;
   padding: 0px;
   margin: 0px;
 }
 
 .map-drop-zone-2d {
-  display: flex;
+  display: block;
   padding: 0px;
   margin: 0px;
 }

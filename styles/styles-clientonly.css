@@ -1,7 +1,8 @@
 * {
   margin: 0px;
   padding: 0px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Roboto';
+  font-weight: 400;
 }
 
 body {
@@ -26,8 +27,8 @@ h2 {
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
-  background-color: darkblue;
-  color: cornsilk;
+  background-color:cornsilk;
+  color: darkblue;
   border-bottom: 2px solid azure;
   border-radius: 6px;
 }
@@ -83,7 +84,7 @@ nav li {
 nav li:hover {
   cursor: pointer;
   color:black;
-  background-color: cornsilk;
+  background-color: azure;
   border-bottom-color: blue;
 }
 
