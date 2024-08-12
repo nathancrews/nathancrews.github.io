@@ -35,8 +35,8 @@ h2 {
 
 .inactive-tab {
   padding: 0.25rem;
-  background-color: #444444;
-  color: cornsilk;
+  background-color: #aaaaaa;
+  color: #444444;
   border-bottom: none;
   border-radius: 6px;
 }
@@ -65,7 +65,7 @@ nav {
   width: 50vw;
   min-width: fit-content;
   grid-gap: 1rem; 
-  background-color: #444444;
+  background-color: #aaaaaa;
   border-radius: 15px;
 }
 

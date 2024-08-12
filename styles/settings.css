@@ -72,7 +72,7 @@
 
 .settings-close:hover,
 .settings-close:focus {
-  color: rgb(0, 252, 0);
+  color: rgb(199, 2, 2);
   text-decoration: none;
   cursor: pointer;
 }
