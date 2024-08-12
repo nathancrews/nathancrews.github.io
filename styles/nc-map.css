@@ -37,7 +37,7 @@ div.leaflet-popup-content {
 .map-body {
   margin-right: 1rem;
   margin-left: 1rem;
-  color: gainsboro;
+  color: cornsilk;
   width: 98vw;
   height: 100vh;
   display: block;
@@ -102,22 +102,22 @@ div.leaflet-popup-content {
 }
 
 .map-h1 {
-  padding: 2rem;
+  font-size: 1.5rem;
   text-align: center;
-  color: gainsboro;
+  margin: 1rem;
+  color: cornsilk;
 }
 
 .map-h2 {
-  padding: 2rem;
   text-align: center;
-  color: gainsboro;
+  color: cornsilk;
+  z-index: 1000;
 }
 
 .map-h3 {
-  padding: 5px;
-  margin-bottom: 5px;
+  margin: 0.5rem;
   text-align: center;
-  color: gainsboro;
+  color: cornsilk;
   z-index: 1000;
 }
 .map-base {
