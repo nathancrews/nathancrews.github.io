@@ -336,7 +336,7 @@ function SaveMap() {
                     window.alert(":( Map size too large to save locally, try reducing the number of photos.")
                 }
                 else {
-                    window.localStorage.setItem(AppMapData.GetAppSettings().MAP_DATA_SAVE_KEY, geoJSONStr);
+                    window.localStorage.setItem(AppMapData.MAP_DATA_SAVE_KEY, geoJSONStr);
                     window.alert("SUCCESS, Map data saved locally");
                 }
 
