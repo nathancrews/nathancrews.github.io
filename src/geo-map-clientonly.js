@@ -1,9 +1,38 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright 2023-2024 Nathan C. Crews IV
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////////
+
 import { AppMapData, AppUIData } from "./app-data.js";
-import { InitDropElements } from "./map-drop-zone.js";
-import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
-import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
-import { nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
-import { ProcessImages } from "./image-processor.js"
+import { DropHandler } from "./map-drop-zone.js";
+import { Map2D } from "./map-view2D.js";
+import { Map3D } from "./map-view3D.js";
+import {FileUtils} from "./file-utils.js";
+import { ImageProcessor } from "./image-processor.js"
 
 await InitAppUI();
 
@@ -11,12 +40,12 @@ export async function UpdateMaps(event) {
     console.log("updating maps...");
 
     let startTime = performance.now();
-    await UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
+    await Map2D.UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
     let endTime = performance.now();
     console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
     startTime = performance.now();
-    await UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
+    await Map3D.UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
     ShowLoadingImage(false);
     endTime = performance.now();
     console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
@@ -55,7 +84,7 @@ async function HandleImagesAddedEvent(event) {
         // console.log("allowedFiles = ", allowedFiles)
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
-            if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.GetAppSettings().allowedFileTypes)) {
+            if (FileUtils.IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.GetAppSettings().allowedFileTypes)) {
                 // don't allow duplicate file names to be processed
                 if (!findImageDataInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                     files.push(allowedFiles[ii]);
@@ -68,7 +97,7 @@ async function HandleImagesAddedEvent(event) {
         AppUIData.processingArrayCount = files.length;
 
         if (files.length > 0) {
-            AppUIData.resultArray = await ProcessImages(files, AppUIData.canvasEl);
+            AppUIData.resultArray = await ImageProcessor.ProcessImages(files, AppUIData.canvasEl);
             AppUIData.processingArrayCount = AppUIData.resultArray.length;
         }
 
@@ -159,7 +188,7 @@ async function InitAppUI() {
 
     // set up the map drop event elements
     let dropElements = document.querySelectorAll(".map-drop-zone");
-    InitDropElements(dropElements);
+    DropHandler.InitDropElements(dropElements);
 
     // Settings dialog UI
     AppMapData.GetAppSettings().GetSettingsUI().InitUI();
@@ -224,12 +253,11 @@ async function InitAppUI() {
         resetMapButton.addEventListener('click', ResetMap);
     }
 
-    await InitMap2D();
-    await InitMap3D();
+    await Map2D.InitMap2D();
+    await Map3D.InitMap3D();
 
     await Show2D(null);
 }
-
 
 function ShowLoadingImage(setVisible) {
 
@@ -253,7 +281,7 @@ async function Show2D(event) {
 
     if (map2D_div_el) {
         map2D_div_el.style.display = "block";
-        await ResetMap2DView();
+        await Map2D.ResetMap2DView();
         console.log("view set to 2D");
     }
 }
@@ -268,7 +296,7 @@ async function Show3D(event) {
 
     if (map3D_div_el) {
         map3D_div_el.style.display = "block";
-        await ResetMap3DView();
+        await Map3D.ResetMap3DView();
         console.log("view set to 3D");
     }
 }
@@ -282,8 +310,8 @@ function ResetMap(showUserConfirm) {
     }
 
     if (userConfirmed) {
-        ResetMap2D();
-        ResetMap3D();
+        Map2D.ResetMap2D();
+        Map3D.ResetMap3D();
 
         AppMapData.GarbageCollect();
         AppUIData.GarbageCollect();

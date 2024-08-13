@@ -1,11 +1,40 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright 2023-2024 Nathan C. Crews IV
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////////
+
 import { AppMapData, AppUIData } from "./app-data.js";
 
 AppMapData.clientSideOnly = false;
 
-import { InitDropElements } from "./map-drop-zone.js";
-import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
-import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
-import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_upload_client.js";
+import { DropHandler } from "./map-drop-zone.js";
+import { Map2D } from "./map-view2D.js";
+import { Map3D } from "./map-view3D.js";
+import { ChunkFileUploadRequests } from "./file_upload_client.js";
 
 
 ///////////////////////////////////////////////////////////////
@@ -14,13 +43,7 @@ import { nc_ChunkFileUploadRequests, nc_IsFileTypeAllowed } from "./nc_file_uplo
 //
 ///////////////////////////////////////////////////////////////
 
-InitUI();
-
-await InitMap2D();
-await UpdateMap2D(AppMapData.geoJSONFileData);
-
-await InitMap3D();
-await UpdateMap3D(AppMapData.geoJSONFileData);
+await InitUI();
 
 async function Show2D(event) {
     let map2D_div_el = document.getElementById("map2d");
@@ -32,7 +55,7 @@ async function Show2D(event) {
 
     if (map2D_div_el) {
         map2D_div_el.style.display = "block";
-        await ResetMap2DView();
+        await Map2D.ResetMap2DView();
         console.log("view set to 2D");
     }
 }
@@ -47,7 +70,7 @@ async function Show3D(event) {
 
     if (map3D_div_el) {
         map3D_div_el.style.display = "block";
-        await ResetMap3DView();
+        await Map3D.ResetMap3DView();
         console.log("view set to 3D");
     }
 }
@@ -57,14 +80,14 @@ export async function UpdateMaps(event) {
 
     let startTime = performance.now();
 
-    await UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
+    await Map2D.UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
 
     let endTime = performance.now();
     console.log(`UpdateMap2D took ${endTime - startTime}ms`)
 
     startTime = performance.now();
 
-    await UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
+    await Map3D.UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
 
     if (AppUIData.loadingImageEl) {
         AppUIData.loadingImageEl.style.display = "none";
@@ -74,14 +97,10 @@ export async function UpdateMaps(event) {
     console.log(`UpdateMap3D took ${endTime - startTime}ms`)
 }
 
-if (AppUIData.formEl) {
-    AppUIData.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
-}
-
 //************************************
 // Attach event listeners
 //************************************
-function InitUI() {
+async function InitUI() {
 
     AppUIData.clientSideOnly = false;
 
@@ -91,6 +110,10 @@ function InitUI() {
     AppUIData.fileInputEl = document.getElementById("file");
 
     //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
+
+    if (AppUIData.formEl) {
+        AppUIData.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
+    }
 
     if (AppUIData.formEl) {
         AppUIData.formEl.addEventListener("submit", SubmitClicked);
@@ -121,9 +144,17 @@ function InitUI() {
     }
 
     let dropElements = document.querySelectorAll(".map-drop-zone");
-    InitDropElements(dropElements);
+    DropHandler.InitDropElements(dropElements);
 
-    InitAppSettingsUI();
+    AppMapData.GetAppSettings().Load();
+    AppMapData.GetAppSettings().GetSettingsUI().InitUI();
+
+    await Map2D.InitMap2D();
+    await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
+
+    await Map3D.InitMap3D();
+    await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
+
 }
 
 
@@ -205,13 +236,13 @@ async function SubmitClicked(event) {
 
             //console.log("sending request : ", AppUIData.formEl);
 
-            let responseText = await nc_ChunkFileUploadRequests(AppUIData.formEl, AppUIData.fileInputEl);
+            let responseText = await ChunkFileUploadRequests(AppUIData.formEl, AppUIData.fileInputEl);
 
             // console.log("1 responseText : ", responseText)
 
             let endTime = performance.now();
 
-            console.log(`nc_ChunkFileUploadRequests Images took ${endTime - startTime}ms`)
+            console.log(`ChunkFileUploadRequests Images took ${endTime - startTime}ms`)
 
             if (responseText) {
                 startTime = performance.now();
@@ -243,93 +274,11 @@ async function SubmitClicked(event) {
     }
 }
 
-function InitAppSettingsUI() {
-    // Settings dialog UI
-
-    console.log("initializing setting UI");
-
-    LoadAppSettings();
-
-    let settingsDialog = document.getElementsByClassName("settings-modal")[0];
-    let settingsButton = document.getElementsByClassName("map-settings-button")[0];
-    let mapIconSelector = document.getElementById("map-icon-selector");
-    let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
-    let settingsIconFieldset = document.getElementById("settings-form-fieldset");
-    let settingsIconPreview = document.getElementById("settings-icon-2d");
-    let settingsIconLegend = document.getElementById("settings-map-icon2d");
-    // Get the <span> element that closes settings
-    let span = document.getElementsByClassName("settings-close")[0];
-
-    // Setup map menu bar icon commands
-
-    if (settingsButton) {
-        settingsButton.onclick = function (event) {
-            event.preventDefault = true;
-            let settingsDialog = document.getElementsByClassName("settings-modal")[0];
-            if (!settingsDialog.style.display || settingsDialog.style.display == 'none') {
-                settingsDialog.style.display = "flex";
-            }
-            else {
-                settingsDialog.style.display = 'none';
-            }
-        }
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    if (span) {
-        span.onclick = function () {
-            settingsDialog.style.display = "none";
-        }
-    }
-
-    mapIconSelector.value = AppMapData.appSettings.imageIcon2DType;
-
-    switch (mapIconSelector.value) {
-        case 'thumbnail':
-            settingsIconPreview.src = 'images/image-thumb.png';
-            break;
-        case 'drone2d':
-            settingsIconPreview.src = 'images/drone-icon.jpg';
-            break;
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == settingsButton) { return; }
-
-        if (settingsDialog.style.display == 'flex') {
-            if ((event.target != settingsDialog) && (event.target != mapIconSelector) &&
-                (event.target != settingsIconPreview) &&
-                (event.target != settingsModalContentIcon) &&
-                (event.target != settingsIconFieldset) &&
-                (event.target != settingsIconPreview) &&
-                (event.target != settingsIconLegend)) {
-                settingsDialog.style.display = 'none';
-            }
-        }
-    }
-
-    mapIconSelector.onchange = function (event) {
-        // console.log("event.target.value: ", event.target.value)
-
-        switch (event.target.value) {
-            case 'thumbnail':
-                settingsIconPreview.src = 'images/image-thumb.png';
-                break;
-            case 'drone2d':
-                settingsIconPreview.src = 'images/drone-icon.jpg';
-                break;
-        }
-
-        AppMapData.appSettings.imageIcon2DType = event.target.value;
-
-        SaveAppSettings();
-
-        UpdateMap2D(AppMapData.geoJSONFileData);
-    }
-}
 
 function SaveAppSettings() {
+    let appJSONStr = window.localStorage.getItem("server_imapper:appJSON");
+
+    AppMapData.GetAppSettings().Save(appJSONStr);
 
     if (AppMapData.appSettings) {
         let appJSONStr = JSON.stringify(AppMapData.appSettings);
@@ -344,12 +293,14 @@ function LoadAppSettings() {
 
     let appJSONStr = window.localStorage.getItem("server_imapper:appJSON");
 
-    if (appJSONStr && appJSONStr.length > 0) {
-        let localAppSettingsData = JSON.parse(appJSONStr);
+    AppMapData.GetAppSettings().Load(appJSONStr);
 
-        AppMapData.appSettings.droneIconType = localAppSettingsData.droneIconType;
-        AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2DType;
-    }
+    // if (appJSONStr && appJSONStr.length > 0) {
+    //     let localAppSettingsData = JSON.parse(appJSONStr);
+
+    //     AppMapData.appSettings.droneIconType = localAppSettingsData.droneIconType;
+    //     AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2DType;
+    // }
 }
 
 function ResetMap(showUserConfirm) {
@@ -361,12 +312,10 @@ function ResetMap(showUserConfirm) {
     }
 
     if (userConfirmed) {
-        ResetMap2D();
-        ResetMap3D();
+        Map2D.ResetMap2D();
+        Map3D.ResetMap3D();
 
-        AppMapData.geoJSONFileData = null;
-        AppMapData.imageDataArray = null;
-        AppMapData.imageDataArray = [];
+        AppMapData.GarbageCollect();
     }
 }
 

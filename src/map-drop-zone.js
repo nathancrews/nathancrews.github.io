@@ -1,124 +1,135 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright 2023-2024 Nathan C. Crews IV
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////////
+export class DropHandlerClass {
 
-export function InitDropElements(dropElements) {
+	_dropElements=null;
 
-	dropElements.forEach((dropElement) => {
-		ProcessDropElement(dropElement);
-	});
-}
+	InitDropElements(dropElements) {
 
-function ProcessDropElement(dropZoneElement) {
+		this._dropElements = dropElements;
 
-	//console.log("setting up drop zone element:", dropZoneElement)
-	let inputElement = document.querySelector(".map-drop-zone__input");
+		this._dropElements.forEach((dropElement) => {
+			this.ProcessDropElement(dropElement);
+		});
+	}
 
-	inputElement.onchange = function (event) {
-		event.preventDefault();
-		let sb = document.querySelectorAll("[type=submit]")[0];
+	ProcessDropElement(dropZoneElement) {
 
-		if (sb) {
-			sb.click();
-		}
-	};
+		//console.log("setting up drop zone element:", dropZoneElement)
+		let inputElement = document.querySelector(".map-drop-zone__input");
 
-	dropZoneElement.addEventListener("dragover", (e) => {
-		e.preventDefault();
+		inputElement.onchange = function (event) {
+			event.preventDefault();
+			let sb = document.querySelectorAll("[type=submit]")[0];
 
-		if (!dropZoneElement.classList.contains("map-drop-zone--over")) {
-			//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
-			dropZoneElement.classList.add("map-drop-zone--over");
-		}
-	});
+			if (sb) {
+				sb.click();
+			}
+		};
 
-	["dragleave", "dragend"].forEach((type) => {
-		dropZoneElement.addEventListener(type, (e) => {
-			if (dropZoneElement.classList.contains("map-drop-zone--over")) {
-				//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
-				dropZoneElement.classList.remove("map-drop-zone--over");
+		dropZoneElement.addEventListener("dragover", (e) => {
+			e.preventDefault();
+
+			if (!dropZoneElement.classList.contains("map-drop-zone--over")) {
+				//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
+				dropZoneElement.classList.add("map-drop-zone--over");
 			}
 		});
-	});
 
-	dropZoneElement.addEventListener("drop", (e) => {
-		e.preventDefault();
-		//console.log("inputElement drop:", inputElement);
-		if (inputElement) {
+		["dragleave", "dragend"].forEach((type) => {
+			dropZoneElement.addEventListener(type, (e) => {
+				if (dropZoneElement.classList.contains("map-drop-zone--over")) {
+					//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
+					dropZoneElement.classList.remove("map-drop-zone--over");
+				}
+			});
+		});
 
-			//console.log("e.dataTransfer:", e.dataTransfer);
+		dropZoneElement.addEventListener("drop", (e) => {
+			e.preventDefault();
+			//console.log("inputElement drop:", inputElement);
+			if (inputElement) {
 
-			if (e.dataTransfer.files.length) {
+				//console.log("e.dataTransfer:", e.dataTransfer);
 
-				inputElement.files = e.dataTransfer.files;
-				let sb = document.getElementById("submit-button");
+				if (e.dataTransfer.files.length) {
 
-				//console.log("inputElement.files:", inputElement.files);
+					inputElement.files = e.dataTransfer.files;
+					let sb = document.getElementById("submit-button");
 
-				if (sb) {
-					sb.click();
+					//console.log("inputElement.files:", inputElement.files);
+
+					if (sb) {
+						sb.click();
+					}
 				}
 			}
-			//else {
-				// let fileUrl = e.dataTransfer.getData('Text');
 
-				// //				url2blob(fileUrl);
-
-				// console.log("e.dataTransfer.getData('Text'): ", fileUrl);
-
-				// let response = fetch(fileUrl, {
-				// 	mode: "no-cors"
-				// }).then(res => { console.log(res); res.blob() })
-				// 	.then(blob => {
-				// 		console.log(blob);
-
-				// 		let fileFromUrl = new File([blob], 'image', { type: blob.type });
-				// 		console.log(fileFromUrl);
-
-				// 		let resFile = ReadDataFile(fileFromUrl);
-				// 		console.log(resFile);
-
-				// 	}).catch(error => {
-				// 		console.log("Error: downloading image file: fetch error: ");
-				// 		console.log(error);
-				// 	});
-			//}
-
-
-		}
-
-		dropZoneElement.classList.remove("map-drop-zone--over");
-	});
-}
-
-function ReadDataFile(urlToRead) {
-
-	const fr = new FileReader();
-
-	fr.addEventListener('load', () => {
-		const res = fr.result;
-		const resFile = res.blob;
-
-		console.log(resFile);
-	});
-
-	console.log(fr.readAsDataURL(urlToRead));
-
-}
-
-async function url2blob(url) {
-	try {
-		const data = await fetch(url /*, {mode: 'no-cors'}*/);
-		const blob = await data.blob();
-
-		console.log(blob);
-		let objectURL = URL.createObjectURL(blob);
-		console.log(objectURL);
-
-		await navigator.clipboard.write([
-			new ClipboardItem({
-				[blob.type]: blob
-			})
-		]);
-		console.log("Success.");
-	} catch (err) {
-		console.error(err.name, err.message);
+			dropZoneElement.classList.remove("map-drop-zone--over");
+		});
 	}
+
+	ReadDataFile(urlToRead) {
+
+		const fr = new FileReader();
+
+		fr.addEventListener('load', () => {
+			const res = fr.result;
+			const resFile = res.blob;
+
+			console.log(resFile);
+		});
+
+		console.log(fr.readAsDataURL(urlToRead));
+
+	}
+
+	async url2blob(url) {
+		try {
+			const data = await fetch(url /*, {mode: 'no-cors'}*/);
+			const blob = await data.blob();
+
+			console.log(blob);
+			let objectURL = URL.createObjectURL(blob);
+			console.log(objectURL);
+
+			await navigator.clipboard.write([
+				new ClipboardItem({
+					[blob.type]: blob
+				})
+			]);
+			console.log("Success.");
+		} catch (err) {
+			console.error(err.name, err.message);
+		}
+	}
+
 }
+
+export let DropHandler = new DropHandlerClass();

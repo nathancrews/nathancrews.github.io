@@ -26,22 +26,49 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
-export class ImageData {
-        constructor() {
-                this.name = "";
-                this.imageURLData = "";
-                this.lat = 0.0;
-                this.lng = 0.0;
-                this.elevation = 0.0;
-                this.flightDirection = 0.0;
-                this.cameraDirection = 0.0;
-                this.cameraPitch = 0.0;
-                this.date = null;
-                this.originalDataSize = 0;
-                this.imageHeight = 1.0;
-                this.imageWidth = 1.0;
-                this.imageRatio = 1.0;
-                this.imageFileData = null;
-        }
-}
 
+export class FileUtils {
+
+    static IsFileTypeAllowed(fileName, allowedFileTypes) {
+        let ret = false;
+
+        if ((allowedFileTypes == undefined) || (allowedFileTypes.length < 1)
+            || (allowedFileTypes == "*") || (allowedFileTypes == "*.*")
+            || (allowedFileTypes == ".*")) {
+            return true;
+        }
+
+        let allowedExts = allowedFileTypes.split(',');
+        //console.log("ftypes: ", allowedExts);
+
+        let fext = '.' + fileName.split('.').pop();
+        //console.log("file type to upload: ", fext);
+
+        for (let ii = 0; ii < allowedExts.length; ii++) {
+            if (allowedExts[ii].toLowerCase() == fext.toLowerCase()) {
+                ret = true;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    static async LoadGeoJSONFile(jsonFileURL) {
+        let fetchData = "";
+
+        // console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
+
+        let fetchResponse = await fetch(jsonFileURL);
+        if (fetchResponse.status === 200) {
+            fetchData = await fetchResponse.json();
+        }
+        else {
+            console.log("Load GeoJSON file failed: ", jsonFileURL)
+        }
+
+        // console.log("LoadGeoJSONFile: fetchData=", fetchData);
+
+        return fetchData;
+    }
+
+}

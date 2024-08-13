@@ -1,4 +1,33 @@
-import { UpdateMap2D } from "./map-view2D.js";
+////////////////////////////////////////////////////////////////////////////////////
+// Copyright 2023-2024 Nathan C. Crews IV
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+////////////////////////////////////////////////////////////////////////////////////
+
+import { Map2D } from "./map-view2D.js";
 
 //************************************
 // Define Application Data
@@ -64,13 +93,13 @@ export class AppSettingsUIClass {
         }
 
         AppMapData.GetAppSettings().Save();
-        UpdateMap2D(AppMapData.geoJSONFileData);
+        Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
     }
 
     // Settings dialog UI
     InitUI() {
 
-        AppMapData.GetAppSettings().Load();
+       
 
         let settingsDialog = document.getElementsByClassName("settings-modal")[0];
         let settingsButton = document.getElementsByClassName("map-settings-button")[0];
@@ -79,6 +108,19 @@ export class AppSettingsUIClass {
         let settingsIconFieldset = document.getElementById("settings-form-fieldset");
         let settingsIconPreview = document.getElementById("settings-icon-2d");
         let settingsIconLegend = document.getElementById("settings-map-icon2d");
+
+        if (settingsButton) {
+            settingsButton.onclick = function (event) {
+                event.preventDefault = true;
+                let settingsDialog = document.getElementsByClassName("settings-modal")[0];
+                if (!settingsDialog.style.display || settingsDialog.style.display == 'none') {
+                    settingsDialog.style.display = "flex";
+                }
+                else {
+                    settingsDialog.style.display = 'none';
+                }
+            }
+        }
 
         // Get the <span> element that closes settings
         let span = document.getElementsByClassName("settings-close")[0];
@@ -189,8 +231,6 @@ class AppSettingsDataClass {
     }
 }
 
-
-
 class AppMapDataClass {
     //************************************
     // Define Constants
@@ -199,11 +239,6 @@ class AppMapDataClass {
     MAP_APP_DATA_SAVE_KEY = "nc_imapper:geoJSONSettings";
 
     constructor() {
-        this.map2D = null;
-        this.map3D = null;
-        this.imagesLayer = null;
-        this.layerControl = null;
-        this.imageLayerGroup = null;
         this.appSettings = new AppSettingsDataClass();
         this.geoJSONFileData = null;
         this.defaultLatitude = 56.01877997222222;
@@ -213,12 +248,6 @@ class AppMapDataClass {
         this.geoJSONFileURL = "uploads/test_drop/geo-images.json";
         this.geoJSONFileName = "geo-images.json";
         this.imageDataArray = [];
-        this.droneIcon = L.icon({
-            iconUrl: 'images/drone-icon.jpg',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12],
-            popupAnchor: [0, 175]
-        });
 
         console.log("AppMapDataClass constructor called");
     }
@@ -236,12 +265,3 @@ class AppMapDataClass {
 
 export let AppMapData = new AppMapDataClass();
 export let AppUIData = new AppUIDataClass();
-
-
-// export function GetGeoJSONDataChangedEvent(inAppMapData) {
-//     return new CustomEvent(AppUIData.GeoJSONDataChangedEventStr, { detail: { AppMapData: inAppMapData } });
-// }
-
-// export function GetThumbnailReadyEvent(fileImageData) {
-//     return new CustomEvent(AppUIData.ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
-// }
