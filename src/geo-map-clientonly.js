@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData, GetGeoJSONDataChangedEvent, MAP_DATA_SAVE_KEY, APP_DATA_SAVE_KEY } from "./app-data.js";
+import { AppMapData, AppUIData } from "./app-data.js";
 import { InitDropElements } from "./map-drop-zone.js";
 import { InitMap2D, UpdateMap2D, ResetMap2D, ResetMap2DView } from "./map-view2D.js";
 import { InitMap3D, UpdateMap3D, ResetMap3D, ResetMap3DView } from "./map-view3D.js";
@@ -55,7 +55,7 @@ async function HandleImagesAddedEvent(event) {
         // console.log("allowedFiles = ", allowedFiles)
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
-            if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.appSettings.allowedFileTypes)) {
+            if (nc_IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.GetAppSettings().allowedFileTypes)) {
                 // don't allow duplicate file names to be processed
                 if (!findImageDataInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                     files.push(allowedFiles[ii]);
@@ -98,7 +98,7 @@ async function HandleThumbnailReadyEvent(evt) {
             //console.log("AppUIData.ThumbnailReadyArray =", AppUIData.ThumbnailReadyArray);
 
             AppMapData.imageDataArray = AppMapData.imageDataArray.concat(AppUIData.ThumbnailReadyArray);
-            
+
             //console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
 
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
@@ -107,7 +107,7 @@ async function HandleThumbnailReadyEvent(evt) {
             if (geoJSONval) {
                 AppMapData.geoJSONFileData = geoJSONval;
 
-                let UpdateMapEvent = GetGeoJSONDataChangedEvent(AppMapData);
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(AppMapData);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -116,11 +116,7 @@ async function HandleThumbnailReadyEvent(evt) {
 
             ShowLoadingImage(false);
             // clear the array and count for the next drop operation
-            AppUIData.ThumbnailReadyArray = null;
-            AppUIData.ThumbnailReadyArray = [];
-            AppUIData.resultArray = null;
-            AppUIData.resultArray = [];
-            AppUIData.processingArrayCount = 0;
+            AppUIData.GarbageCollect();
         }
         else {
             // console.log("waiting for complete results array.... ")
@@ -156,15 +152,16 @@ async function InitAppUI() {
     if (AppUIData.fileInputEl) {
         AppUIData.fileInputEl.onchange = function (event) {
             event.preventDefault();
-
             HandleImagesAddedEvent(event);
         };
     }
     ///////////////////////////////////////////////////////////
 
     // set up the map drop event elements
-    let dropElements = document.querySelectorAll(".map-drop-zone");
-    InitDropElements(dropElements);
+     let dropElements = document.querySelectorAll(".map-drop-zone");
+     InitDropElements(dropElements);
+
+    AppMapData.GetAppSettings().GetSettingsUI().InitUI();
 
     // Get the settings open button
     let settingsButton = document.getElementsByClassName("map-settings-button")[0];
@@ -227,7 +224,7 @@ async function InitAppUI() {
     }
 
     // Settings dialog UI
-    InitAppSettingsUI();
+    AppUIData.settingsUI.InitUI();
 
     await InitMap2D();
     await InitMap3D();
@@ -235,73 +232,7 @@ async function InitAppUI() {
     await Show2D(null);
 }
 
-function InitAppSettingsUI() {
-    // Settings dialog UI
 
-    let settingsDialog = document.getElementsByClassName("settings-modal")[0];
-    let settingsButton = document.getElementsByClassName("map-settings-button")[0];
-    let mapIconSelector = document.getElementById("map-icon-selector");
-    let settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
-    let settingsIconFieldset = document.getElementById("settings-form-fieldset");
-    let settingsIconPreview = document.getElementById("settings-icon-2d");
-    let settingsIconLegend = document.getElementById("settings-map-icon2d");
-
-    LoadAppSettings();
-
-    // Get the <span> element that closes settings
-    let span = document.getElementsByClassName("settings-close")[0];
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        settingsDialog.style.display = "none";
-    }
-
-    mapIconSelector.value = AppMapData.appSettings.imageIcon2DType;
-
-    switch (mapIconSelector.value) {
-        case 'thumbnail':
-            settingsIconPreview.src = 'images/image-thumb.png';
-            break;
-        case 'drone2d':
-            settingsIconPreview.src = 'images/drone-icon.jpg';
-            break;
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == settingsButton) { return; }
-
-        if (settingsDialog.style.display == 'flex') {
-            if ((event.target != settingsDialog) && (event.target != mapIconSelector) &&
-                (event.target != settingsIconPreview) &&
-                (event.target != settingsModalContentIcon) &&
-                (event.target != settingsIconFieldset) &&
-                (event.target != settingsIconPreview) &&
-                (event.target != settingsIconLegend)) {
-                settingsDialog.style.display = 'none';
-            }
-        }
-    }
-
-    mapIconSelector.onchange = function (event) {
-        // console.log("event.target.value: ", event.target.value)
-
-        switch (event.target.value) {
-            case 'thumbnail':
-                settingsIconPreview.src = 'images/image-thumb.png';
-                break;
-            case 'drone2d':
-                settingsIconPreview.src = 'images/drone-icon.jpg';
-                break;
-        }
-
-        AppMapData.appSettings.imageIcon2DType = event.target.value;
-
-        SaveAppSettings();
-
-        UpdateMap2D(AppMapData.geoJSONFileData);
-    }
-}
 
 function ShowLoadingImage(setVisible) {
 
@@ -357,49 +288,16 @@ function ResetMap(showUserConfirm) {
         ResetMap2D();
         ResetMap3D();
 
-        AppMapData.geoJSONFileData = null;
-        AppMapData.imageDataArray = null;
-        AppMapData.imageDataArray = [];
-
-        if (AppUIData) {
-            AppUIData.ThumbnailReadyArray = null;
-            AppUIData.ThumbnailReadyArray = [];
-            AppUIData.resultArray = null;
-            AppUIData.resultArray = [];
-            AppUIData.processingArrayCount = 0;
-        }
+        AppMapData.GarbageCollect();
+        AppUIData.GarbageCollect();
     }
 }
-
-function SaveAppSettings() {
-
-    if (AppMapData.appSettings) {
-        let appJSONStr = JSON.stringify(AppMapData.appSettings);
-        if (appJSONStr && appJSONStr.length > 0) {
-            window.localStorage.setItem(APP_DATA_SAVE_KEY, appJSONStr);
-            //console.log("saved app settings data: ", appJSONStr);
-        }
-    }
-}
-
-function LoadAppSettings() {
-
-    let appJSONStr = window.localStorage.getItem(APP_DATA_SAVE_KEY);
-
-    if (appJSONStr && appJSONStr.length > 0) {
-        let localAppSettingsData = JSON.parse(appJSONStr);
-
-        AppMapData.appSettings.droneIconType = localAppSettingsData.droneIconType;
-        AppMapData.appSettings.imageIcon2DType = localAppSettingsData.imageIcon2DType;
-    }
-}
-
 
 function SaveMap() {
     try {
         let maxSingleLength = 5200000 - 1;
 
-        SaveAppSettings();
+        AppMapData.GetAppSettings().Save(AppMapData.MAP_APP_DATA_SAVE_KEY);
 
         if (AppMapData.geoJSONFileData) {
             let geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
@@ -413,7 +311,7 @@ function SaveMap() {
                     window.alert(":( Map size too large to save locally, try reducing the number of photos.")
                 }
                 else {
-                    window.localStorage.setItem(MAP_DATA_SAVE_KEY, geoJSONStr);
+                    window.localStorage.setItem(AppMapData.GetAppSettings().MAP_DATA_SAVE_KEY, geoJSONStr);
                     window.alert("SUCCESS, Map data saved locally");
                 }
 
@@ -437,10 +335,11 @@ function LoadMap() {
 
     try {
 
-        LoadAppSettings();
-        InitAppSettingsUI();
+        // load specially saved app settings for map
+        AppMapData.GetAppSettings().Load(AppMapData.MAP_APP_DATA_SAVE_KEY);
+        AppMapData.GetAppSettings().Save();
 
-        let geoJSONStr = window.localStorage.getItem(MAP_DATA_SAVE_KEY);
+        let geoJSONStr = window.localStorage.getItem(AppMapData.MAP_DATA_SAVE_KEY);
 
         if (geoJSONStr) {
 
@@ -454,7 +353,7 @@ function LoadMap() {
 
                 ShowLoadingImage(true);
 
-                let UpdateMapEvent = GetGeoJSONDataChangedEvent(AppMapData);
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(AppMapData);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);

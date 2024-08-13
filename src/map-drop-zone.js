@@ -40,13 +40,18 @@ function ProcessDropElement(dropZoneElement) {
 
 	dropZoneElement.addEventListener("drop", (e) => {
 		e.preventDefault();
-
+		//console.log("inputElement drop:", inputElement);
 		if (inputElement) {
 
-			if (e.dataTransfer.files.length) {
-				inputElement.files = e.dataTransfer.files;
+			//console.log("e.dataTransfer:", e.dataTransfer);
 
+			if (e.dataTransfer.files.length) {
+
+				inputElement.files = e.dataTransfer.files;
 				let sb = document.getElementById("submit-button");
+
+				//console.log("inputElement.files:", inputElement.files);
+
 				if (sb) {
 					sb.click();
 				}

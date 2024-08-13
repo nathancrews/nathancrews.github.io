@@ -1,4 +1,4 @@
-import { AppMapData, AppUIData } from "./app-data.js";
+import { AppMapData } from "./app-data.js";
 
 export async function InitMap3D() {
     if (!AppMapData.map3D) {
