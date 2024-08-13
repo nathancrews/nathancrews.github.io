@@ -18,6 +18,8 @@ export class AppUIDataClass {
         this.GeoJSONDataChangedEventStr = "GeoJSONDataChangedEvent";
         this.ThumbnailReadyEventStr = "ThumbnailReadyEvent";
         this.settingsUI = new AppSettingsUIClass();
+
+        console.log("AppUIDataClass constructor called");
     }
 
     GarbageCollect() {
@@ -115,8 +117,25 @@ export class AppSettingsUIClass {
 
         mapIconSelector.onchange = this.UpdateMapIcons;
     }
-}
 
+    UpdateUI() {
+
+        let mapIconSelector = document.getElementById("map-icon-selector");
+        let settingsIconPreview = document.getElementById("settings-icon-2d");
+
+        mapIconSelector.value = AppMapData.GetAppSettings().imageIcon2DType;
+
+        switch (mapIconSelector.value) {
+            case 'thumbnail':
+                settingsIconPreview.src = 'images/image-thumb.png';
+                break;
+            case 'drone2d':
+                settingsIconPreview.src = 'images/drone-icon.jpg';
+                break;
+        }
+    }
+
+}
 
 class AppSettingsDataClass {
     //************************************
@@ -200,6 +219,8 @@ class AppMapDataClass {
             iconAnchor: [12, 12],
             popupAnchor: [0, 175]
         });
+
+        console.log("AppMapDataClass constructor called");
     }
 
     GetAppSettings() {

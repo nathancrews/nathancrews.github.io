@@ -158,9 +158,10 @@ async function InitAppUI() {
     ///////////////////////////////////////////////////////////
 
     // set up the map drop event elements
-     let dropElements = document.querySelectorAll(".map-drop-zone");
-     InitDropElements(dropElements);
+    let dropElements = document.querySelectorAll(".map-drop-zone");
+    InitDropElements(dropElements);
 
+    // Settings dialog UI
     AppMapData.GetAppSettings().GetSettingsUI().InitUI();
 
     // Get the settings open button
@@ -223,15 +224,11 @@ async function InitAppUI() {
         resetMapButton.addEventListener('click', ResetMap);
     }
 
-    // Settings dialog UI
-    AppUIData.settingsUI.InitUI();
-
     await InitMap2D();
     await InitMap3D();
 
     await Show2D(null);
 }
-
 
 
 function ShowLoadingImage(setVisible) {
@@ -338,6 +335,8 @@ function LoadMap() {
         // load specially saved app settings for map
         AppMapData.GetAppSettings().Load(AppMapData.MAP_APP_DATA_SAVE_KEY);
         AppMapData.GetAppSettings().Save();
+
+        AppMapData.GetAppSettings().GetSettingsUI().UpdateUI();
 
         let geoJSONStr = window.localStorage.getItem(AppMapData.MAP_DATA_SAVE_KEY);
 
