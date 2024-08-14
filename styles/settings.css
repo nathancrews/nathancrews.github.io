@@ -1,5 +1,4 @@
 .settings-modal {
-  display: none;
   position: fixed; 
   left: 60px;
   top: 120px;
@@ -9,6 +8,14 @@
   background-color: #aaaaaa;
   z-index: 1000; 
   border-radius: 10px;
+}
+
+.settings-modal-hide {
+  display: none;
+}
+
+.settings-modal-show {
+  display: flex;
 }
 
 /* Modal Content */

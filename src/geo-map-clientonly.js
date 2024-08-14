@@ -28,10 +28,11 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 import { AppMapData, AppUIData } from "./app-data.js";
+import { AppSettings } from "./app-settings.js";
 import { DropHandler } from "./map-drop-zone.js";
 import { Map2D } from "./map-view2D.js";
 import { Map3D } from "./map-view3D.js";
-import {FileUtils} from "./file-utils.js";
+import { FileUtils } from "./file-utils.js";
 import { ImageProcessor } from "./image-processor.js"
 
 await InitAppUI();
@@ -54,7 +55,7 @@ export async function UpdateMaps(event) {
 }
 
 
-function findImageDataInArray(nameStr, imageArray) {
+function FindImageNameInArray(nameStr, imageArray) {
     let existsInArray = false;
 
     for (let ii = 0; ii < imageArray.length; ii++) {
@@ -74,8 +75,6 @@ async function HandleImagesAddedEvent(event) {
 
         ShowLoadingImage(true);
 
-        let startTime = performance.now();
-
         //console.log("AppUIData = ", AppUIData)
 
         let allowedFiles = AppUIData.fileInputEl.files;
@@ -84,15 +83,15 @@ async function HandleImagesAddedEvent(event) {
         // console.log("allowedFiles = ", allowedFiles)
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
-            if (FileUtils.IsFileTypeAllowed(allowedFiles[ii].name, AppMapData.GetAppSettings().allowedFileTypes)) {
+            if (FileUtils.IsFileTypeAllowed(allowedFiles[ii].name, AppSettings.allowedFileTypes)) {
                 // don't allow duplicate file names to be processed
-                if (!findImageDataInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
+                if (!FindImageNameInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                     files.push(allowedFiles[ii]);
                 }
             }
         };
 
-        console.log("Allowed image files to process: ", files.length);
+        //console.log("Allowed image files to process: ", files.length);
 
         AppUIData.processingArrayCount = files.length;
 
@@ -101,11 +100,7 @@ async function HandleImagesAddedEvent(event) {
             AppUIData.processingArrayCount = AppUIData.resultArray.length;
         }
 
-        console.log("OnDrop AppUIData.processingArrayCount = ", AppUIData.processingArrayCount)
-
-        let endTime = performance.now();
-
-        console.log(`OnDrop ProcessImages took ${endTime - startTime}ms`)
+        //console.log("OnDrop AppUIData.processingArrayCount = ", AppUIData.processingArrayCount)
 
         if (AppUIData.processingArrayCount == 0) {
             ShowLoadingImage(false);
@@ -116,22 +111,15 @@ async function HandleImagesAddedEvent(event) {
 
 async function HandleThumbnailReadyEvent(evt) {
     //console.log("ThumbnailReadyEvent called: ", evt);
-    if (evt.detail.ImageData && AppUIData.ThumbnailReadyArray) {
+    if (evt.detail.ImageData && AppUIData.thumbnailReadyArray) {
 
-        //console.log('evt.detail.imageData = ', evt.detail.ImageData);
-        AppUIData.ThumbnailReadyArray.push(evt.detail.ImageData);
-        // console.log(`processingArrayCount: ${processingArrayCount}, AppUIData.ThumbnailReadyArray.length: ${AppUIData.ThumbnailReadyArray.length}`);
+        AppUIData.thumbnailReadyArray.push(evt.detail.ImageData);
 
-        if (AppUIData.processingArrayCount == (AppUIData.ThumbnailReadyArray.length)) {
+        if (AppUIData.processingArrayCount == (AppUIData.thumbnailReadyArray.length)) {
 
-            //console.log("AppUIData.ThumbnailReadyArray =", AppUIData.ThumbnailReadyArray);
-
-            AppMapData.imageDataArray = AppMapData.imageDataArray.concat(AppUIData.ThumbnailReadyArray);
-
-            //console.log("AppMapData.imageDataArray =", AppMapData.imageDataArray);
+            AppMapData.imageDataArray = AppMapData.imageDataArray.concat(AppUIData.thumbnailReadyArray);
 
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
-            //console.log("result geoJSONval = ", geoJSONval)
 
             if (geoJSONval) {
                 AppMapData.geoJSONFileData = geoJSONval;
@@ -197,24 +185,20 @@ async function InitAppUI() {
     DropHandler.SetSubmitButtonClass(submitButtonClass);
     DropHandler.InitDropHandler();
 
-    // Settings dialog UI
-    AppMapData.GetAppSettings().GetSettingsUI().InitUI();
-
     // Get the settings open button
     let settingsButton = document.getElementsByClassName('map-settings-button')[0];
 
+    // Settings dialog UI, send the parent button for NON-click handling
+    AppSettings.GetSettingsUI().InitUI(settingsButton);
+
     // Setup map menu bar icon commands
 
-    settingsButton.onclick = function (event) {
+    function SettingsButtonClickEvent(event){
         event.preventDefault = true;
-        let settingsDialog = document.getElementsByClassName('settings-modal')[0];
-        if (!settingsDialog.style.display || settingsDialog.style.display == 'none') {
-            settingsDialog.style.display = "flex";
-        }
-        else {
-            settingsDialog.style.display = 'none';
-        }
+        AppSettings.GetSettingsUI().ShowDialog();
     }
+
+    settingsButton.onclick = SettingsButtonClickEvent;
 
     let mapMenu = document.getElementById("map-menu");
 
@@ -329,7 +313,7 @@ function SaveMap() {
     try {
         let maxSingleLength = 5200000 - 1;
 
-        AppMapData.GetAppSettings().Save(AppMapData.MAP_APP_DATA_SAVE_KEY);
+        AppSettings.Save(AppMapData.MAP_APP_DATA_SAVE_KEY);
 
         if (AppMapData.geoJSONFileData) {
             let geoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
@@ -368,10 +352,10 @@ function LoadMap() {
     try {
 
         // load specially saved app settings for map
-        AppMapData.GetAppSettings().Load(AppMapData.MAP_APP_DATA_SAVE_KEY);
-        AppMapData.GetAppSettings().Save();
+        AppSettings.Load(AppMapData.MAP_APP_DATA_SAVE_KEY);
+        AppSettings.Save();
 
-        AppMapData.GetAppSettings().GetSettingsUI().UpdateUI();
+        AppSettings.GetSettingsUI().UpdateUI();
 
         let geoJSONStr = window.localStorage.getItem(AppMapData.MAP_DATA_SAVE_KEY);
 

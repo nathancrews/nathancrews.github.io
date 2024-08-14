@@ -29,6 +29,7 @@
 
 import { AppMapData, AppUIData} from "./app-data.js";
 import { ImageData } from "./image-data.js"
+import { AppSettings } from "./app-settings.js";
 const ExifReader = await import('./exifreader/src/exif-reader.js');
 
 export class ImageProcessorClass {
@@ -46,6 +47,8 @@ export class ImageProcessorClass {
     
         let resultImageDataArr = [];
     
+        let startTime = performance.now();
+
         for (let ii = 0; ii < FilesDataArray.length; ii++) {
             if (FilesDataArray[ii].name.length > 0) {
                 let imageDataMessage = new ImageData();
@@ -65,9 +68,13 @@ export class ImageProcessorClass {
     
         for (let ii = 0; ii < resultImageDataArr.length; ii++) {
             //       console.log("creating thumbnail : ", resultImageDataArr[ii].name);
-            this.CreateImageThumbnail(resultImageDataArr[ii], canvasEl);
+            await this.CreateImageThumbnail(resultImageDataArr[ii], canvasEl);
         }
     
+        let endTime = performance.now();
+
+        console.log(`Inner ProcessImages duration ${endTime - startTime}ms`)
+        
         return resultImageDataArr;
     };
     
@@ -80,69 +87,60 @@ export class ImageProcessorClass {
             return;
         }
     
-        let imageEl = document.createElement('img');
-    //    let reader = new FileReader();
-    
-        if (!imageEl) {
+        let loadingImage = new Image();
+
+        if (!loadingImage) {
             console.log('CreateImageThumbnail: invalid data!');
-            console.log('image Element:', imageEl);
+            console.log('image Element:', loadingImage);
             return;
         }
-    
-        imageEl.style.display = 'none';
-        imageEl.id = fileImageData.name;
+
+        loadingImage.style.display = 'none';
     
         async function FinalizeThumbnailImage(event) {
-            let max_thumb_width = AppMapData.GetAppSettings().imageIcon2DWidth;
-            let max_thumb_height = AppMapData.GetAppSettings().imageIcon2DHeight;
-    
+            let max_thumb_width = AppSettings.imageIcon2DWidth;
+            let max_thumb_height = AppSettings.imageIcon2DHeight;
+            let largeImageRatio = loadingImage.naturalWidth / loadingImage.naturalHeight;
             //console.log('Worker FinalizeThumbnailImage called, event = ', event);
-    
-            //console.log(`imageEl.size = ${((imageEl.naturalWidth * imageEl.naturalHeight)/1024)*2} kb`);
+            //console.log(`loadingImage.size = ${((loadingImage.naturalWidth * loadingImage.naturalHeight)/1024)*2} kb`);
     
             let canvasContext = canvasEl.getContext('2d');
-            let largeImageRatio = imageEl.naturalWidth / imageEl.naturalHeight;
-       
+    
             canvasEl.width = max_thumb_width;
             canvasEl.height = (max_thumb_height / (largeImageRatio));
     
-            console.log('canvasEl.height = ', canvasEl.height);
+            //console.log('canvasEl.height = ', canvasEl.height);
     
             if (canvasEl.height > max_thumb_height) {
                 canvasEl.width *= largeImageRatio;
-                console.log('new canvasEl.width = ', canvasEl.width);
+                //console.log('new canvasEl.width = ', canvasEl.width);
     
                 canvasEl.height = max_thumb_height;
             }
     
             fileImageData.imageHeight = canvasEl.height;
             fileImageData.imageWidth = canvasEl.width;
-    
             fileImageData.imageRatio = fileImageData.imageHeight / fileImageData.imageWidth;
     
-            console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
-            console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
+            //console.log(`thumb image H: ${fileImageData.imageHeight}, W: ${fileImageData.imageWidth}`);
+            //console.log('fileImageData.imageRatio = ', fileImageData.imageRatio);
     
             canvasContext.fillStyle = "white";
             canvasContext.fillRect(0, 0, canvasEl.width, canvasEl.height);
     
             if (fileImageData.cameraDirection != 0) {
                 let rotateRads = ((fileImageData.cameraDirection) * Math.PI) / 180;
-    
                 canvasContext.translate(canvasEl.width / 2, canvasEl.height / 2);
                 canvasContext.rotate(rotateRads);
                 canvasContext.translate(-canvasEl.width / 2, -canvasEl.height / 2);
             }
     
-            canvasContext.drawImage(imageEl, 0, 0, canvasEl.width, canvasEl.height);
-    
+            canvasContext.drawImage(loadingImage, 0, 0, canvasEl.width, canvasEl.height);
             // thumbnail_local_file = URLToFile(thumbnail_image_data);
             // thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
-    
-            fileImageData.imageURLData = canvasEl.toDataURL(AppMapData.GetAppSettings().imageIcon2DFormat, AppMapData.GetAppSettings().imageIcon2DQuality);
-            
+            fileImageData.imageURLData = canvasEl.toDataURL(AppSettings.imageIcon2DFormat, AppSettings.imageIcon2DQuality);
            // console.log(`fileImageData.imageURLData.length = ${(fileImageData.imageURLData.length/1024)*2} kb`);
-    
+   
             // remove large data object before creating GeoJSON data
             //console.log('fileImageData.imageFileData = ', fileImageData.imageFileData);
             URL.revokeObjectURL(fileImageData.imageFileData);
@@ -152,25 +150,23 @@ export class ImageProcessorClass {
             //console.log('Worker calling ThumbnailReadyEvent');
 
             let ThumbnailReadyEvent = AppUIData.GetThumbnailReadyEvent(fileImageData);
-   
-            imageEl.src = '';
-            imageEl = null;
-    
+
+            loadingImage.src = '';
+            loadingImage = null;
+
             canvasEl.dispatchEvent(ThumbnailReadyEvent);
         }
     
         const url = URL.createObjectURL(fileImageData.imageFileData);
     
         if (url) {
-            fileImageData.imageFileData = url;
-            imageEl.onload = FinalizeThumbnailImage;
-            imageEl.src = url;
+//            fileImageData.imageFileData = url;
+            loadingImage.onload = FinalizeThumbnailImage;
+            loadingImage.src = url;
         }
-    
     }
     
     async ReadImageEXIFTags(FileData) {
-    
         //  console.log("Worker FileData = ", FileData);
     
         if (!FileData) {
@@ -183,7 +179,7 @@ export class ImageProcessorClass {
                 return null;
             }
     
-            console.log("tags = ", tags);
+            //console.log("tags = ", tags);
     
             if (tags.gps && tags.gps.Latitude != 0 && tags.gps.Longitude != 0) {
                 const addMe = new ImageData();
@@ -209,7 +205,7 @@ export class ImageProcessorClass {
                         addMe.cameraPitch = Number(tags.xmp.GimbalPitchDegree.value);
                     }
                     else {
-                        console.log("No EXIF XMP data... ");
+                       // console.log("No EXIF XMP data... ");
                         addMe.flightDirection = 0;
                         addMe.cameraDirection = 0;
                         addMe.cameraPitch = 90;
