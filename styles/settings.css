@@ -1,11 +1,11 @@
 .settings-modal {
   display: none;
   position: fixed; 
-  left: 25vw;
-  top: 25vh;
+  left: 60px;
+  top: 120px;
   padding-left: 1.5rem;
-  width: fit-content; 
-  height: fit-content; 
+  width: -moz-fit-content; 
+  height: -moz-fit-content; 
   background-color: #aaaaaa;
   z-index: 1000; 
   border-radius: 10px;
@@ -33,7 +33,7 @@
 .settings-map-icon-selector {
   margin-left: 1rem;
   margin-right:1rem;
-  height: fit-content;
+  height: -moz-fit-content;
   background-color: #aaaaaa;
 }
 

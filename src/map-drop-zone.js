@@ -28,71 +28,70 @@
 ////////////////////////////////////////////////////////////////////////////////////
 export class DropHandlerClass {
 
-	_dropElements=null;
+	_dropElements = null;
+	_fileInputButtonClass = '';
+	_submitButtonClass = '';
+	_dropOnElementClass = '';
+	_dropOverEventClass = '';
 
-	InitDropElements(dropElements) {
+	SetFileInputButtonClass(iClass){this._fileInputButtonClass = iClass;}
+	SetSubmitButtonClass(iClass){this._submitButtonClass = iClass;}
+	SetDropOnElementClass(iClass){this._dropOnElementClass = iClass;}
+	SetDropOverEventClass(iClass){this._dropOverEventClass = iClass;}
 
-		this._dropElements = dropElements;
+	InitDropHandler() {
 
-		this._dropElements.forEach((dropElement) => {
-			this.ProcessDropElement(dropElement);
-		});
+		this._dropElements = document.getElementsByClassName(this._dropOnElementClass);
+
+		for (let ii=0; ii < this._dropElements.length; ii++){
+			this.ProcessDropElement(this._dropElements[ii]);
+		}
 	}
 
 	ProcessDropElement(dropZoneElement) {
 
 		//console.log("setting up drop zone element:", dropZoneElement)
-		let inputElement = document.querySelector(".map-drop-zone__input");
+		let fileInputElement = document.getElementsByClassName(this._fileInputButtonClass)[0];
+		let submitButtonElement = document.getElementsByClassName(this._submitButtonClass)[0];
 
-		inputElement.onchange = function (event) {
-			event.preventDefault();
-			let sb = document.querySelectorAll("[type=submit]")[0];
+		if (fileInputElement && submitButtonElement) {
 
-			if (sb) {
-				sb.click();
-			}
-		};
+			fileInputElement.onchange = function (event) {
+				submitButtonElement.click();
+			};
 
-		dropZoneElement.addEventListener("dragover", (e) => {
-			e.preventDefault();
+			dropZoneElement.addEventListener("dragover", (e) => {
+				e.preventDefault();
 
-			if (!dropZoneElement.classList.contains("map-drop-zone--over")) {
-				//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
-				dropZoneElement.classList.add("map-drop-zone--over");
-			}
-		});
-
-		["dragleave", "dragend"].forEach((type) => {
-			dropZoneElement.addEventListener(type, (e) => {
-				if (dropZoneElement.classList.contains("map-drop-zone--over")) {
-					//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
-					dropZoneElement.classList.remove("map-drop-zone--over");
+				if (!dropZoneElement.classList.contains(this._dropOverEventClass)) {
+					//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
+					dropZoneElement.classList.add(this._dropOverEventClass);
 				}
 			});
-		});
 
-		dropZoneElement.addEventListener("drop", (e) => {
-			e.preventDefault();
-			//console.log("inputElement drop:", inputElement);
-			if (inputElement) {
-
-				//console.log("e.dataTransfer:", e.dataTransfer);
-
-				if (e.dataTransfer.files.length) {
-
-					inputElement.files = e.dataTransfer.files;
-					let sb = document.getElementById("submit-button");
-
-					//console.log("inputElement.files:", inputElement.files);
-
-					if (sb) {
-						sb.click();
+			["dragleave", "dragend"].forEach((type) => {
+				dropZoneElement.addEventListener(type, (e) => {
+					if (dropZoneElement.classList.contains(this._dropOverEventClass)) {
+						//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
+						dropZoneElement.classList.remove(this._dropOverEventClass);
 					}
-				}
-			}
+				});
+			});
 
-			dropZoneElement.classList.remove("map-drop-zone--over");
-		});
+			dropZoneElement.addEventListener("drop", (e) => {
+				e.preventDefault();
+				//console.log("inputElement drop:", inputElement);
+				//console.log("e.dataTransfer:", e.dataTransfer);
+					if (e.dataTransfer.files.length) {
+
+						fileInputElement.files = e.dataTransfer.files;
+						//console.log("inputElement.files:", inputElement.files);
+						submitButtonElement.click();
+					}
+
+				dropZoneElement.classList.remove(this._dropOverEventClass);
+			});
+		}
 	}
 
 	ReadDataFile(urlToRead) {

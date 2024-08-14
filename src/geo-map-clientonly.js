@@ -162,9 +162,12 @@ async function InitAppUI() {
     // critial: without these two elements and events, nothing works!
     ///////////////////////////////////////////////////////////
 
+	let fileInputButtonClass = 'map-drop-zone__input';
+	let submitButtonClass = 'map-drop-submit-button';
+
     // This DROP (on class map-drop-zone) message handler calls this 
     // event to load the dropped files.
-    AppUIData.submitButton = document.getElementById("submit-button");
+    AppUIData.submitButton = document.getElementsByClassName(submitButtonClass)[0];
     if (AppUIData.submitButton) {
         AppUIData.submitButton.addEventListener("click", HandleImagesAddedEvent);
         AppUIData.submitButton.addEventListener(AppUIData.GeoJSONDataChangedEventStr, UpdateMaps);
@@ -176,7 +179,7 @@ async function InitAppUI() {
     }
 
     // This CHANGE message handler loads the user choosen files
-    AppUIData.fileInputEl = document.getElementById("upload-files");
+    AppUIData.fileInputEl = document.getElementsByClassName(fileInputButtonClass)[0];
 
     if (AppUIData.fileInputEl) {
         AppUIData.fileInputEl.onchange = function (event) {
@@ -184,23 +187,27 @@ async function InitAppUI() {
             HandleImagesAddedEvent(event);
         };
     }
+
     ///////////////////////////////////////////////////////////
 
-    // set up the map drop event elements
-    let dropElements = document.querySelectorAll(".map-drop-zone");
-    DropHandler.InitDropElements(dropElements);
+    // setup the map drop event elements
+    DropHandler.SetDropOnElementClass('map-drop-zone');
+    DropHandler.SetDropOverEventClass('map-drop-zone--over');
+    DropHandler.SetFileInputButtonClass(fileInputButtonClass);
+    DropHandler.SetSubmitButtonClass(submitButtonClass);
+    DropHandler.InitDropHandler();
 
     // Settings dialog UI
     AppMapData.GetAppSettings().GetSettingsUI().InitUI();
 
     // Get the settings open button
-    let settingsButton = document.getElementsByClassName("map-settings-button")[0];
+    let settingsButton = document.getElementsByClassName('map-settings-button')[0];
 
     // Setup map menu bar icon commands
 
     settingsButton.onclick = function (event) {
         event.preventDefault = true;
-        let settingsDialog = document.getElementsByClassName("settings-modal")[0];
+        let settingsDialog = document.getElementsByClassName('settings-modal')[0];
         if (!settingsDialog.style.display || settingsDialog.style.display == 'none') {
             settingsDialog.style.display = "flex";
         }

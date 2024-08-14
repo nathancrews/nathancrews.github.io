@@ -98,9 +98,6 @@ export class AppSettingsUIClass {
 
     // Settings dialog UI
     InitUI() {
-
-       
-
         let settingsDialog = document.getElementsByClassName("settings-modal")[0];
         let settingsButton = document.getElementsByClassName("map-settings-button")[0];
         let mapIconSelector = document.getElementById("map-icon-selector");

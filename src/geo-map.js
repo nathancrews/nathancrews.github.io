@@ -102,6 +102,9 @@ export async function UpdateMaps(event) {
 //************************************
 async function InitUI() {
 
+    let fileInputButtonClass = 'map-drop-zone__input';
+	let submitButtonClass = 'map-drop-submit-button';
+    
     AppUIData.clientSideOnly = false;
 
     AppUIData.formEl = document.getElementById("uploadForm");
@@ -143,8 +146,12 @@ async function InitUI() {
         resetMap_button_el.addEventListener('click', ResetMap);
     }
 
-    let dropElements = document.querySelectorAll(".map-drop-zone");
-    DropHandler.InitDropElements(dropElements);
+    // setup the map drop event elements
+    DropHandler.SetDropOnElementClass('map-drop-zone');
+    DropHandler.SetDropOverEventClass('map-drop-zone--over');
+    DropHandler.SetFileInputButtonClass(fileInputButtonClass);
+    DropHandler.SetSubmitButtonClass(submitButtonClass);
+    DropHandler.InitDropHandler();
 
     AppMapData.GetAppSettings().Load();
     AppMapData.GetAppSettings().GetSettingsUI().InitUI();

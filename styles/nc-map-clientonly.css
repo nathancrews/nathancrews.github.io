@@ -34,17 +34,45 @@ div.leaflet-popup-content {
 }
 
 .map-body {
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
-  color: azure;
-  width: 98%;
-  height: 96%;
+  margin-left: 10px;
+  margin-right: 0px;
+  color: cornsilk;
+  height: 100%;
   display: block;
   background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  overflow: none;
+}
+
+.map-drop-zone__input {
+  display: flex;
+}
+
+.map-drop-zone--over {
+  border-style: solid;
+  border-color: limegreen;
+}
+
+.map-drop-submit-button{
+  display: none;
+}
+
+.map-base {
+  width: 98%;
+  height: 86svh;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  min-width: 300px;
+}
+
+.map-drop-zone {
+  color: #cccccc;
+  border: 4px dashed #009578;
+  border-radius: 10px;
 }
 
 .map-controls {
@@ -64,7 +92,7 @@ div.leaflet-popup-content {
 .map-menu-bar {
   display: flex;
   width: fit-content;
-  height: auto;
+  height: 40px;
   color: #aaaaaa;
   background-color: #aaaaaa;
   align-items: center;
@@ -76,7 +104,8 @@ div.leaflet-popup-content {
 
 .map-menu-button {
   color: black;
-  margin: 0.25rem;
+  margin: 0.15rem;
+  padding: 0.1rem;
   vertical-align: middle;
   width:2rem;
   height: 2rem;
@@ -84,8 +113,7 @@ div.leaflet-popup-content {
 }
 
 .map-menu-button:hover {
-  border: 0.1rem solid white; 
-  box-shadow:gray 0.1rem;
+  border: 2px solid white; 
 }
 
 .map-erase-button {
@@ -153,38 +181,5 @@ div.leaflet-popup-content {
 .map-form-input-text {
   font-size: large;
   height: 25px;
-}
-
-.map-drop-zone__input {
-  display: flex;
-}
-
-.map-base {
-  margin-top: 2rem;
-  width: 95vw;
-  height: 90vh;
-}
-
-.map-drop-zone {
-  cursor: pointer;
-  border: 4px dashed #009578;
-  border-radius: 10px;
-}
-
-.map-drop-zone-3d {
-  display: block;
-  padding: 0px;
-  margin: 0px;
-}
-
-.map-drop-zone-2d {
-  display: block;
-  padding: 0px;
-  margin: 0px;
-}
-
-.map-drop-zone--over {
-  border-style: solid;
-  border-color: limegreen;
 }
 
