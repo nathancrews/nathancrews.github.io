@@ -30,20 +30,18 @@
 export class MessageUIClass {
 
     _messageDialog = null;
-    _messageFieldset = null;
     _messageLegend = null;
     _messageText = null;
-    _messageClose = null;
-    _inParentButton = null;
-    _okAction = null;
     _messageTextnode = null;
+    _messageOkButton = null;
+    _messageCancelButton = null;
+    _okAction = null;
 
     constructor() {
+
         this._messageDialog = document.getElementsByClassName("message-modal")[0];
-        this._messageFieldset = document.getElementsByClassName("message-form-fieldset")[0];
         this._messageLegend = document.getElementsByClassName("message-legend")[0];
         this._messageText = document.getElementsByClassName("message-text")[0];
-        this._messageClose = document.getElementsByClassName("message-close")[0];
         this._messageOkButton = document.getElementsByClassName("message-button-ok")[0];
         this._messageCancelButton = document.getElementsByClassName("message-button-cancel")[0];
         console.log("MessageUIClass constructor called");
@@ -52,10 +50,9 @@ export class MessageUIClass {
     // message dialog UI
 
     OkButtonClickEvent(event) {
+
         event.preventDefault = true;
-
         MessageUI.HideMessage();
-
         if (MessageUI._okAction) {
             //console.log("Ok, calling: ", MessageUI._okAction);
             MessageUI._okAction();
@@ -63,6 +60,7 @@ export class MessageUIClass {
     }
 
     CancelButtonClickEvent(event) {
+
         event.preventDefault = true;
         console.log("MessageBox Cancelled");
         MessageUI.HideMessage();
