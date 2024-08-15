@@ -1,0 +1,98 @@
+.message-modal {
+  display: block;
+  position: fixed;
+  left: 25%;
+  top: 30%;
+  padding: 1rem;
+  width: fit-content;
+  height: fit-content;
+  background-color: #aaaaaa;
+  z-index: 1000;
+  border-radius: 10px;
+}
+
+.message-modal-hide {
+  display: none;
+}
+
+.message-modal-show {
+  display: block;
+}
+
+/* Modal Content */
+
+.message-dialog {
+    display: block;
+    justify-content: center;
+    align-content: center;
+}
+  
+.message-form-fieldset {
+  display: flex;
+  align-self: center;
+  max-width: 350px;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  vertical-align: top;
+  border: 2px solid black;
+  border-radius: 6px;
+}
+
+.message-legend {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.message-text {
+  margin: 0.5rem;
+  vertical-align: top;
+  padding: 0px;
+  color: black;
+  float: left;
+  font-size: 1rem;
+}
+
+.message-button-bar {
+  margin: 0;
+  padding:0;
+  display: flex;
+  position: relative;
+  left: 40%;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  grid-gap: 1rem;
+  width: fit-content;
+  color: #aaaaaa;
+  background-color: #aaaaaa;
+}
+
+.message-button-ok {
+  display: flex;
+  padding: 0.25rem;
+  background-color: cornsilk ;
+  border: 0.25rem  lightgreen;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.message-button-cancel {
+  display: flex;
+  vertical-align: middle;
+  padding: 0.25rem;
+  background-color: cornsilk;
+  border: 0.25rem   darkred;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.message-close:hover,
+.message-close:focus {
+  color: rgb(199, 2, 2);
+  text-decoration: none;
+  cursor: pointer;
+}

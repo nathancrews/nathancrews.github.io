@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <title>Photo Mapper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Nathan Crews">
     <meta name="description" content="drag and drop photos onto 2D or 3D map to geo-locate">
     <meta name="google-site-verification" content="CMKPT92L4h6JYyYqIw0VBlumjHMl5_EwVO82AzemNNQ" />
     <meta name="keywords"
@@ -13,8 +15,6 @@
     <meta name="keywords" content="arial, imagery, memory, memories, where, was, picture, taken, photo, jpeg, jpg, png">
     <meta name="keywords"
         content="java, script, html, css, programming, application, nathan, crews, software, development">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Nathan Crews">
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -24,10 +24,14 @@
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/nc-map-clientonly.css" />
     <link rel="stylesheet" href="styles/settings.css" />
+    <link rel="stylesheet" href="styles/message.css" />
     <script src="./src/geojson/geojson.min.js" type="module" defer></script>
     <script src="./src/geo-map-clientonly.js" type="module" defer></script>
     <!-- Cloudflare Web Analytics -->
@@ -62,7 +66,21 @@
             <button id="submit-button" class="map-drop-submit-button" type="submit" hidden="true"></button>
         </div>
         <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
-        <!-- <div id="settings-modal" class="settings-modal"> -->
+        <!-- Modal message dialog -->
+        <dialog class="message-modal message-modal-hide">
+        <form >
+            <div class="message-dialog">
+                <fieldset class="message-form-fieldset">
+                    <legend class="message-legend">Message</legend>
+                    <div class="message-text"></div>
+                </fieldset>
+                <div class="message-button-bar">
+                    <button id="ok" class="message-button-ok" type="button">Ok</button>
+                    <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
         <!-- Modal settings dialog -->
         <form id="settings-modal" class="settings-modal settings-modal-hide">
             <fieldset id="settings-form-fieldset" class="settings-form-fieldset">
@@ -71,7 +89,7 @@
                     <option value="thumbnail">Image Thumbnail</option>
                     <option value="drone2d">Drone</option>
                 </select>
-                <img id="settings-icon-2d" class="settings-icon-2d" src="images/image-thumb.png"/>
+                <img id="settings-icon-2d" class="settings-icon-2d" src="images/image-thumb.png" />
             </fieldset>
             <span class="settings-close">&times;</span>
         </form>

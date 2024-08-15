@@ -29,6 +29,7 @@
 
 import { AppMapData, AppUIData } from "./app-data.js";
 import { AppSettings } from "./app-settings.js";
+import { MessageUI } from "./message-ui.js";
 import { DropHandler } from "./map-drop-zone.js";
 import { Map2D } from "./map-view2D.js";
 import { Map3D } from "./map-view3D.js";
@@ -150,8 +151,8 @@ async function InitAppUI() {
     // critial: without these two elements and events, nothing works!
     ///////////////////////////////////////////////////////////
 
-	let fileInputButtonClass = 'map-drop-zone__input';
-	let submitButtonClass = 'map-drop-submit-button';
+    let fileInputButtonClass = 'map-drop-zone__input';
+    let submitButtonClass = 'map-drop-submit-button';
 
     // This DROP (on class map-drop-zone) message handler calls this 
     // event to load the dropped files.
@@ -193,7 +194,7 @@ async function InitAppUI() {
 
     // Setup map menu bar icon commands
 
-    function SettingsButtonClickEvent(event){
+    function SettingsButtonClickEvent(event) {
         event.preventDefault = true;
         AppSettings.GetSettingsUI().ShowDialog();
     }
@@ -241,7 +242,7 @@ async function InitAppUI() {
 
     const resetMapButton = document.getElementById("reset-map");
     if (resetMapButton) {
-        resetMapButton.addEventListener('click', ResetMap);
+        resetMapButton.addEventListener('click', OnResetMapButtonClick);
     }
 
     await Map2D.InitMap2D();
@@ -292,21 +293,17 @@ async function Show3D(event) {
     }
 }
 
-function ResetMap(showUserConfirm) {
+function OnResetMapButtonClick() {
+    MessageUI.ShowMessage("Photo Mapper", "Do you really want to erase ALL photos from the Map?", ResetMap);
+}
 
-    let userConfirmed = true;
+async function ResetMap() {
 
-    if (showUserConfirm) {
-        userConfirmed = window.confirm("Do you really want to erase ALL photos from the Map?");
-    }
+    await Map2D.ResetMap2D();
+    await Map3D.ResetMap3D();
 
-    if (userConfirmed) {
-        Map2D.ResetMap2D();
-        Map3D.ResetMap3D();
-
-        AppMapData.GarbageCollect();
-        AppUIData.GarbageCollect();
-    }
+    AppMapData.GarbageCollect();
+    AppUIData.GarbageCollect();
 }
 
 function SaveMap() {
@@ -324,26 +321,32 @@ function SaveMap() {
                 console.log(`Map save geoJSON size: ${(saveLength / 1024 * 2)} kb`);
 
                 if (saveLength > maxSingleLength) {
-                    window.alert(":( Map size too large to save locally, try reducing the number of photos.")
+                    MessageUI.ShowMessage("Photo Mapper", ":( Map size too large to save locally, try reducing the number of photos.", null);
+                    // window.alert(":( Map size too large to save locally, try reducing the number of photos.")
                 }
                 else {
                     window.localStorage.setItem(AppMapData.MAP_DATA_SAVE_KEY, geoJSONStr);
-                    window.alert("SUCCESS, Map data saved locally");
+
+                    MessageUI.ShowMessage("Photo Mapper", "SUCCESS, Map data saved locally", null);
+                    //window.alert("SUCCESS, Map data saved locally");
                 }
 
                 geoJSONStr = null;
             }
             else {
-                window.alert("Sorry, there was no map data saved.");
+               // window.alert("Sorry, there was no map data saved.");
+                MessageUI.ShowMessage("Photo Mapper", "Sorry, there was no map data saved.", null);
             }
         }
         else {
-            window.alert("Sorry, there is no map data to save. Try adding another photo.");
+            MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no map data to save. Try adding another photo.", null);
+            //window.alert("Sorry, there is no map data to save. Try adding another photo.");
         }
     }
     catch (error) {
         console.log("Error map data to large to save: ", error);
-        window.alert(":( ERROR map data to large to save: ", error);
+        MessageUI.ShowMessage("Photo Mapper", ":( ERROR map data to large to save: ", null);
+        //window.alert(":( ERROR map data to large to save: ", error);
     }
 }
 
@@ -378,18 +381,21 @@ function LoadMap() {
                 }
             }
             else {
-                window.alert("ERROR, loading local map data.");
+                //window.alert("ERROR, loading local map data.");
+                MessageUI.ShowMessage("Photo Mapper", "ERROR, loading local map data.", null);
             }
 
             geoJSONStr = null;
         }
         else {
-            window.alert("Sorry, there is no local map data to load.");
+           // window.alert("Sorry, there is no local map data to load.");
+            MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no local map data to load.", null);
         }
     }
     catch (error) {
         console.log("Error loading map data: ", error);
-        window.alert(`:( ${error} unable to load map data`)
+        MessageUI.ShowMessage("Photo Mapper", `:( ${error} unable to load map data`, null);
+       // window.alert(`:( ${error} unable to load map data`)
     }
 }
 
