@@ -39,20 +39,21 @@ import { ImageProcessor } from "./image-processor.js"
 await InitAppUI();
 
 export async function UpdateMaps(event) {
-    console.log("updating maps...");
+
+    AppMapData.geoJSONFileData = event.detail.geoJSONFileData;
+
+    console.log("updating maps...:");
 
     let startTime = performance.now();
-    await Map2D.UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
+    await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
     let endTime = performance.now();
     console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
     startTime = performance.now();
-    await Map3D.UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
+    await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
     ShowLoadingImage(false);
     endTime = performance.now();
     console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
-
-    event.detail.AppMapData = null;
 }
 
 
@@ -123,9 +124,8 @@ async function HandleThumbnailReadyEvent(evt) {
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
 
             if (geoJSONval) {
-                AppMapData.geoJSONFileData = geoJSONval;
 
-                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(AppMapData);
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -298,6 +298,10 @@ function OnResetMapButtonClick() {
 }
 
 async function ResetMap() {
+    
+//    console.log("ResetMap() called");
+
+    AppMapData.geoJSONFileData = null;
 
     await Map2D.ResetMap2D();
     await Map3D.ResetMap3D();
@@ -366,15 +370,15 @@ function LoadMap() {
 
             console.log(`Map load geoJSON size: ${(geoJSONStr.length / 1024) * 2} kb`);
 
-            ResetMap(false);
+            ResetMap();
 
-            AppMapData.geoJSONFileData = JSON.parse(geoJSONStr);
+            let geoJSON = JSON.parse(geoJSONStr);
 
-            if (AppMapData.geoJSONFileData && AppUIData.submitButton) {
+            if (geoJSON && AppUIData.submitButton) {
 
                 ShowLoadingImage(true);
 
-                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(AppMapData);
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSON);
 
                 if (UpdateMapEvent) {
                     AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -385,7 +389,6 @@ function LoadMap() {
                 MessageUI.ShowMessage("Photo Mapper", "ERROR, loading local map data.", null);
             }
 
-            geoJSONStr = null;
         }
         else {
            // window.alert("Sorry, there is no local map data to load.");

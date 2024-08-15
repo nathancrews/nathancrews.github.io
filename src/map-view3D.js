@@ -191,8 +191,6 @@ export class Map3DClass {
             return;
         }
 
-        await this.ResetMap3DView();
-
         return retView;
     }
 

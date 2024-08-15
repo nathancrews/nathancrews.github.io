@@ -58,8 +58,8 @@ export class AppUIDataClass {
     // Define Application Events
     //************************************
 
-    GetGeoJSONDataChangedEvent(inAppMapData) {
-        return new CustomEvent(this.GeoJSONDataChangedEventStr, { detail: { AppMapData: inAppMapData } });
+    GetGeoJSONDataChangedEvent(ingeoJSONFileData) {
+        return new CustomEvent(this.GeoJSONDataChangedEventStr, { detail: { geoJSONFileData: ingeoJSONFileData } });
     }
 
     GetThumbnailReadyEvent(fileImageData) {
@@ -75,6 +75,15 @@ class AppMapDataClass {
     MAP_DATA_SAVE_KEY = "nc_imapper:geoJSON";
     MAP_APP_DATA_SAVE_KEY = "nc_imapper:geoJSONSettings";
 
+    geoJSONFileData = null;
+    defaultLatitude = 56.01877997222222;
+    defaultLongitude = -3.7548339722222224;
+    projectDirectory = "test_drop";
+    baseUploadPath = "uploads/";
+    geoJSONFileURL = "uploads/test_drop/geo-images.json";
+    geoJSONFileName = "geo-images.json";
+    imageDataArray = [];
+
     constructor() {
         this.geoJSONFileData = null;
         this.defaultLatitude = 56.01877997222222;
@@ -88,14 +97,12 @@ class AppMapDataClass {
         console.log("AppMapDataClass constructor called");
     }
 
-    // GetAppSettings() {
-    //     return this.appSettings;
-    // }
-
     GarbageCollect() {
-        this.geoJSONFileData = null;
+        console.log("AppMapDataClass GarbageCollect() called");
         this.imageDataArray = null;
         this.imageDataArray = [];
+
+        //console.log("AppMapData geoJSONFileData: ", this.geoJSONFileData);
     }
 }
 

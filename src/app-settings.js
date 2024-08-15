@@ -37,7 +37,7 @@ export class AppSettingsUIClass {
     _settingsIconFieldset = null;
     _settingsIconPreview = null;
     _settingsIconLegend = null;
-    _span = null;
+    _close = null;
     _inParentButton = null;
 
     constructor() {
@@ -47,7 +47,7 @@ export class AppSettingsUIClass {
         this._settingsIconFieldset = document.getElementById("settings-form-fieldset");
         this._settingsIconPreview = document.getElementById("settings-icon-2d");
         this._settingsIconLegend = document.getElementById("settings-map-icon2d");
-        this._span = document.getElementsByClassName("settings-close")[0];
+        this._close = document.getElementsByClassName("settings-close")[0];
 
         console.log("AppSettingsUIClass constructor called");
     }
@@ -104,7 +104,7 @@ export class AppSettingsUIClass {
         AppSettings.Load();
 
         // When the user clicks on <span> (x), close the modal
-        this._span.onclick = this.CloseDialogEvent;
+        this._close.onclick = this.CloseDialogEvent;
 
         this._mapIconSelector.value = AppSettings.imageIcon2DType;
 

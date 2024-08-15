@@ -118,10 +118,12 @@ export class Map2DClass {
 
     async UpdateMap2D(geoJSONResults) {
 
+       // console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
+
         let localgeoJSONResults = geoJSONResults;
 
         //console.log("2DMap geoJSONResults=", geoJSONResults);
-        // console.log("AppUIData.clientSideOnly=", AppUIData.clientSideOnly);
+        //console.log("AppUIData.clientSideOnly = ", AppUIData.clientSideOnly);
         if (AppUIData.clientSideOnly == false && !localgeoJSONResults && AppMapData.geoJSONFileURL) {
             try {
 
