@@ -28,9 +28,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 import { AppMapData, AppUIData } from "./app-data.js";
-
+import { AppSettings } from "./app-settings.js";
 AppMapData.clientSideOnly = false;
-
+import { MessageUI } from "./message-ui.js";
 import { DropHandler } from "./map-drop-zone.js";
 import { Map2D } from "./map-view2D.js";
 import { Map3D } from "./map-view3D.js";
@@ -44,6 +44,18 @@ import { ChunkFileUploadRequests } from "./file_upload_client.js";
 ///////////////////////////////////////////////////////////////
 
 await InitUI();
+
+function ShowLoadingImage(setVisible) {
+
+    if (AppUIData && AppUIData.loadingImageEl) {
+        if (setVisible) {
+            AppUIData.loadingImageEl.style.display = "block";
+        }
+        else {
+            AppUIData.loadingImageEl.style.display = "none";
+        }
+    }
+}
 
 async function Show2D(event) {
     let map2D_div_el = document.getElementById("map2d");
@@ -76,25 +88,21 @@ async function Show3D(event) {
 }
 
 export async function UpdateMaps(event) {
-    console.log("updating maps...");
+
+    AppMapData.geoJSONFileData = event.detail.geoJSONFileData;
+
+    console.log("updating maps...: ", AppMapData.geoJSONFileData);
 
     let startTime = performance.now();
-
-    await Map2D.UpdateMap2D(event.detail.AppMapData.geoJSONFileData);
-
+    await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
     let endTime = performance.now();
-    console.log(`UpdateMap2D took ${endTime - startTime}ms`)
+    console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
     startTime = performance.now();
-
-    await Map3D.UpdateMap3D(event.detail.AppMapData.geoJSONFileData);
-
-    if (AppUIData.loadingImageEl) {
-        AppUIData.loadingImageEl.style.display = "none";
-    }
-
+    await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
+    ShowLoadingImage(false);
     endTime = performance.now();
-    console.log(`UpdateMap3D took ${endTime - startTime}ms`)
+    console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
 }
 
 //************************************
@@ -102,9 +110,6 @@ export async function UpdateMaps(event) {
 //************************************
 async function InitUI() {
 
-    let fileInputButtonClass = 'map-drop-zone__input';
-	let submitButtonClass = 'map-drop-submit-button';
-    
     AppUIData.clientSideOnly = false;
 
     AppUIData.formEl = document.getElementById("uploadForm");
@@ -115,7 +120,7 @@ async function InitUI() {
     //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
 
     if (AppUIData.formEl) {
-        AppUIData.formEl.addEventListener("GeoJSONFileURLChanged", UpdateMaps);
+        AppUIData.formEl.addEventListener(AppUIData.GeoJSONDataChangedEventStr, UpdateMaps);
     }
 
     if (AppUIData.formEl) {
@@ -147,21 +152,38 @@ async function InitUI() {
     }
 
     // setup the map drop event elements
+    let fileInputButtonClass = 'map-drop-zone__input';
+	let submitButtonClass = 'map-drop-submit-button';
+
     DropHandler.SetDropOnElementClass('map-drop-zone');
     DropHandler.SetDropOverEventClass('map-drop-zone--over');
     DropHandler.SetFileInputButtonClass(fileInputButtonClass);
     DropHandler.SetSubmitButtonClass(submitButtonClass);
     DropHandler.InitDropHandler();
 
-    AppMapData.GetAppSettings().Load();
-    AppMapData.GetAppSettings().GetSettingsUI().InitUI();
+    AppSettings.Load();
+
+    let settingsButton = document.getElementsByClassName('map-settings-button')[0];
+
+    // Settings dialog UI, send the parent button for NON-click handling
+    AppSettings.GetSettingsUI().InitUI(settingsButton);
+
+    // Setup map menu bar icon commands
+
+    function SettingsButtonClickEvent(event) {
+        event.preventDefault = true;
+        AppSettings.GetSettingsUI().ShowDialog();
+    }
+
+    settingsButton.onclick = SettingsButtonClickEvent;
+
+    await Show2D(null);
 
     await Map2D.InitMap2D();
     await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
 
     await Map3D.InitMap3D();
     await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
-
 }
 
 
@@ -194,7 +216,7 @@ async function OnDirChanged(event) {
 
         let formAction = "cgi-bin/image-geo/image-mapper.js?dir=uploads/" + newDirectory + "/&response_type=json";
 
-        //console.log("formAction = ", formAction);
+        console.log("formAction = ", formAction);
 
         let response = await fetch(formAction, { method: "GET" }).catch(error => {
             console.log("Error: refresh image GeoJSON failed.", error);
@@ -206,12 +228,14 @@ async function OnDirChanged(event) {
             let responseText = "ERROR";
             responseText = await response.text();
 
-            //console.log("responseText=", responseText)
+            console.log("responseText=", responseText)
 
             let stat = responseText.indexOf("ERROR");
             if (stat < 0) {
-                AppMapData.geoJSONFileData = await JSON.parse(responseText);
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged", { detail: { AppMapData: AppMapData } });
+                let geoJSONval = await JSON.parse(responseText);
+
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
+
                 AppUIData.formEl.dispatchEvent(UpdateMapEvent);
             }
         }
@@ -254,16 +278,15 @@ async function SubmitClicked(event) {
             if (responseText) {
                 startTime = performance.now();
 
-                //console.log("responseText : ", responseText)
+                console.log("responseText : ", responseText)
 
-                AppMapData.geoJSONFileData = await JSON.parse(responseText);
+               let geoJSONval = await JSON.parse(responseText);
 
                 endTime = performance.now();
 
                 console.log(`JSON.parse(responseText) took ${endTime - startTime}ms`)
 
-                let UpdateMapEvent = new CustomEvent("GeoJSONFileURLChanged",
-                    { detail: { AppMapData: AppMapData } });
+                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
 
                 // ResetFileInputElement(AppUIData.fileInputEl);
 
@@ -285,7 +308,7 @@ async function SubmitClicked(event) {
 function SaveAppSettings() {
     let appJSONStr = window.localStorage.getItem("server_imapper:appJSON");
 
-    AppMapData.GetAppSettings().Save(appJSONStr);
+    AppSettings.Save(appJSONStr);
 
     if (AppMapData.appSettings) {
         let appJSONStr = JSON.stringify(AppMapData.appSettings);
@@ -300,7 +323,7 @@ function LoadAppSettings() {
 
     let appJSONStr = window.localStorage.getItem("server_imapper:appJSON");
 
-    AppMapData.GetAppSettings().Load(appJSONStr);
+    AppSettings.Load(appJSONStr);
 
     // if (appJSONStr && appJSONStr.length > 0) {
     //     let localAppSettingsData = JSON.parse(appJSONStr);
@@ -312,18 +335,6 @@ function LoadAppSettings() {
 
 function ResetMap(showUserConfirm) {
 
-    let userConfirmed = true;
-
-    if (showUserConfirm) {
-        userConfirmed = window.confirm("Do you really want to erase ALL photos from the Map?");
-    }
-
-    if (userConfirmed) {
-        Map2D.ResetMap2D();
-        Map3D.ResetMap3D();
-
-        AppMapData.GarbageCollect();
-    }
 }
 
 function ResetFileInputElement(existingFileInputEl) {

@@ -57,6 +57,7 @@ export class DropHandlerClass {
 		if (fileInputElement && submitButtonElement) {
 
 			fileInputElement.onchange = function (event) {
+				e.preventDefault();
 				submitButtonElement.click();
 			};
 
@@ -64,7 +65,7 @@ export class DropHandlerClass {
 				e.preventDefault();
 
 				if (!dropZoneElement.classList.contains(this._dropOverEventClass)) {
-					//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
+					console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
 					dropZoneElement.classList.add(this._dropOverEventClass);
 				}
 			});
@@ -72,7 +73,7 @@ export class DropHandlerClass {
 			["dragleave", "dragend"].forEach((type) => {
 				dropZoneElement.addEventListener(type, (e) => {
 					if (dropZoneElement.classList.contains(this._dropOverEventClass)) {
-						//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
+						console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
 						dropZoneElement.classList.remove(this._dropOverEventClass);
 					}
 				});
@@ -80,12 +81,13 @@ export class DropHandlerClass {
 
 			dropZoneElement.addEventListener("drop", (e) => {
 				e.preventDefault();
-				//console.log("inputElement drop:", inputElement);
-				//console.log("e.dataTransfer:", e.dataTransfer);
+				console.log("fileInputElement drop:", fileInputElement);
+				console.log("e.dataTransfer:", e.dataTransfer);
+				
 					if (e.dataTransfer.files.length) {
 
 						fileInputElement.files = e.dataTransfer.files;
-						//console.log("inputElement.files:", inputElement.files);
+						console.log("fileInputElement.files:", fileInputElement.files);
 						submitButtonElement.click();
 					}
 

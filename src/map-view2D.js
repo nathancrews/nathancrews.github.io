@@ -122,8 +122,8 @@ export class Map2DClass {
 
         let localgeoJSONResults = geoJSONResults;
 
-        //console.log("2DMap geoJSONResults=", geoJSONResults);
-        //console.log("AppUIData.clientSideOnly = ", AppUIData.clientSideOnly);
+        console.log("2DMap geoJSONResults=", geoJSONResults);
+        console.log("AppUIData.clientSideOnly = ", AppUIData.clientSideOnly);
         if (AppUIData.clientSideOnly == false && !localgeoJSONResults && AppMapData.geoJSONFileURL) {
             try {
 

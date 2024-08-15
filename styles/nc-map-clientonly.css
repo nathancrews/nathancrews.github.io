@@ -49,6 +49,12 @@ div.leaflet-popup-content {
   display: flex;
 }
 
+.map-drop-zone {
+  color: #cccccc;
+  border: 4px dashed #009578;
+  border-radius: 10px;
+}
+
 .map-drop-zone--over {
   border-style: solid;
   border-color: limegreen;
@@ -69,11 +75,6 @@ div.leaflet-popup-content {
   min-width: 300px;
 }
 
-.map-drop-zone {
-  color: #cccccc;
-  border: 4px dashed #009578;
-  border-radius: 10px;
-}
 
 .map-controls {
   display: flex;

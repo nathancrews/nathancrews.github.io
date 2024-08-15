@@ -50,6 +50,12 @@ div.leaflet-popup-content {
   display: flex;
 }
 
+.map-drop-zone {
+  color: #cccccc;
+  border: 4px dashed #009578;
+  border-radius: 10px;
+}
+
 .map-drop-zone--over {
   border-style: solid;
   border-color: limegreen;
@@ -70,22 +76,12 @@ div.leaflet-popup-content {
   min-width: 300px;
 }
 
-.map-drop-zone {
-  color: #cccccc;
-  border: 4px dashed #009578;
-  border-radius: 10px;
+.map-drop-zone-2d {
+  display: block;
 }
 
 .map-drop-zone-3d {
   display: none;
-  padding: 0px;
-  margin: 0px;
-}
-
-.map-drop-zone-2d {
-  display: block;
-  padding: 0px;
-  margin: 0px;
 }
 
 .map-header {
