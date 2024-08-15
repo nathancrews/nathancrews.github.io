@@ -117,9 +117,9 @@ div.leaflet-popup-content {
   background-color: lightblue;
 }
 
-.settings-button{
-  width: 25px;
-  height: 25px;
+.map-settings-button{
+  width:2rem;
+  height: 2rem;
   vertical-align: middle;
   margin: 1rem;
 }
