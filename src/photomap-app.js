@@ -38,19 +38,21 @@ import { ImageProcessor } from "./image-processor.js"
 
 await InitAppUI();
 
+/** UpdateMaps: updates both the 2d and 3d maps after 
+ * an image load or drop event is processed */
 export async function UpdateMaps(event) {
 
-    AppMapData.geoJSONFileData = event.detail.geoJSONFileData;
+    let localgeoJSONFileData = event.detail.geoJSONFileData;
 
     console.log("updating maps...:");
 
     let startTime = performance.now();
-    await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
+    await Map2D.UpdateMap2D(localgeoJSONFileData);
     let endTime = performance.now();
     console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
     startTime = performance.now();
-    await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
+    await Map3D.UpdateMap3D(localgeoJSONFileData);
     ShowLoadingImage(false);
     endTime = performance.now();
     console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
