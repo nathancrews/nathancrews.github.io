@@ -74,9 +74,11 @@ export class MessageUIClass {
         this._messageCancelButton.onclick = this.CancelButtonClickEvent;
 
         if (!inAction) {
+            this._messageOkButton.innerText = 'Done';
             this._messageCancelButton.style.display = 'none';
         }
         else {
+            this._messageOkButton.innerText = 'Ok';
             this._messageCancelButton.style.display = 'flex';
         }
 

@@ -187,68 +187,74 @@ async function InitAppUI() {
     DropHandler.InitDropHandler();
 
     // Get the settings open button
-    let settingsButton = document.getElementsByClassName('map-settings-button')[0];
+    let menuButtonSettings = document.getElementById('settings-button');
 
     // Settings dialog UI, send the parent button for NON-click handling
-    AppSettings.GetSettingsUI().InitUI(settingsButton);
+    AppSettings.GetSettingsUI().InitUI(menuButtonSettings);
 
-    // Setup map menu bar icon commands
+    InitMenuBar();
 
-    function SettingsButtonClickEvent(event) {
-        event.preventDefault = true;
-        AppSettings.GetSettingsUI().ShowDialog();
-    }
+    await Map2D.InitMap2D();
+    await Map3D.InitMap3D();
 
-    settingsButton.onclick = SettingsButtonClickEvent;
+    await Show2DMap(null);
+}
 
-    let mapMenu = document.getElementById("map-menu");
+function MenuButtonSettingsOnClick(event) {
+    event.preventDefault = true;
+    AppSettings.GetSettingsUI().ShowDialog();
+}
 
-    if (mapMenu) {
-        mapMenu.onclick = function (event) {
+// Setup map menu bar icon commands
+function InitMenuBar() {
+    let menuButtonSettings = document.getElementById('settings-button');
+    let menuButtonHome = document.getElementById("menu-button-home");
+
+    if (menuButtonHome) {
+        menuButtonHome.onclick = function (event) {
             event.preventDefault = true;
 
-            let mapMenuBars = document.getElementsByClassName("map-menu-bar");
-            for (let ii = 0; ii < mapMenuBars.length; ii++) {
-                if (!mapMenuBars[ii].style.display || mapMenuBars[ii].style.display === "flex") {
-                    mapMenuBars[ii].style.display = "none";
+            let menuBars = document.getElementsByClassName("menu-bar");
+            for (let ii = 0; ii < menuBars.length; ii++) {
+                if (!menuBars[ii].style.display || menuBars[ii].style.display === "flex") {
+                    menuBars[ii].style.display = "none";
                 }
                 else {
-                    mapMenuBars[ii].style.display = "flex";
+                    menuBars[ii].style.display = "flex";
                 }
             }
         }
     }
 
-    const saveMapButton = document.getElementById("save-map");
-    const loadMapButton = document.getElementById("load-map");
-
-    if (saveMapButton) {
-        saveMapButton.addEventListener("click", SaveMap);
+    if (menuButtonSettings) {
+        menuButtonSettings.addEventListener("click", MenuButtonSettingsOnClick);
     }
 
-    if (loadMapButton) {
-        loadMapButton.addEventListener("click", LoadMap);
+    const menuButtonSaveMap = document.getElementById("save-map");
+
+    if (menuButtonSaveMap) {
+        menuButtonSaveMap.addEventListener("click", SaveMap);
     }
 
-    let view2D_button_el = document.getElementById("view2d");
-    let view3D_button_el = document.getElementById("view3d");
-
-    if (view2D_button_el) {
-        view2D_button_el.addEventListener('click', Show2D);
-    }
-    if (view3D_button_el) {
-        view3D_button_el.addEventListener('click', Show3D);
+    const menuButtonLoadMap = document.getElementById("load-map");
+    if (menuButtonLoadMap) {
+        menuButtonLoadMap.addEventListener("click", LoadMap);
     }
 
-    const resetMapButton = document.getElementById("reset-map");
-    if (resetMapButton) {
-        resetMapButton.addEventListener('click', OnResetMapButtonClick);
+    let menuButtonShow2DMap = document.getElementById("show-2d-map");
+    let menuButtonShow3DMap = document.getElementById("show-3d-map");
+
+    if (menuButtonShow2DMap) {
+        menuButtonShow2DMap.addEventListener('click', Show2DMap);
+    }
+    if (menuButtonShow3DMap) {
+        menuButtonShow3DMap.addEventListener('click', Show3DMap);
     }
 
-    await Map2D.InitMap2D();
-    await Map3D.InitMap3D();
-
-    await Show2D(null);
+    const menuButtonResetMap = document.getElementById("reset-map");
+    if (menuButtonResetMap) {
+        menuButtonResetMap.addEventListener('click', ResetMaps);
+    }
 }
 
 function ShowLoadingImage(setVisible) {
@@ -263,7 +269,7 @@ function ShowLoadingImage(setVisible) {
     }
 }
 
-async function Show2D(event) {
+async function Show2DMap(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
@@ -278,7 +284,7 @@ async function Show2D(event) {
     }
 }
 
-async function Show3D(event) {
+async function Show3DMap(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
 
@@ -293,7 +299,7 @@ async function Show3D(event) {
     }
 }
 
-function OnResetMapButtonClick() {
+function ResetMaps() {
     MessageUI.ShowMessage("Photo Mapper", "Do you really want to erase ALL photos from the Map?", ResetMap);
 }
 

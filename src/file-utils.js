@@ -71,4 +71,40 @@ export class FileUtils {
         return fetchData;
     }
 
+	ReadDataFile(urlToRead) {
+
+		const fr = new FileReader();
+
+		fr.addEventListener('load', () => {
+			const res = fr.result;
+			const resFile = res.blob;
+
+			console.log(resFile);
+		});
+
+		console.log(fr.readAsDataURL(urlToRead));
+
+	}
+
+	async url2blob(url) {
+		try {
+			const data = await fetch(url /*, {mode: 'no-cors'}*/);
+			const blob = await data.blob();
+
+			console.log(blob);
+			let objectURL = URL.createObjectURL(blob);
+			console.log(objectURL);
+
+			await navigator.clipboard.write([
+				new ClipboardItem({
+					[blob.type]: blob
+				})
+			]);
+			console.log("Success.");
+		} catch (err) {
+			console.error(err.name, err.message);
+		}
+	}
+
+
 }

@@ -57,7 +57,7 @@ export class DropHandlerClass {
 		if (fileInputElement && submitButtonElement) {
 
 			fileInputElement.onchange = function (event) {
-				e.preventDefault();
+				event.preventDefault();
 				submitButtonElement.click();
 			};
 
@@ -65,7 +65,7 @@ export class DropHandlerClass {
 				e.preventDefault();
 
 				if (!dropZoneElement.classList.contains(this._dropOverEventClass)) {
-					console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
+					//console.log("Adding class: map-drop-zone--over to ", dropZoneElement)
 					dropZoneElement.classList.add(this._dropOverEventClass);
 				}
 			});
@@ -73,7 +73,7 @@ export class DropHandlerClass {
 			["dragleave", "dragend"].forEach((type) => {
 				dropZoneElement.addEventListener(type, (e) => {
 					if (dropZoneElement.classList.contains(this._dropOverEventClass)) {
-						console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
+						//console.log("Removing event: ${type} removing drop-zone--over", dropZoneElement)
 						dropZoneElement.classList.remove(this._dropOverEventClass);
 					}
 				});
@@ -81,53 +81,18 @@ export class DropHandlerClass {
 
 			dropZoneElement.addEventListener("drop", (e) => {
 				e.preventDefault();
-				console.log("fileInputElement drop:", fileInputElement);
-				console.log("e.dataTransfer:", e.dataTransfer);
+				//console.log("fileInputElement drop:", fileInputElement);
+				//console.log("e.dataTransfer:", e.dataTransfer);
 				
 					if (e.dataTransfer.files.length) {
 
 						fileInputElement.files = e.dataTransfer.files;
-						console.log("fileInputElement.files:", fileInputElement.files);
+						//console.log("fileInputElement.files:", fileInputElement.files);
 						submitButtonElement.click();
 					}
 
 				dropZoneElement.classList.remove(this._dropOverEventClass);
 			});
-		}
-	}
-
-	ReadDataFile(urlToRead) {
-
-		const fr = new FileReader();
-
-		fr.addEventListener('load', () => {
-			const res = fr.result;
-			const resFile = res.blob;
-
-			console.log(resFile);
-		});
-
-		console.log(fr.readAsDataURL(urlToRead));
-
-	}
-
-	async url2blob(url) {
-		try {
-			const data = await fetch(url /*, {mode: 'no-cors'}*/);
-			const blob = await data.blob();
-
-			console.log(blob);
-			let objectURL = URL.createObjectURL(blob);
-			console.log(objectURL);
-
-			await navigator.clipboard.write([
-				new ClipboardItem({
-					[blob.type]: blob
-				})
-			]);
-			console.log("Success.");
-		} catch (err) {
-			console.error(err.name, err.message);
 		}
 	}
 
