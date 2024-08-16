@@ -71,40 +71,137 @@ export class FileUtils {
         return fetchData;
     }
 
-	ReadDataFile(urlToRead) {
+    static async ChunkFileUploader(formEl, fileInputEl) {
 
-		const fr = new FileReader();
+        if ((formEl == undefined) || (fileInputEl == undefined)) {
+            console.log("Error: ChunkFileUploadRequests: called with undefined argument!")
+            console.log("Parameter formEl: ", formEl)
+            console.log("Parameter fileInputEl: ", fileInputEl)
+            return;
+        }
 
-		fr.addEventListener('load', () => {
-			const res = fr.result;
-			const resFile = res.blob;
+        //console.log(formEl);
 
-			console.log(resFile);
-		});
+        let formAction = formEl.getAttribute("action");
+        let allowedFileTypes = fileInputEl.getAttribute("accept");
+        let doAction = false;
 
-		console.log(fr.readAsDataURL(urlToRead));
+        if (formAction == undefined) {
+            console.log("Error: ChunkFileUploadRequests: invalid Form 'action' attribute value!")
+            return;
+        }
+        if (formAction) {
 
-	}
+            let formData = new FormData(formEl);
+            let filesArray = [];
+            let redirectCGIKey = "redirectCGI";
+            let redirectCGIValue = formData.get(redirectCGIKey);
 
-	async url2blob(url) {
-		try {
-			const data = await fetch(url /*, {mode: 'no-cors'}*/);
-			const blob = await data.blob();
+            let maxFilesPerRequest = Number(formData.get("maxFilesPerRequest"));
 
-			console.log(blob);
-			let objectURL = URL.createObjectURL(blob);
-			console.log(objectURL);
+            if (maxFilesPerRequest == 0) {
+                maxFilesPerRequest = 50;
+            }
 
-			await navigator.clipboard.write([
-				new ClipboardItem({
-					[blob.type]: blob
-				})
-			]);
-			console.log("Success.");
-		} catch (err) {
-			console.error(err.name, err.message);
-		}
-	}
+            let fileEntries = formData.getAll("file");
 
+            //console.log(fileEntries);
 
+            fileEntries.forEach((fileEntry) => {
+                if (FileUtils.IsFileTypeAllowed(fileEntry.name, allowedFileTypes)) {
+                    filesArray.push(fileEntry);
+                }
+            });
+
+            //console.log("files array now stored: ", filesArray);
+
+            let maxRequestCount = Math.ceil(filesArray.length / maxFilesPerRequest);
+            let requestCount = 1;
+
+            //console.log("maxRequest number : ", maxRequestCount);
+
+            if (maxRequestCount > 1) {
+                formData.delete(redirectCGIKey)
+            }
+
+            for (let ii = 0; ii < (filesArray.length); ii += maxFilesPerRequest) {
+                formData.getAll("file").forEach((fileEntry) => { formData.delete("file"); })
+                //console.log("TOP of loop, files array removed from form: ", formData.getAll("file"));
+
+                for (let yy = 0; yy < (maxFilesPerRequest); yy++) {
+                    //console.log('ii= ', ii, ' yy= ', yy);
+
+                    if (ii + yy < filesArray.length) {
+                        //console.log('adding file : ', filesArray[ii + yy].name);
+                        formData.append("file", filesArray[ii + yy])
+                    }
+                }
+
+                if (requestCount == maxRequestCount) {
+                    // console.log("sending request # ", requestCount, " of ", maxRequestCount);
+                    doAction = true;
+                    formData.append(redirectCGIKey, redirectCGIValue);
+                }
+
+                let response = await fetch(formAction, {
+                    method: "POST",
+                    body: formData
+                }).catch(error => {
+                    console.log("Error: ChunkFileUploadRequests: fetch error: ");
+                    console.log(error);
+                    return;
+                });
+
+                if (doAction === true && response && response.status >= 200 && response.status < 300) {
+
+                    let responseRes = await response.text();
+                    //console.log("responseRes=", responseRes)
+                    return responseRes;
+                }
+
+                requestCount++;
+            }
+        }
+
+        return;
+    }
+
+    static CreateDownloadURL(inFileData, inType) {
+
+        let fBlob = new Blob([inFileData], { type: inType });
+
+        return (URL.createObjectURL(fBlob));
+    }
+
+    static async ReadDataFile(urlToRead) {
+
+        let fr = new FileReader();
+
+        fr.addEventListener('load', () => {
+            console.log(fr.result);
+//            return fr.result;
+        });
+
+        return fr.readAsText(urlToRead);
+    }
+
+    async Url2blob(url) {
+        try {
+            const data = await fetch(url /*, {mode: 'no-cors'}*/);
+            const blob = await data.blob();
+
+            console.log(blob);
+            let objectURL = URL.createObjectURL(blob);
+            console.log(objectURL);
+
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    [blob.type]: blob
+                })
+            ]);
+            console.log("Success.");
+        } catch (err) {
+            console.error(err.name, err.message);
+        }
+    }
 }

@@ -73,7 +73,7 @@ export class MessageUIClass {
         this._messageOkButton.onclick = this.OkButtonClickEvent;
         this._messageCancelButton.onclick = this.CancelButtonClickEvent;
 
-        if (!inAction) {
+        if (!inAction || inAction === undefined) {
             this._messageOkButton.innerText = 'Done';
             this._messageCancelButton.style.display = 'none';
         }
@@ -83,9 +83,13 @@ export class MessageUIClass {
         }
 
         this._messageLegend.innerHTML = inTitle;
-        this._messageTextnode = document.createTextNode(inMessage);
-        this._messageText.appendChild(this._messageTextnode);
+        this._messageTextnode = document.createElement("div");
 
+        if (this._messageTextnode) {
+            this._messageTextnode.innerHTML = inMessage;
+            this._messageText.appendChild(this._messageTextnode);
+        }
+        
         if (!this._messageDialog.style.display || this._messageDialog.style.display == 'none') {
             this._messageDialog.style.display = "block";
         }

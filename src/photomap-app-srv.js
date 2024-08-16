@@ -34,7 +34,7 @@ import { MessageUI } from "./message-ui.js";
 import { DropHandler } from "./map-drop-zone.js";
 import { Map2D } from "./map-view2D.js";
 import { Map3D } from "./map-view3D.js";
-import { ChunkFileUploadRequests } from "./file_upload_client.js";
+import { FileUtils } from "./file-utils.js";
 
 
 ///////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ export async function UpdateMaps(event) {
 
     AppMapData.geoJSONFileData = event.detail.geoJSONFileData;
 
-    console.log("updating maps...: ", AppMapData.geoJSONFileData);
+    console.log("updating maps...: ");
 
     let startTime = performance.now();
     await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
@@ -267,24 +267,24 @@ async function SubmitClicked(event) {
 
             //console.log("sending request : ", AppUIData.formEl);
 
-            let responseText = await ChunkFileUploadRequests(AppUIData.formEl, AppUIData.fileInputEl);
+            let responseText = await FileUtils.ChunkFileUploader(AppUIData.formEl, AppUIData.fileInputEl);
 
             // console.log("1 responseText : ", responseText)
 
             let endTime = performance.now();
 
-            console.log(`ChunkFileUploadRequests Images took ${endTime - startTime}ms`)
+            console.log(`FileUtils.ChunkFileUploader Images duration: ${endTime - startTime}ms`)
 
             if (responseText) {
                 startTime = performance.now();
 
-                console.log("responseText : ", responseText)
+                //console.log("responseText : ", responseText)
 
                let geoJSONval = await JSON.parse(responseText);
 
                 endTime = performance.now();
 
-                console.log(`JSON.parse(responseText) took ${endTime - startTime}ms`)
+                console.log(`JSON.parse(responseText) duration: ${endTime - startTime}ms`)
 
                 let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
 

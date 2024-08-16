@@ -79,23 +79,40 @@ async function HandleImagesAddedEvent(event) {
 
         ShowLoadingImage(true);
 
-        //console.log("AppUIData = ", AppUIData)
-
         let allowedFiles = AppUIData.fileInputEl.files;
         let files = [];
-
-        // console.log("allowedFiles = ", allowedFiles)
+        //console.log("allowedFiles = ", allowedFiles)
 
         for (let ii = 0; ii < allowedFiles.length; ii++) {
             if (FileUtils.IsFileTypeAllowed(allowedFiles[ii].name, AppSettings.allowedFileTypes)) {
                 // don't allow duplicate file names to be processed
-                if (!FindImageNameInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
+
+                if (allowedFiles[ii].name.indexOf('.geojson') > 0) {
+                    // console.log("geojson found, ", allowedFiles[ii])
+                    let geoJSONStr;
+                    let fr = new FileReader();
+
+                    fr.addEventListener('load', () => {
+                       //console.log(fr.result);
+                        if (fr.result) {
+                            let geoJSONObj = JSON.parse(fr.result);
+                            let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONObj);
+   
+                            if (UpdateMapEvent) {
+                                AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                            }
+                        }
+                    });
+
+                    fr.readAsText(allowedFiles[ii]);
+                    return;
+                }
+
+                else if (!FindImageNameInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                     files.push(allowedFiles[ii]);
                 }
             }
         };
-
-        //console.log("Allowed image files to process: ", files.length);
 
         AppUIData.processingArrayCount = files.length;
 
@@ -103,12 +120,11 @@ async function HandleImagesAddedEvent(event) {
             AppUIData.resultArray = await ImageProcessor.ProcessImages(files, AppUIData.canvasEl);
             AppUIData.processingArrayCount = AppUIData.resultArray.length;
         }
-
         //console.log("OnDrop AppUIData.processingArrayCount = ", AppUIData.processingArrayCount)
 
         if (AppUIData.processingArrayCount == 0) {
             ShowLoadingImage(false);
-            alert("Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!");
+            MessageUI.ShowMessage("Photo Map", "Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!", null);
         }
     }
 }
@@ -202,6 +218,38 @@ async function InitAppUI() {
     await Show2DMap(null);
 }
 
+function DownloadMap(event) {
+    if (!event) { return; }
+
+    event.preventDefault = true;
+
+    //console.log("AppMapData.geoJSONFileData: ", AppMapData.geoJSONFileData);
+
+    if (AppMapData.geoJSONFileData) {
+
+        let localGeoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
+
+        let downloadURL = FileUtils.CreateDownloadURL(localGeoJSONStr);
+
+        //console.log("downloadURL: ", downloadURL);
+
+        if (downloadURL) {
+            let downloadMap = document.getElementById("download-map-a");
+            if (downloadMap) {
+                downloadMap.href = downloadURL;
+                downloadMap.download = "photoMap.geojson";
+
+                MessageUI.ShowMessage("Photo Mapper", `Success! <br/>Downloaded PhotoMap file: ${downloadMap.download}`, null);
+            }
+        }
+    }
+    else {
+        MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no map data to download.", null);
+    }
+
+}
+
+
 function MenuButtonSettingsOnClick(event) {
     event.preventDefault = true;
     AppSettings.GetSettingsUI().ShowDialog();
@@ -232,31 +280,36 @@ function InitMenuBar() {
         menuButtonSettings.addEventListener("click", MenuButtonSettingsOnClick);
     }
 
-    const menuButtonSaveMap = document.getElementById("save-map");
-
-    if (menuButtonSaveMap) {
-        menuButtonSaveMap.addEventListener("click", SaveMap);
-    }
-
-    const menuButtonLoadMap = document.getElementById("load-map");
-    if (menuButtonLoadMap) {
-        menuButtonLoadMap.addEventListener("click", LoadMap);
-    }
-
     let menuButtonShow2DMap = document.getElementById("show-2d-map");
-    let menuButtonShow3DMap = document.getElementById("show-3d-map");
-
     if (menuButtonShow2DMap) {
         menuButtonShow2DMap.addEventListener('click', Show2DMap);
     }
+
+    let menuButtonShow3DMap = document.getElementById("show-3d-map");
     if (menuButtonShow3DMap) {
         menuButtonShow3DMap.addEventListener('click', Show3DMap);
     }
 
-    const menuButtonResetMap = document.getElementById("reset-map");
+    let menuButtonResetMap = document.getElementById("reset-map");
     if (menuButtonResetMap) {
         menuButtonResetMap.addEventListener('click', ResetMaps);
     }
+
+    let menuButtonSaveMap = document.getElementById("save-map");
+    if (menuButtonSaveMap) {
+        menuButtonSaveMap.addEventListener("click", SaveMap);
+    }
+
+    let menuButtonLoadMap = document.getElementById("load-map");
+    if (menuButtonLoadMap) {
+        menuButtonLoadMap.addEventListener("click", LoadMap);
+    }
+
+    let menuButtonDownloadMap = document.getElementById("download-map");
+    if (menuButtonDownloadMap) {
+        menuButtonDownloadMap.addEventListener("click", DownloadMap);
+    }
+
 }
 
 function ShowLoadingImage(setVisible) {
@@ -306,8 +359,8 @@ function ResetMaps() {
 }
 
 async function ResetMap() {
-    
-//    console.log("ResetMap() called");
+
+    //    console.log("ResetMap() called");
 
     AppMapData.geoJSONFileData = null;
 
@@ -346,7 +399,7 @@ function SaveMap() {
                 geoJSONStr = null;
             }
             else {
-               // window.alert("Sorry, there was no map data saved.");
+                // window.alert("Sorry, there was no map data saved.");
                 MessageUI.ShowMessage("Photo Mapper", "Sorry, there was no map data saved.", null);
             }
         }
@@ -365,11 +418,9 @@ function SaveMap() {
 function LoadMap() {
 
     try {
-
         // load specially saved app settings for map
         AppSettings.Load(AppMapData.MAP_APP_DATA_SAVE_KEY);
         AppSettings.Save();
-
         AppSettings.GetSettingsUI().UpdateUI();
 
         let geoJSONStr = window.localStorage.getItem(AppMapData.MAP_DATA_SAVE_KEY);
@@ -399,14 +450,15 @@ function LoadMap() {
 
         }
         else {
-           // window.alert("Sorry, there is no local map data to load.");
+            // window.alert("Sorry, there is no local map data to load.");
             MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no local map data to load.", null);
         }
     }
     catch (error) {
         console.log("Error loading map data: ", error);
         MessageUI.ShowMessage("Photo Mapper", `:( ${error} unable to load map data`, null);
-       // window.alert(`:( ${error} unable to load map data`)
+        // window.alert(`:( ${error} unable to load map data`)
     }
 }
+
 
