@@ -33,25 +33,15 @@ export class AppSettingsUIClass {
 
     _settingsDialog = null;
     _mapIconSelector = null;
-//    _mapIconSelectorLabel = null;
-//    _settingsModalContentIcon = null;
-//    _settingsIconFieldset = null;
     _settingsIconPreview = null;
-//    _settingsIconLegend = null;
-//    _settingsMapNameLabel = null;
     _settingsMapName = null;
     _close = null;
     _inParentButton = null;
 
     constructor() {
         this._settingsDialog = document.getElementsByClassName("settings-modal")[0];
- //       this._mapIconSelectorLabel = document.getElementById("map-form-input-text");
         this._mapIconSelector = document.getElementById("settings-map-icon-selector");
-  //      this._settingsModalContentIcon = document.getElementById("settings-modal-content-icon2d");
- //       this._settingsIconFieldset = document.getElementById("settings-form-fieldset");
         this._settingsIconPreview = document.getElementById("settings-icon-2d");
- //       this._settingsIconLegend = document.getElementById("settings-map-icon2d");
- //       this._settingsMapNameLabel = document.getElementById("settings-map-name-label");
         this._settingsMapName = document.getElementById("settings-map-name");
         this._close = document.getElementsByClassName("settings-close")[0];
 
@@ -81,7 +71,6 @@ export class AppSettingsUIClass {
     }
 
     UpdateMapName(event) {
-
         // not trapping the enter key causes the page to reload!!!!
         if ((event instanceof KeyboardEvent) && event.key == "Enter" ) {
             event.preventDefault();
@@ -89,7 +78,7 @@ export class AppSettingsUIClass {
             return;
         }
 
-        if (event.target.value) {
+        if (event.target && event.target.value) {
             AppSettings.mapName = event.target.value;
         }
     }
@@ -127,8 +116,14 @@ export class AppSettingsUIClass {
         // When the user clicks on <span> (x), close the modal
         this._close.onclick = this.CloseDialogEvent;
 
-        this._settingsMapName.value = AppSettings.mapName;
-        this._mapIconSelector.value = AppSettings.imageIcon2DType;
+        if (this._settingsMapName){
+            this._settingsMapName.value = AppSettings.mapName;
+        }
+        
+        if (this._mapIconSelector){
+            this._mapIconSelector.value = AppSettings.imageIcon2DType;
+        }
+        
 
         switch (this._mapIconSelector.value) {
             case 'thumbnail':
@@ -163,9 +158,13 @@ export class AppSettingsUIClass {
 
     UpdateUI() {
 
-        this._mapIconSelector.value = AppSettings.imageIcon2DType;
-        this._settingsMapName.value = AppSettings.mapName;
-
+        if (this._settingsMapName){
+            this._settingsMapName.value = AppSettings.mapName;
+        }
+        
+        if (this._mapIconSelector){
+            this._mapIconSelector.value = AppSettings.imageIcon2DType;
+        }
         switch (this._mapIconSelector.value) {
             case 'thumbnail':
                 this._settingsIconPreview.src = 'images/image-thumb.png';
