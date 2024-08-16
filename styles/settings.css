@@ -21,13 +21,16 @@
 /* Modal Content */
 
 .settings-form-fieldset {
-  display: flex;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  padding: 0.5rem;
-  vertical-align: top;
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0rem;
   border: 2px solid black;
   border-radius: 6px;
+}
+
+.settings-section{
+  margin: 0.5rem;
 }
 
 .settings-legend {
@@ -37,15 +40,28 @@
   margin-top: -0.5rem;
 }
 
+.settings-form-input-text{
+  font-size: small;
+  color: black;
+  height: auto;
+}
+
+.settings-form-input-label {
+  font-size: small;
+  color: black;
+  height: auto;
+}
+
 .settings-map-icon-selector {
-  margin-left: 1rem;
+  font-size: 1rem;
+  margin-left: 0rem;
   margin-right:1rem;
   height: -moz-fit-content;
   background-color: #aaaaaa;
 }
 
 .settings-icon-2d {
-  margin-right: 0.5rem;
+  /* margin-right: 0.5rem; */
   /* border: 2px solid black; */
   text-align: center;
   width: 50px;
@@ -66,7 +82,7 @@
 
 /* The Close Button */
 .settings-close {
-  margin-top: 0px;
+  margin-top: -5px;
   margin-left: 0px;
   margin-right: 0.5rem;
   vertical-align: top;

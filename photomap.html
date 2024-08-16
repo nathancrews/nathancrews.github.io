@@ -45,7 +45,8 @@
     <header id="loading-header" name="loading-header" class="map-header">
         <h1 class="map-h1">Drop photos on map or choose</h1>
         <div class="menu-controls">
-            <img id="menu-button-home" title="Show Map Menu" alt="Map Menu" src="images/menu.svg" class="menu-button menu-button-home" />
+            <img id="menu-button-home" title="Show Map Menu" alt="Map Menu" src="images/menu.svg"
+                class="menu-button menu-button-home" />
             <div id="menu-bar-1" class="menu-bar">
                 <img id="settings-button" title="Edit Settings" alt="Map Settings" src="images/settings.png"
                     class="menu-button menu-settings-button" />
@@ -61,9 +62,11 @@
                     title="Pick photos" type="file" name="upload-files" multiple="true">
             </div>
             <div id="menu-bar-3" class="menu-bar">
-                <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="menu-button" />
-                <img id="load-map" title="Load Local Map" alt="Load Local Map" src="images/loadlocal.svg" class="menu-button" />
-                <a id="download-map-a" download="photoMap.geojson"><img id="download-map" title="Download Map File" alt="Download Map File" src="images/download.svg" class="menu-button" /></a>
+                <!-- <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="menu-button" />
+                <img id="load-map" title="Load Local Map" alt="Load Local Map" src="images/loadlocal.svg"
+                    class="menu-button" /> -->
+                <a id="download-map-a" download="photoMap.geojson"><img id="download-map" title="Download Map File"
+                        alt="Download Map File" src="images/download.svg" class="menu-button" /></a>
             </div>
             <button id="submit-button" class="map-drop-submit-button" type="submit" hidden="true"></button>
         </div>
@@ -86,12 +89,20 @@
         <!-- Modal settings dialog -->
         <form id="settings-modal" class="settings-modal settings-modal-hide">
             <fieldset id="settings-form-fieldset" class="settings-form-fieldset">
-                <legend id="settings-legend" class="settings-legend">2D Map Icon</legend>
-                <select id="map-icon-selector" class="settings-map-icon-selector" title="Mapping Icon">
-                    <option value="thumbnail">Image Thumbnail</option>
-                    <option value="drone2d">Drone</option>
-                </select>
-                <img id="settings-icon-2d" class="settings-icon-2d" src="images/image-thumb.png" />
+                <legend id="settings-legend" class="settings-legend">Map Settings</legend>
+                <div class="settings-section">
+                    <label for="map-icon-selector" class="settings-form-input-label">2D icon:</label>
+                    <select id="settings-map-icon-selector" class="settings-map-icon-selector" title="Mapping Icon">
+                        <option value="thumbnail">Image Thumbnail</option>
+                        <option value="drone2d">Drone</option>
+                    </select>
+                    <img id="settings-icon-2d" class="settings-icon-2d" src="images/image-thumb.png" />
+                </div>
+                <div class="settings-section">
+                    <label id="settings-map-name-label" for="map-name" class="settings-form-input-label">Map Name:</label>
+                    <input id="settings-map-name" value="photoMap" type="text" title="Map Name"
+                        class="map-menu-button settings-form-input-text">
+                </div>
             </fieldset>
             <span class="settings-close">&times;</span>
         </form>

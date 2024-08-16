@@ -114,7 +114,8 @@ div.leaflet-popup-content {
 }
 
 .map-form-input-text {
-  font-size: large;
-  height: 25px;
+  font-size: small;
+  color: black;
+  height: auto;
 }
 

@@ -38,7 +38,8 @@ import { ImageProcessor } from "./image-processor.js"
 
 await InitAppUI();
 
-/** UpdateMaps: updates both the 2d and 3d maps after 
+/** UpdateMaps: 
+ * updates both the 2d and 3d maps after 
  * an image load or drop event is processed */
 export async function UpdateMaps(event) {
 
@@ -58,7 +59,8 @@ export async function UpdateMaps(event) {
     console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
 }
 
-
+/** FindImageNameInArray: 
+ * Helper function to detect duplicate files */
 function FindImageNameInArray(nameStr, imageArray) {
     let existsInArray = false;
 
@@ -72,6 +74,7 @@ function FindImageNameInArray(nameStr, imageArray) {
 }
 
 
+/** Primary function for files dropped or choosen by user */
 async function HandleImagesAddedEvent(event) {
 
     if (AppUIData.fileInputEl) {
@@ -129,6 +132,8 @@ async function HandleImagesAddedEvent(event) {
     }
 }
 
+/** Secondary helper function to complete thumbnail images
+ *  for files dropped or choosen by user */
 async function HandleThumbnailReadyEvent(evt) {
     //console.log("ThumbnailReadyEvent called: ", evt);
     if (evt.detail.ImageData && AppUIData.thumbnailReadyArray) {
@@ -160,6 +165,14 @@ async function HandleThumbnailReadyEvent(evt) {
     }
 }
 
+/////////////////////////////////////////////////
+/** Initialize APP UI includes:
+ * Input handlers,
+ * Drag/Drop handlers,
+ * App menu bar,
+ * App Settings dialog                 
+ */
+/////////////////////////////////////////////////
 async function InitAppUI() {
 
     ShowLoadingImage(false);
@@ -196,8 +209,8 @@ async function InitAppUI() {
     }
 
     ///////////////////////////////////////////////////////////
-
     // setup the map drop event elements
+
     DropHandler.SetDropOnElementClass('map-drop-zone');
     DropHandler.SetDropOverEventClass('map-drop-zone--over');
     DropHandler.SetFileInputButtonClass(fileInputButtonClass);
@@ -218,44 +231,41 @@ async function InitAppUI() {
     await Show2DMap(null);
 }
 
+/** Produces a downloadable map GeoJSON file */
 function DownloadMap(event) {
     if (!event) { return; }
 
     event.preventDefault = true;
-
     //console.log("AppMapData.geoJSONFileData: ", AppMapData.geoJSONFileData);
-
     if (AppMapData.geoJSONFileData) {
 
         let localGeoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
-
         let downloadURL = FileUtils.CreateDownloadURL(localGeoJSONStr);
 
         //console.log("downloadURL: ", downloadURL);
-
         if (downloadURL) {
             let downloadMap = document.getElementById("download-map-a");
             if (downloadMap) {
                 downloadMap.href = downloadURL;
-                downloadMap.download = "photoMap.geojson";
+                downloadMap.download =  AppSettings.mapName + ".geojson";
 
-                MessageUI.ShowMessage("Photo Mapper", `Success! <br/>Downloaded PhotoMap file: ${downloadMap.download}`, null);
+                MessageUI.ShowMessage("Photo Mapper", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
             }
         }
     }
     else {
         MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no map data to download.", null);
     }
-
 }
-
 
 function MenuButtonSettingsOnClick(event) {
     event.preventDefault = true;
     AppSettings.GetSettingsUI().ShowDialog();
 }
 
-// Setup map menu bar icon commands
+/////////////////////////////////////////////////
+/**  Setup map menu bar icon commands   */
+/////////////////////////////////////////////////
 function InitMenuBar() {
     let menuButtonSettings = document.getElementById('settings-button');
     let menuButtonHome = document.getElementById("menu-button-home");
@@ -297,12 +307,12 @@ function InitMenuBar() {
 
     let menuButtonSaveMap = document.getElementById("save-map");
     if (menuButtonSaveMap) {
-        menuButtonSaveMap.addEventListener("click", SaveMap);
+        menuButtonSaveMap.addEventListener("click", SaveMapToLocalStorage);
     }
 
     let menuButtonLoadMap = document.getElementById("load-map");
     if (menuButtonLoadMap) {
-        menuButtonLoadMap.addEventListener("click", LoadMap);
+        menuButtonLoadMap.addEventListener("click", LoadMapFromLocalStorage);
     }
 
     let menuButtonDownloadMap = document.getElementById("download-map");
@@ -312,6 +322,7 @@ function InitMenuBar() {
 
 }
 
+/** Helper function to show or hide the loading/processing image */
 function ShowLoadingImage(setVisible) {
 
     if (AppUIData && AppUIData.loadingImageEl) {
@@ -324,6 +335,7 @@ function ShowLoadingImage(setVisible) {
     }
 }
 
+/** Sets the 2D map visible and zooms to user images */
 async function Show2DMap(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
@@ -339,6 +351,7 @@ async function Show2DMap(event) {
     }
 }
 
+/** Sets the 3D map visible and zooms to user images */
 async function Show3DMap(event) {
     let map2D_div_el = document.getElementById("map2d");
     let map3D_div_el = document.getElementById("map3d");
@@ -354,6 +367,7 @@ async function Show3DMap(event) {
     }
 }
 
+/** Erases all images from map and resets 2D and 3D map views */
 function ResetMaps() {
     MessageUI.ShowMessage("Photo Mapper", "Do you really want to erase ALL photos from the Map?", ResetMap);
 }
@@ -371,7 +385,10 @@ async function ResetMap() {
     AppUIData.GarbageCollect();
 }
 
-function SaveMap() {
+/////////////////////////////////////////////////
+/**  Saves map data to localStorage */
+/////////////////////////////////////////////////
+function SaveMapToLocalStorage() {
     try {
         let maxSingleLength = 5200000 - 1;
 
@@ -415,7 +432,10 @@ function SaveMap() {
     }
 }
 
-function LoadMap() {
+/////////////////////////////////////////////////
+/** Loads map data from localStorage */
+/////////////////////////////////////////////////
+function LoadMapFromLocalStorage() {
 
     try {
         // load specially saved app settings for map
