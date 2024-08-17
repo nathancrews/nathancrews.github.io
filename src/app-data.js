@@ -42,8 +42,6 @@ export class AppUIDataClass {
         this.thumbnailReadyArray = [];
         this.dirInputEl = document.getElementById("directory");
         this.clientSideOnly = true;
-        this.GeoJSONDataChangedEventStr = "GeoJSONDataChangedEvent";
-        this.ThumbnailReadyEventStr = "ThumbnailReadyEvent";
 
         console.log("AppUIDataClass constructor called");
     }
@@ -53,22 +51,10 @@ export class AppUIDataClass {
         this.resultArray = [];
         this.thumbnailReadyArray = [];
     }
-
-    //************************************
-    // Define Application Events
-    //************************************
-
-    GetGeoJSONDataChangedEvent(ingeoJSONFileData) {
-        return new CustomEvent(this.GeoJSONDataChangedEventStr, { detail: { geoJSONFileData: ingeoJSONFileData } });
-    }
-
-    GetThumbnailReadyEvent(fileImageData) {
-        return new CustomEvent(this.ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
-    }
 }
 
 
-class AppMapDataClass {
+export class AppMapDataClass {
     //************************************
     // Define Constants
     //************************************

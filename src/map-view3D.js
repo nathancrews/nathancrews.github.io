@@ -27,18 +27,23 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
 
-import { AppMapData } from "./app-data.js";
-
 export class Map3DClass {
 
     _csMap = null;
     _csMapElement = null;
 
+    _defaultLatitude = 56.01877997222222;
+    _defaultLongitude = -3.7548339722222224;
+
     GetMap3D() {
         return this._csMap;
     }
 
-    async InitMap3D() {
+    async InitMap3D(defaultLatitude, defaultLongitude) {
+
+        this._defaultLatitude = defaultLatitude;
+        this._defaultLongitude = defaultLongitude;
+
         if (!this._csMap) {
             this._csMap = await this.LoadCesium3D();
         }
@@ -144,7 +149,7 @@ export class Map3DClass {
         }
 
         await this._csMap.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(AppMapData.defaultLongitude, AppMapData.defaultLatitude, 1000.0),
+            destination: Cesium.Cartesian3.fromDegrees(this._defaultLongitude, this._defaultLatitude, 1000.0),
             duration: 1,
         });
     }
@@ -173,7 +178,7 @@ export class Map3DClass {
                 retView.scene.globe.show = true;
 
                 await retView.camera.flyTo({
-                    destination: Cesium.Cartesian3.fromDegrees(AppMapData.defaultLongitude, AppMapData.defaultLatitude, 1000.0),
+                    destination: Cesium.Cartesian3.fromDegrees(this._defaultLongitude, this._defaultLatitude, 1000.0),
                     duration: 0,
                 });
 

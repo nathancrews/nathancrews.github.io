@@ -177,7 +177,7 @@ export class AppSettingsUIClass {
 
 }
 
-class AppSettingsDataClass {
+export class AppSettingsDataClass {
     //************************************
     // Define Constants
     //************************************
@@ -186,9 +186,9 @@ class AppSettingsDataClass {
     constructor() {
         this.mapName = "PhotoMap";
         this.imageIcon2DType = "thumbnail";
-        this.imageIcon2DWidth = 300;
-        this.imageIcon2DHeight = 350;
-        this.imageIcon2DQuality = 0.25;
+        this.thumbnailImageWidth = 300;
+        this.thumbnailImageHeight = 350;
+        this.imageIcon2DQuality = 0.5;
         this.imageIcon2DFormat = 'image/webp';
         this.imageIcon3DWidth = 64;
         this.droneIcon2D = 'images/drone-icon.jpg';

@@ -27,17 +27,20 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
 
-import { AppMapData, AppUIData} from "./app-data.js";
 import { ImageData } from "./image-data.js"
-import { AppSettings } from "./app-settings.js";
 const ExifReader = await import('./exifreader/src/exif-reader.js');
 
 export class ImageProcessorClass {
 
-    async ProcessImages(FilesDataArray, canvasEl) {
+    _ThumbnailReadyEventStr = "ThumbnailReadyEvent";
+    _max_thumb_width = 300;
+    _max_thumb_height = 350;
+    _imageIcon2DFormat = 'image/webp';
+    _imageIcon2DQuality = 0.5;
 
+    async ProcessImages(FilesDataArray, canvasEl, imageIcon2DWidth, imageIcon2DHeight, imageIcon2DFormat, imageIcon2DQuality) {
         //  console.log("Worker FilesDataArray = ", FilesDataArray);
-    
+
         if (!FilesDataArray || !canvasEl) {
             console.log('ProcessImages: invalid data!');
             console.log('FilesDataArray:', FilesDataArray);
@@ -45,8 +48,12 @@ export class ImageProcessorClass {
             return null;
         }
     
+        if (imageIcon2DWidth){ this._max_thumb_width = imageIcon2DWidth;}
+        if (imageIcon2DHeight){ this._max_thumb_height = imageIcon2DHeight;}
+        if (imageIcon2DFormat){ this._imageIcon2DFormat = imageIcon2DFormat;}
+        if (imageIcon2DQuality){ this._imageIcon2DQuality = imageIcon2DQuality;}
+
         let resultImageDataArr = [];
-    
         let startTime = performance.now();
 
         for (let ii = 0; ii < FilesDataArray.length; ii++) {
@@ -72,7 +79,6 @@ export class ImageProcessorClass {
         }
     
         let endTime = performance.now();
-
         console.log(`Inner ProcessImages duration ${endTime - startTime}ms`)
         
         return resultImageDataArr;
@@ -97,9 +103,13 @@ export class ImageProcessorClass {
 
         loadingImage.style.display = 'none';
     
+        let max_thumb_width = this._max_thumb_width;
+        let max_thumb_height = this._max_thumb_height;
+        let imageIcon2DFormat = this._imageIcon2DFormat;
+        let imageIcon2DQuality = this._imageIcon2DQuality;
+
         async function FinalizeThumbnailImage(event) {
-            let max_thumb_width = AppSettings.imageIcon2DWidth;
-            let max_thumb_height = AppSettings.imageIcon2DHeight;
+
             let largeImageRatio = loadingImage.naturalWidth / loadingImage.naturalHeight;
             //console.log('Worker FinalizeThumbnailImage called, event = ', event);
             //console.log(`loadingImage.size = ${((loadingImage.naturalWidth * loadingImage.naturalHeight)/1024)*2} kb`);
@@ -138,7 +148,7 @@ export class ImageProcessorClass {
             canvasContext.drawImage(loadingImage, 0, 0, canvasEl.width, canvasEl.height);
             // thumbnail_local_file = URLToFile(thumbnail_image_data);
             // thumbnail_local_file_url = URL.createObjectURL(thumbnail_local_file);
-            fileImageData.imageURLData = canvasEl.toDataURL(AppSettings.imageIcon2DFormat, AppSettings.imageIcon2DQuality);
+            fileImageData.imageURLData = canvasEl.toDataURL(imageIcon2DFormat, imageIcon2DQuality);
            // console.log(`fileImageData.imageURLData.length = ${(fileImageData.imageURLData.length/1024)*2} kb`);
    
             // remove large data object before creating GeoJSON data
@@ -148,8 +158,7 @@ export class ImageProcessorClass {
             fileImageData.imageData = null;
 
             //console.log('Worker calling ThumbnailReadyEvent');
-
-            let ThumbnailReadyEvent = AppUIData.GetThumbnailReadyEvent(fileImageData);
+            let ThumbnailReadyEvent = new CustomEvent(this._ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
 
             loadingImage.src = '';
             loadingImage = null;
@@ -230,6 +239,10 @@ export class ImageProcessorClass {
         return null;
     }
     
+    GetThumbnailReadyEvent(fileImageData) {
+        return new CustomEvent(this._ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });
+    }
+
     URLToFile(imageData) {
     
         if (!imageData) return null;
