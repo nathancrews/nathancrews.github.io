@@ -11,10 +11,6 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: #222222;
-  /* background-image: url(../images/dark-geom-small.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center; */
 }
 
 h1 {
@@ -24,6 +20,56 @@ h1 {
 h2 {
   text-align: center;
 }
+
+.about-page {
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: row;
+  margin: 1rem;
+  padding : 1rem;
+  border: 0.25rem solid  #aaaaaa;
+  border-radius: 20px;
+  color: #222222;
+  background-color: cornsilk;
+}
+
+a{
+  color:#aaaaaa;
+}
+
+ul{
+  padding-top: 1rem;
+}
+
+li {
+  list-style: none;
+
+  padding-bottom: 0.5rem;
+}
+
+.myphoto{
+  width: 200px;
+  margin: 0.5rem;
+  margin-left : 1rem;
+  margin-right : 0rem;
+  border-top: 2px solid cornsilk;
+  border-right: 2px solid cornsilk;
+  border-radius: 100px;
+}
+
+.myname{
+  justify-content: center;
+}
+
+.about-p {
+  display: inline-flex;
+  font-size: larger;
+  text-align: center;
+  margin: 1rem;
+  padding : 0.25rem;
+  height: fit-content;
+}
+
 
 .active-tab {
   padding: 0.25rem;
@@ -99,6 +145,7 @@ nav li:hover {
   grid-gap: 1rem; 
   padding: 1rem;
   margin: 0.5rem;
+  border-radius: 20px;
 }
 
 .grid-container {
@@ -113,6 +160,7 @@ nav li:hover {
 
 .projectBox {
   background-color: #444444;
+  border-radius: 20px;
 }
 
 .project {
@@ -128,6 +176,7 @@ nav li:hover {
   border: azure;
   border-width: medium;
   border-style: ridge;
+  border-radius: 20px;
 }
 
 .project-title {
@@ -136,13 +185,14 @@ nav li:hover {
 }
 
 a.project-image {
-  
+  cursor: pointer;
   color: greenyellow;
   text-align: center;
   padding: 1rem;
 }
 
 img.project-image {
+  cursor: pointer;
   align-self: center;
   padding: 0.5rem;
 }

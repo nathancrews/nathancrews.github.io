@@ -47,6 +47,7 @@
 //
 // let imageNames = new Array("./images/image1.jpg",./images/image2.jpg", ./images/image3.jpg");
 // let imageCaptions = new Array("Image Caption 1", "Image Caption 2", "Image Caption 3",);
+//
 // SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
 //
 ////////////////////////////////////////////////////////////////////////////////////

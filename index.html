@@ -30,8 +30,6 @@
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
     data-cf-beacon='{"token": "e2b26c1669c44cc08b9db6bcd2ae3c83"}'></script>
   <!-- End Cloudflare Web Analytics -->
-
-
 </head>
 
 <body>
@@ -44,23 +42,67 @@
       </ul>
     </nav>
   </div>
-  <div id="about" class="active-page page">
-    <h2>About</h2>
+  <div id="about" class="active-page page about-page">
+    <div style="display: inline-grid; margin: 1rem;">
+      <p class="about-p myname">Nathan Crews</p>
+      <img src="./images/projects/nathan-speaker.webp" class="myphoto" alt="Nathan Crews">
+    </div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+      <div style="display: inline-grid; margin-left: 1.5rem; padding: 1rem;"">
+        <p>I am a professional software engineer with diverse work experience and skills. My goal is to deliver
+          quality software solutions, on time - meeting, and often exceeding expectations.</p>
+        <br />
+        
+        <div style="display: flex; gap: 55px;">
+          <p>Industry Experience:</p>
+          <ul>
+            <li>Civil Engineering</li>
+            <li>Land Surveying</li>
+          </ul>
+          <ul>
+            <li>GIS</li>
+            <li>Electric Services</li>
+          </ul>
+          <ul>
+            <li>Mapping</li>
+            <li>3D Visualization/Game Development</li>
+          </ul>
+        </div>
+        <div style="display: flex; gap: 55px;">
+          <p>Languages:</p>
+          <ul>
+            <li>C/C++</li>
+            <li>C#</li>
+          </ul>
+          <ul>
+            <li>JavaScript</li>
+            <li>HTML/CSS</li>
+          </ul>
+          <ul>
+            <li>Python</li>
+            <li>Shell Scripting</li>
+          </ul>
+        </div>
+      </div>
+      <br />
+      
+
+    </div>
   </div>
+ 
   <div id="resume" class="inactive-page page">
     <h2>Resume</h2>
   </div>
   <div id="projects" class="inactive-page page page-container">
-    <h2>Software Application Projects</h2>
+    <h2>Software Application Gallery</h2>
     <div id="projects" class="grid-container projectBox">
       <box class="project">
         <h3 class="project-title">Photo Mapper</h3>
-        <article class="description-text">Photo Mapper runs entirely in the browser to quickly map photos with GPS data
-          by dragging and dropping photo image files
-          onto the displayed 2D or 3D map. Works on desktop/laptop and phone browsers.
+        <article class="description-text">Photo Mapper is a browser based application. Users can quickly map photos with GPS data
+          by dragging and dropping photo image files onto the displayed 2D or 3D map. Works on desktop/laptop and phone browsers.
         </article>
-        <a href="./photomap.html" target="_blank">Launch Project</a>
-        <img src="./images/projects/webapps/photomap.webp" class="project-image" width="250" />
+        <a href="./photomap.html" target="_blank"><img src="./images/projects/webapps/photomap.webp" class="project-image" width="250" /></a>
+        
         <details class="project-details">
           <summary>Project Details</summary>
           <div class="project-details">put details here</div>
