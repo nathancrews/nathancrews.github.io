@@ -108,6 +108,11 @@ export async function UpdateMaps(event) {
 //************************************
 // Attach event listeners
 //************************************
+
+function GetGeoJSONDataChangedEvent(ingeoJSONFileData) {
+    return new CustomEvent("GeoJSONDataChangedEvent", { detail: { geoJSONFileData: ingeoJSONFileData } });
+}
+
 async function InitUI() {
 
     AppUIData.clientSideOnly = false;
@@ -120,7 +125,7 @@ async function InitUI() {
     //   console.log("InitMap2D called AppUIData2D.formEl = ", AppUIData.formEl)
 
     if (AppUIData.formEl) {
-        AppUIData.formEl.addEventListener(AppUIData.GeoJSONDataChangedEventStr, UpdateMaps);
+        AppUIData.formEl.addEventListener("GeoJSONDataChangedEvent", UpdateMaps);
     }
 
     if (AppUIData.formEl) {
@@ -179,10 +184,10 @@ async function InitUI() {
 
     await Show2D(null);
 
-    await Map2D.InitMap2D();
+    await Map2D.InitMap2D(AppMapData.defaultLatitude, AppMapData.defaultLongitude);
     await Map2D.UpdateMap2D(AppMapData.geoJSONFileData);
 
-    await Map3D.InitMap3D();
+    await Map3D.InitMap3D(AppMapData.defaultLatitude, AppMapData.defaultLongitude);
     await Map3D.UpdateMap3D(AppMapData.geoJSONFileData);
 }
 
@@ -228,13 +233,13 @@ async function OnDirChanged(event) {
             let responseText = "ERROR";
             responseText = await response.text();
 
-            console.log("responseText=", responseText)
+            //console.log("responseText=", responseText)
 
             let stat = responseText.indexOf("ERROR");
             if (stat < 0) {
                 let geoJSONval = await JSON.parse(responseText);
 
-                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
+                let UpdateMapEvent = GetGeoJSONDataChangedEvent(geoJSONval);
 
                 AppUIData.formEl.dispatchEvent(UpdateMapEvent);
             }
@@ -286,7 +291,7 @@ async function SubmitClicked(event) {
 
                 console.log(`JSON.parse(responseText) duration: ${endTime - startTime}ms`)
 
-                let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSONval);
+                let UpdateMapEvent = GetGeoJSONDataChangedEvent(geoJSONval);
 
                 // ResetFileInputElement(AppUIData.fileInputEl);
 

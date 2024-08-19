@@ -471,7 +471,7 @@ class PhotoMapAppClass {
 
                     this.ShowLoadingImage(true);
 
-                    let UpdateMapEvent = AppUIData.GetGeoJSONDataChangedEvent(geoJSON);
+                    let UpdateMapEvent = this.GetGeoJSONDataChangedEvent(geoJSON);
 
                     if (UpdateMapEvent) {
                         AppUIData.submitButton.dispatchEvent(UpdateMapEvent);

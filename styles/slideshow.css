@@ -1,0 +1,144 @@
+ * {
+  box-sizing: border-box;
+} 
+
+img {
+  vertical-align: middle;
+}
+
+.container-popup {
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: #444444;
+  border-radius: 20px;
+}
+
+.nc-slideshow {
+  display: flex;
+}
+
+.slide-show-container {
+  width:800px; 
+  height:fit-content;
+  margin-top: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: 0.2rem;
+  position: relative;
+}
+
+.slide-show-slides {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.slide-show-slides-img {
+    width:800px; 
+    height:600px;
+    border-radius: 12px;
+}
+
+
+/* Add a pointer when hovering over the thumbnail images */
+.cursor {
+  cursor: pointer;
+}
+
+/* Next & previous buttons */
+.slide-prev,
+.slide-next {
+  cursor: pointer;
+  position: absolute;
+  top: 40%; 
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: darkblue;
+  background-color: lightgray;
+  opacity: 0.5;
+  font-weight: bold;
+  font-size: 30px;
+  border-radius: 0 12px 12px 0;
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 500;
+  opacity: 0.60;
+}
+
+.slide-next {
+  right: 0;
+  border-radius: 12px 0 0 12px;
+}
+
+
+.slide-prev:hover,
+.slide-next:hover {
+  color: cornsilk;
+  background-color: darkblue;
+  opacity: 1.0;
+}
+
+.slide-show-caption-container {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  background-color: cornsilk;
+  padding: 2px 16px;
+  border-radius: 8px;
+}
+
+.slide-caption-text{
+  color: black;
+  font-weight: bolder;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+.column {
+  float: left;
+  width: 16.66%;
+}
+
+
+.slide-opacity {
+  opacity: 0.6;
+}
+
+.row-image{
+  width: 100%;
+}
+
+.active,
+.slide-opacity:hover {
+  opacity: 1;
+}
+
+
+/* The Close Button */
+.slide-show-close {
+  display:flex;
+    margin-top: -5px;
+    margin-left: 0px;
+    margin-right: 0.5rem;
+    vertical-align: top;
+    padding: 0px;
+    color: black;
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .slide-show-close:hover,
+  .slide-show-close:focus {
+    color: rgb(199, 2, 2);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  

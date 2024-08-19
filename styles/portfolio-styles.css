@@ -10,10 +10,11 @@ body {
   display: block;
   width: 100vw;
   height: 100vh;
-  background-image: url(../images/dark-geom-small.jpg);
+  background-color: #222222;
+  /* background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; */
 }
 
 h1 {
@@ -115,6 +116,7 @@ nav li:hover {
 }
 
 .project {
+  min-height: 475px;
   color: cornsilk;
   padding: 1rem;
   display: flow;
