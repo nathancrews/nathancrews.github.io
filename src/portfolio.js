@@ -46,7 +46,7 @@ import { SlideShow } from "./slideshow.js";
 //     projectPC.addEventListener('click', StartSlideShow);
 // }
 
-let imageClickCaptions = document.getElementsByClassName("project-image-caption");
+let imageClickCaptions = document.getElementsByClassName("project-image-caption-slides");
 
 for (let ii=0; ii < imageClickCaptions.length; ii++){
     imageClickCaptions[ii].addEventListener('click', StartSlideShow);
