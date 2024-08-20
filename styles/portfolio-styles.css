@@ -255,20 +255,28 @@ a.project-image {
 
 img.project-image {
   width: 250px;
+  max-width: 250px;
+  align-self: center;
+  padding: 0.5rem;
+}
+
+.project-image {
+  width: 250px;
+  max-width: 250px;
   align-self: center;
   padding: 0.5rem;
 }
 
 .project-image-caption-launch {
-  position: inherit;
+  display: inline-block;
   width:fit-content;
   /* transform: translate(66px, -140px);  */
-  background:cornsilk; 
-  color: black; 
+  /* background:cornsilk;  */
+  color: #aaaaaa; 
   padding: 5px; 
   margin: 0;
   font-size: medium; 
-  font-weight: bolder;
+  font-weight: normal;
   text-align: center;
 }
 
