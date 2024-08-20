@@ -133,6 +133,7 @@ li {
 }
 
 
+
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
@@ -253,9 +254,38 @@ a.project-image {
 }
 
 img.project-image {
-  cursor: pointer;
+  width: 250px;
   align-self: center;
   padding: 0.5rem;
+}
+
+.project-image-caption-launch {
+  position: inherit;
+  width:fit-content;
+  /* transform: translate(66px, -140px);  */
+  background:cornsilk; 
+  color: black; 
+  padding: 5px; 
+  margin: 0;
+  font-size: medium; 
+  font-weight: bolder;
+  text-align: center;
+}
+
+
+.project-image-caption-slides {
+  position: inherit;
+  cursor: pointer;
+  width:fit-content;
+  transform: translate(66px, -140px); 
+  background:cornsilk; 
+  color: black; 
+  padding: 5px; 
+  margin: 0;
+  font-size: larger; 
+  font-weight: bolder;
+  text-align: center;
+  opacity: 0.66;
 }
 
 .description-text {

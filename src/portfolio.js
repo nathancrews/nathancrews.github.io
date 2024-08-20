@@ -30,20 +30,26 @@
 import { SlideShow } from "./slideshow.js";
 
 
-let projectGlb = document.getElementById("project-glb");
+// let projectGlb = document.getElementById("project-glb");
 
-if (projectGlb) {
-    projectGlb.addEventListener('click', StartSlideShow);
-}
+// if (projectGlb) {
+//     projectGlb.addEventListener('click', StartSlideShow);
+// }
 
-let projectLandxml = document.getElementById("project-landxml");
-if (projectLandxml) {
-    projectLandxml.addEventListener('click', StartSlideShow);
-}
+// let projectLandxml = document.getElementById("project-landxml");
+// if (projectLandxml) {
+//     projectLandxml.addEventListener('click', StartSlideShow);
+// }
 
-let projectPC = document.getElementById("project-pc");
-if (projectPC) {
-    projectPC.addEventListener('click', StartSlideShow);
+// let projectPC = document.getElementById("project-pc");
+// if (projectPC) {
+//     projectPC.addEventListener('click', StartSlideShow);
+// }
+
+let imageClickCaptions = document.getElementsByClassName("project-image-caption");
+
+for (let ii=0; ii < imageClickCaptions.length; ii++){
+    imageClickCaptions[ii].addEventListener('click', StartSlideShow);
 }
 
 
