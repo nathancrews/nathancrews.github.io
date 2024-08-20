@@ -29,7 +29,6 @@
 
 import { SlideShow } from "./slideshow.js";
 
-
 // let projectGlb = document.getElementById("project-glb");
 
 // if (projectGlb) {
@@ -61,7 +60,7 @@ function StartSlideShow(event) {
             let imageNames = new Array("./images/projects/shell_extensions/GLB_Thumbnail.webp",
                 "./images/projects/shell_extensions/GLTF_Preview_Image.webp",
                 "./images/projects/shell_extensions/GLBWindowsShellExtension.webp",
-                "./images/projects/shell_extensions/GLTF_Preview_options.webp",
+                "./images/projects/shell_extensions/GLTF_Preview_Options.webp",
                 "./images/projects/shell_extensions/GLTF_Preview_Image_Directory.webp");
 
             let imageCaptions = new Array("Automatic .GLB Thumbnails", "By File(s): Generate preview image for selected .GLTF file(s)",
