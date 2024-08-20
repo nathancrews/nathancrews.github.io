@@ -142,6 +142,8 @@ export class SlideShowClass {
       }
     }
 
+    this.RemoveSlides();
+
     this.SetSlideImages(imagesArray);
     this.SetSlideCaptions(imageCaptionArray);
 

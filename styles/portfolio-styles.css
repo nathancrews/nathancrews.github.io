@@ -18,13 +18,16 @@ h1 {
 }
 
 h2 {
+  text-align: left;
+}
+
+.page-title{
   text-align: center;
 }
 
 .about-page {
   display: flex;
   flex-wrap: wrap;
-  flex-flow: row;
   margin: 1rem;
   padding : 1rem;
   border: 0.25rem solid  #aaaaaa;
@@ -33,18 +36,48 @@ h2 {
   background-color: cornsilk;
 }
 
+.about-text{
+  font-size: larger;
+  padding: 0rem;
+  margin: 1rem;
+  text-align: left;
+  justify-self: left;
+  height:fit-content;
+}
+
+.outer-container{
+  display: flex; flex-wrap: wrap; justify-content: flex-start;
+}
+
+.inner-content{
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 1rem;
+  height:fit-content;
+}
+
 a{
   color:#aaaaaa;
 }
 
 ul{
-  padding-top: 1rem;
+  padding-top: 0.25rem;
 }
 
 li {
   list-style: none;
-
   padding-bottom: 0.5rem;
+}
+
+.sub-li {
+  margin-left: 1.5rem;
+  font-size: medium;
+}
+
+.sub-li-1 {
+  margin-left: 1.5rem;
+  font-size: small;
+  color: #5b5b5b;
 }
 
 .myphoto{
@@ -61,11 +94,35 @@ li {
   justify-content: center;
 }
 
-.about-p {
+.my-details {
+  /* display: flex;
+  flex-flow: row;
+  text-align: justify; */
+  margin-left: 1rem;
+}
+
+.my-details-sub {
+  color:#5b5b5b
+  /* list-style-type: "❯ "; */
+}
+
+.summary-header{
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.summary-header-details{
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.about-name {
   display: inline-flex;
   font-size: larger;
   text-align: center;
-  margin: 1rem;
+  margin-top: 0.5rem;
   padding : 0.25rem;
   height: fit-content;
 }
@@ -140,7 +197,6 @@ nav li:hover {
 }
 
 .page-container {
- 
   flex-wrap: wrap;
   grid-gap: 1rem; 
   padding: 1rem;

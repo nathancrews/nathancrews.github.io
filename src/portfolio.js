@@ -76,10 +76,12 @@ function StartSlideShow(event) {
         case 'project-pc-slides':
             let pcimageNames = new Array("./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp",
                 "./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp",
-                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp", "./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp");
+                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp", 
+                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp", "./images/projects/shell_extensions/Pointcloud_Preview_Options.webp");
 
             let pcimageCaptions = new Array("By File(s): Generate a 3D preview image for .LAS/.LAZ file(s)", "Generate a MERGED preview image for selected .LAS/.LAZ file(s)",
-                                            "Sample merged 3D preview image for 15 .LAZ files", "By Directory: Generate All preview images for .LAS/.LAZ files in directory");
+                                            "Sample merged 3D preview image for 15 .LAZ files", "By Directory: Generate All preview images for .LAS/.LAZ files in directory",
+                                        "Options for .LAS/.LAZ preview image size and format");
 
             SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
             break;

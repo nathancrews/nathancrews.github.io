@@ -37,63 +37,229 @@
     <nav>
       <ul>
         <li class="tab-button active-tab" data-page="about">About</li>
-        <li class="tab-button inactive-tab" data-page="projects">Projects</li>
+        <!-- <li class="tab-button inactive-tab" data-page="projects">Projects</li> -->
         <li class="tab-button inactive-tab" data-page="resume">Resume</li>
       </ul>
     </nav>
   </div>
   <div id="about" class="active-page page about-page">
-    <div style="display: inline-grid; margin: 1rem;">
-      <p class="about-p myname">Nathan Crews</p>
+    <div style="display: inline-grid; margin: 1rem;height:fit-content;">
       <img src="./images/projects/nathan-speaker.webp" class="myphoto" alt="Nathan Crews">
+      <p class="about-name myname">Nathan Crews</p>
     </div>
-    <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
-      <div style="display: inline-grid; margin-left: 1.5rem; padding: 1rem;"">
-        <p>I am a professional software engineer with diverse work experience and skills. My goal is to deliver
+    <div class="outer-container">
+      <div>
+        <p class="about-text">I am a professional software engineer with diverse work experience and skills. My goal is to deliver
           quality software solutions, on time - meeting, and often exceeding expectations.</p>
-        <br />
-        
-        <div style="display: flex; gap: 55px;">
-          <p>Industry Experience:</p>
+        <details open='true' class=" my-details">
+        <summary class="summary-header">Industry Experience</summary>
+        <div class="inner-content">
           <ul>
-            <li>Civil Engineering</li>
-            <li>Land Surveying</li>
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">Civil Engineering</summary>
+                <ul class="sub-li-1">
+                  <li>3D Visualization</li>
+                  <li>Road Design</li>
+                  <li>Surface Modeling</li>
+                  <li>Photogrammetry</li>
+                  <li>COGO</li>
+                  <li>Hydrology</li>
+                  <li>Data Exchange</li>
+                  <li>AutoCAD Civil 3D</li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">Web Applications</summary>
+                <ul class="sub-li-1">
+                  <li>Browser Mapping Applications</li>
+                  <li>UI controls</li>
+                  <li>Server map processing</li>
+                  <li>Server image processing</li>
+                </ul>
+              </details>
+            </li>
+
+          </ul>
+          <ul >
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">Game Development</summary>
+                <ul class="sub-li-1">
+                  <li>Unreal Engine 5</li>
+                  <li>Unreal Engine C++ plugins</li>
+                  <li>Unreal Engine Blueprint</li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">Land Surveying</summary>
+                <ul class="sub-li-1">
+                  <li>3D Visualization</li>
+                  <li>COGO</li>
+                  <li>Surface Modeling</li>
+                  <li>Photogrammetry</li>
+                  <li>Data Exchange</li>
+                  <li>AutoCAD Civil 3D</li>
+                </ul>
+              </details>
+            </li>
           </ul>
           <ul>
-            <li>GIS</li>
-            <li>Electric Services</li>
-          </ul>
-          <ul>
-            <li>Mapping</li>
-            <li>3D Visualization/Game Development</li>
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">GIS/Mapping</summary>
+                <ul class="sub-li-1">
+                  <li>3D Visualization</li>
+                  <li>OGC web mapping</li>
+                  <li>Geospatial Data Intergration</li>
+                  <li>Photogrammetry</li>
+                  <li>Esri ArcGIS</li>
+                  <li>AutoCAD Map</li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="my-details">
+                <summary class="summary-header-details my-details-sub">Electric Supply Services</summary>
+                <ul class="sub-li-1">
+                  <li>Sensor Data processing</li>
+                  <li>Billing data processing</li>
+                  <li>Customer data</li>
+                </ul>
+              </details>
+            </li>
           </ul>
         </div>
-        <div style="display: flex; gap: 55px;">
-          <p>Languages:</p>
-          <ul>
-            <li>C/C++</li>
-            <li>C#</li>
-          </ul>
-          <ul>
-            <li>JavaScript</li>
-            <li>HTML/CSS</li>
-          </ul>
-          <ul>
-            <li>Python</li>
-            <li>Shell Scripting</li>
-          </ul>
-        </div>
+        </details>
+
+        <details class="my-details">
+          <summary class="summary-header">Programming Languages</summary>
+          <div class="inner-content">
+            <ul class="sub-li-1">
+              <li>C/C++</li>
+              <li>C#</li>
+            </ul>
+            <ul class="sub-li-1">
+              <li>JavaScript</li>
+              <li>HTML/CSS</li>
+            </ul>
+            <ul class="sub-li-1">
+              <li>GLSL/HSL</li>
+              <li>Shell Scripting</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="my-details">
+          <summary class="summary-header">Frameworks</summary>
+          <div class="inner-content">
+            <ul class="sub-li-1">
+              <li>Windows API/COM/Shell</li>
+              <li>AutoCAD ARX</li>
+              <li>Unreal Engine Plugins</li>
+              <li>Qt</li>
+            </ul>
+            <ul class="sub-li-1">
+              <li>OpenGL/GLU/GLUT/GLFW</li>
+              <li>WebGL/GPU</li>
+              <li>Open3D</li>
+            </ul>
+            <ul class="sub-li-1">
+              <li>NodeJS</li>
+              <li>CGI</li>
+              <li>HTMX</li>
+            </ul>
+            <ul class="sub-li-1">
+              <li>LeftletJS</li>
+              <li>CesiumJS</li>
+            </ul>
+          </div>
+        </details>
+
       </div>
       <br />
-      
-
     </div>
   </div>
- 
+  <div id="projects" class="page-container">
+    <h2 class="page-title">Software Application Gallery</h2>
+    <div id="project-gallery" class="grid-container projectBox">
+      <box class="project">
+        <h3 class="project-title">Photo Mapper</h3>
+        <article class="description-text">Photo Mapper is a browser based application. Users can quickly map photos with
+          GPS data
+          by dragging and dropping photo image files onto the displayed 2D or 3D map. Works on desktop/laptop and phone
+          browsers.
+        </article>
+        <a href="./photomap.html" target="_blank"><img src="./images/projects/webapps/photomap.webp"
+            class="project-image" width="250" /></a>
+
+        <details class="project-details">
+          <summary>Project Details</summary>
+          <div class="project-details">put details here</div>
+        </details>
+      </box>
+      <box class="project">
+        <h3 class="project-title">Photo Mapper Server</h3>
+        <article class="description-text">Quickly map photos with GPS data. Simply Drag and drop photo image files
+          onto
+          the displayed 2D or 3D map. You can also choose the files to map. Uses server-side rendering code.</article>
+        <a href="#" target="_blank" ">Launch Video Demo</a>
+          <img src=" ./images/projects/webapps/photomapsrv.webp" class="project-image" width="250" />
+        <details class="project-details">
+          <summary>Project Details</summary>
+          <div class="project-details">put details here</div>
+        </details>
+      </box>
+      <box class="project">
+        <h3 class="project-title">Point Cloud Quickview Windows Shell Extension</h3>
+        <article class="description-text">In Windows File Explorer, right click on point cloud .LAS/.LAZ files to
+          produce quick
+          thumbnail images.</article>
+        <a href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">Launch Short
+          Video</a>
+        <img id="project-pc" src="./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp"
+          class="project-image" width="250" data-slide-show-id="project-pc-slides" />
+        <details class="project-details">
+          <summary>Project Details</summary>
+          <div class="project-details">put details here</div>
+        </details>
+      </box>
+      <box class="project">
+        <h3 class="project-title">GLTF/GLB Windows Shell Extension</h3>
+        <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick
+          thumbnail images.</article>
+        <a href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Launch Short
+          Video</a>
+        <img id="project-glb" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
+          class="project-image" width="250" data-slide-show-id="project-glb-slides" />
+        <details class="project-details">
+          <summary>Project Details</summary>
+          <div class="project-details">put details here</div>
+        </details>
+      </box>
+      <box class="project">
+        <h3 class="project-title">Convert LandXML to GLTF Windows Shell Extension</h3>
+        <article class="description-text">In Windows File Explorer, right click on LandXML .xml files to produce a 3D
+          GLTF file. Works for LandXML 1.0 to 2.0 files containing surfaces with optional textures.</article>
+        <a href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Launch Short
+          Video</a>
+        <img id="project-landxml" src="./images/projects/shell_extensions/LandXML2glTFSample2.webp"
+          class="project-image" width="250" data-slide-show-id="project-landxml-slides" />
+        <details class="project-details">
+          <summary>Project Details</summary>
+          <div class="project-details">put details here</div>
+        </details>
+      </box>
+    </div>
+  </div>
   <div id="resume" class="inactive-page page">
     <h2>Resume</h2>
   </div>
-  <div id="projects" class="inactive-page page page-container">
+  <!-- <div id="projects" class="inactive-page page page-container">
     <h2>Software Application Gallery</h2>
     <div id="projects" class="grid-container projectBox">
       <box class="project">
@@ -161,7 +327,7 @@
         </details>
       </box>
     </div>
-  </div>
+  </div> -->
 
   <!-- Re-usable slide show template -->
   <dialog id="slide-show-dialog" class="container-popup">
