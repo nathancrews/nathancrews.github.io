@@ -36,13 +36,18 @@ h2 {
   background-color: cornsilk;
 }
 
+.about-container{
+  display: flex; flex-wrap: wrap; justify-content: flex-start;
+}
+
 .about-text{
-  font-size: larger;
+  word-break: normal;
+  font-size: large;
   padding: 0rem;
   margin: 1rem;
   text-align: left;
-  justify-self: left;
-  height:fit-content;
+  min-width: 15rem;
+  max-width: 35rem;
 }
 
 .outer-container{
