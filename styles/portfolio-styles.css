@@ -3,14 +3,15 @@
   padding: 0px;
   font-family: 'Roboto';
   font-weight: 400;
+  font-size: 1rem;
 }
 
 body {
   color: cornsilk;
   display: block;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  background-color: #222222;
+  background-color: #444444;
 }
 
 h1 {
@@ -21,7 +22,13 @@ h2 {
   text-align: left;
 }
 
+.page{
+  padding: 0;
+}
+
 .page-title{
+  font-size: x-large;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -37,7 +44,10 @@ h2 {
 }
 
 .about-container{
-  display: flex; flex-wrap: wrap; justify-content: flex-start;
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: flex-start;
+
 }
 
 .about-text{
@@ -62,7 +72,7 @@ h2 {
 }
 
 a{
-  color:#aaaaaa;
+  color:lightblue;
 }
 
 ul{
@@ -81,7 +91,7 @@ li {
 
 .sub-li-1 {
   margin-left: 1.5rem;
-  font-size: small;
+  font-size: medium;
   color: #5b5b5b;
 }
 
@@ -100,9 +110,7 @@ li {
 }
 
 .my-details {
-  /* display: flex;
-  flex-flow: row;
-  text-align: justify; */
+font-size: large;
   margin-left: 1rem;
 }
 
@@ -119,8 +127,8 @@ li {
 }
 
 .summary-header-details{
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: medium;
+  font-weight: bold;
 }
 
 .about-name {
@@ -133,13 +141,12 @@ li {
 }
 
 
-
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
   background-color:cornsilk;
   color: darkblue;
-  border-bottom: 2px solid azure;
+  border-bottom: 2px solid darkblue;
   border-radius: 6px;
 }
 
@@ -198,30 +205,28 @@ nav li:hover {
   border-bottom-color: blue;
 }
 
-.page{
-  padding: 0;
-}
+
 
 .page-container {
   flex-wrap: wrap;
   grid-gap: 1rem; 
   padding: 1rem;
-  margin: 0.5rem;
+  margin: 0rem;
   border-radius: 20px;
 }
 
 .grid-container {
   display: flex;
   flex-wrap: wrap;
-  grid-gap: 1rem; 
-  padding: 1rem;
-  margin: 0.5rem;
+  grid-gap: 1.25rem; 
+  padding: 0rem;
+  margin: 0rem;
   width: fit-content;
   height: fit-content;
 }
 
 .projectBox {
-  background-color: #444444;
+  background-color: #6f6f6f;
   border-radius: 20px;
 }
 
@@ -242,8 +247,11 @@ nav li:hover {
 }
 
 .project-title {
+  font-size: large;
   color:cornsilk;
   text-align: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid black;
 }
 
 a.project-image {
@@ -280,10 +288,10 @@ img.project-image {
 
 
 .project-image-caption-slides {
-  position: inherit;
+  display: inline-block;
+  align-self: center;
   cursor: pointer;
   width:fit-content;
-  transform: translate(75px, -125px); 
   background:cornsilk; 
   color: black; 
   padding: 5px; 
@@ -291,10 +299,12 @@ img.project-image {
   font-size: larger; 
   font-weight: bolder;
   text-align: center;
-  opacity: 0.66;
+  opacity: 0.6;
 }
 
 .description-text {
+  height: 6rem;
+  font-size: medium;
   text-align: left;
   margin: 1rem;
 }
