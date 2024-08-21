@@ -88,10 +88,10 @@ export class SlideShowClass {
       this.slideShowCloseButton.removeEventListener('click', this.onClose);
     }
     if (this.slideShowNextButton) {
-      this.slideShowNextButton.removeEventListener('click', this.onClose);
+      this.slideShowNextButton.removeEventListener('click', this.plusSlides);
     }
     if (this.slideShowPrevButton) {
-      this.slideShowPrevButton.removeEventListener('click', this.onClose);
+      this.slideShowPrevButton.removeEventListener('click', this.prevSlides);
     }
 
     this.slideIndex = 0;
@@ -201,10 +201,28 @@ export class SlideShowClass {
     this.slides = this.slideShowContainer.getElementsByClassName("slide-show-slides");
     this.rowSlides = this.slideShowRowContainer.getElementsByClassName("slide-row-image");
 
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      let slidesFound = false;
+      if (event.target.classList) {
+        for (let ii = 0; ii < event.target.classList.length; ii++) {
+
+          console.log("event.target.classList[ii]: ", event.target.classList[ii]);
+          if (event.target.classList[ii].indexOf("slide") != -1) {
+            slidesFound = true;
+            break;
+          }
+        }
+      }
+
+      if (slidesFound == false) {
+        SlideShow.onClose();
+      }
+    }
+
     this.showSlides(0);
     this.slideShowDialog.style.display = "flex";
-    this.slideShowDialog.showModal();
-    
+
   }
 
   onClose(event) {
@@ -212,7 +230,6 @@ export class SlideShowClass {
 
     let localSlideShowDialog = document.getElementById("slide-show-dialog");
 
-    localSlideShowDialog.close();
     localSlideShowDialog.style.display = "none";
 
     SlideShow.RemoveSlides();
@@ -238,18 +255,16 @@ export class SlideShowClass {
     SlideShow.showSlides(SlideShow.slideIndex = n);
   }
 
-  showSlides(n) {
-    if (n > this.slides.length - 1) { this.slideIndex = 0 }
-    if (n < 0) { this.slideIndex = this.slides.length - 1 }
+  showSlides(slideNumber) {
+    if (slideNumber > this.slides.length - 1) { this.slideIndex = 0 }
+    if (slideNumber < 0) { this.slideIndex = this.slides.length - 1 }
 
     for (let ii = 0; ii < this.slides.length; ii++) {
-
       if (this.slides[ii]) {
         this.slides[ii].style.display = "none";
       }
     }
 
-    //console.log("this.slides[this.slideIndex], this.slideIndex=", this.slides[this.slideIndex], this.slideIndex);
     this.slides[this.slideIndex].style.display = "block";
 
     if (this.rowSlides) {

@@ -16,11 +16,6 @@
   border-radius: 20px;
 }
 
-dialog::backdrop {
-  backdrop-filter:blur(2px);
-  -webkit-backdrop-filter:blur(2px);
-}
-
 .slide-show-container {
   width: 100%;
   margin-top: 1.5rem;
