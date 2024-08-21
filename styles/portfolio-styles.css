@@ -22,8 +22,80 @@ h2 {
   text-align: left;
 }
 
+.active-tab {
+  padding: 0.25rem;
+  padding-bottom: 0rem;
+  background-color:cornsilk;
+  color: darkblue;
+  border-bottom: 2px solid darkblue;
+  border-radius: 6px;
+}
+
+.inactive-tab {
+  padding: 0.25rem;
+  background-color: #aaaaaa;
+  color: #444444;
+  border-bottom: none;
+  border-radius: 6px;
+}
+
+.active-page {
+  display:flex;
+}
+
+.inactive-page {
+  display: none;
+}
+
+.nav-bar{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: center;
+  min-width: fit-content;
+} 
+
+nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  margin: 1rem;
+  width: 50vw;
+  min-width: fit-content;
+  grid-gap: 1rem; 
+  background-color: #aaaaaa;
+  border-radius: 15px;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  width: 100%;
+  list-style: none;
+}
+
+nav li {
+  margin: 0.25rem;
+}
+
+nav li:hover {
+  cursor: pointer;
+  color:black;
+  background-color: azure;
+  border-bottom-color: blue;
+}
+
 .page{
   padding: 0;
+}
+
+.page-container {
+  flex-wrap: wrap;
+  grid-gap: 1rem; 
+  padding: 1rem;
+  margin: 0rem;
+  border-radius: 20px;
 }
 
 .page-title{
@@ -138,81 +210,6 @@ font-size: large;
   margin-top: 0.5rem;
   padding : 0.25rem;
   height: fit-content;
-}
-
-
-.active-tab {
-  padding: 0.25rem;
-  padding-bottom: 0rem;
-  background-color:cornsilk;
-  color: darkblue;
-  border-bottom: 2px solid darkblue;
-  border-radius: 6px;
-}
-
-.inactive-tab {
-  padding: 0.25rem;
-  background-color: #aaaaaa;
-  color: #444444;
-  border-bottom: none;
-  border-radius: 6px;
-}
-
-.active-page {
-  display:flex;
-}
-
-.inactive-page {
-  display: none;
-}
-
-.nav-bar{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-content: center;
-  min-width: fit-content;
-} 
-
-nav {
-  display: flex;
-  justify-content: space-evenly;
-  align-content: center;
-  margin: 1rem;
-  width: 50vw;
-  min-width: fit-content;
-  grid-gap: 1rem; 
-  background-color: #aaaaaa;
-  border-radius: 15px;
-}
-
-nav ul {
-  display: flex;
-  justify-content: space-evenly;
-  align-content: center;
-  width: 100%;
-  list-style: none;
-}
-
-nav li {
-  margin: 0.25rem;
-}
-
-nav li:hover {
-  cursor: pointer;
-  color:black;
-  background-color: azure;
-  border-bottom-color: blue;
-}
-
-
-
-.page-container {
-  flex-wrap: wrap;
-  grid-gap: 1rem; 
-  padding: 1rem;
-  margin: 0rem;
-  border-radius: 20px;
 }
 
 .grid-container {
