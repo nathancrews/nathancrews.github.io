@@ -29,33 +29,35 @@
 
 import { SlideShow } from "./slideshow.js";
 
-// let projectGlb = document.getElementById("project-glb");
-
-// if (projectGlb) {
-//     projectGlb.addEventListener('click', StartSlideShow);
-// }
-
-// let projectLandxml = document.getElementById("project-landxml");
-// if (projectLandxml) {
-//     projectLandxml.addEventListener('click', StartSlideShow);
-// }
-
-// let projectPC = document.getElementById("project-pc");
-// if (projectPC) {
-//     projectPC.addEventListener('click', StartSlideShow);
-// }
-
 let imageClickCaptions = document.getElementsByClassName("project-image-caption-slides");
 
-for (let ii=0; ii < imageClickCaptions.length; ii++){
+for (let ii = 0; ii < imageClickCaptions.length; ii++) {
     imageClickCaptions[ii].addEventListener('click', StartSlideShow);
 }
-
 
 function StartSlideShow(event) {
     let slideShowDialog = document.getElementById(event.target.dataset.slideShowId);
 
     switch (event.target.dataset.slideShowId) {
+        case 'project-pmc-slides':
+            let pmimageNames = new Array("./images/projects/webapps/photomap.webp",
+                "./images/projects/webapps/photomapper-2D.webp", "./images/projects/webapps/photomapper-3D.webp",
+            "./images/projects/webapps/photomapper-settings.webp");
+                
+            let pmimageCaptions = new Array("Drag & Drop Photos on 2D or 3D Map", "Photos with GPS data in 2D Map", "Photos with GPS data in 3D Map",
+                "Photo Mapper Settings Options");
+
+            SlideShow.StartSlideShow(pmimageNames, pmimageCaptions);
+            break;
+        case 'project-pmsrv-slides':
+            let pmsrvimageNames = new Array("./images/projects/webapps/photomapper-Drone.webp",
+                                            "./images/projects/webapps/photomapper-Drone-settings.webp",
+                                        "./images/projects/webapps/photomapsrv.webp");
+
+            let pmsrvimageCaptions = new Array("Aerial Drone Photos on 2D Map", "Photo Mapper Settings Options", "Drag & Drop Photos on 2D or 3D Map");
+
+            SlideShow.StartSlideShow(pmsrvimageNames, pmsrvimageCaptions);
+            break;
         case 'project-glb-slides':
             let imageNames = new Array("./images/projects/shell_extensions/GLB_Thumbnail.webp",
                 "./images/projects/shell_extensions/GLTF_Preview_Image.webp",
@@ -81,12 +83,12 @@ function StartSlideShow(event) {
         case 'project-pc-slides':
             let pcimageNames = new Array("./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp",
                 "./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp",
-                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp", 
+                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp",
                 "./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp", "./images/projects/shell_extensions/Pointcloud_Preview_Options.webp");
 
             let pcimageCaptions = new Array("By File(s): Generate a 3D preview image for .LAS/.LAZ file(s)", "Generate a MERGED preview image for selected .LAS/.LAZ file(s)",
-                                            "Sample merged 3D preview image for 15 .LAZ files", "By Directory: Generate All preview images for .LAS/.LAZ files in directory",
-                                        "Options for .LAS/.LAZ preview image size and format");
+                "Sample merged 3D preview image for 15 .LAZ files", "By Directory: Generate All preview images for .LAS/.LAZ files in directory",
+                "Options for .LAS/.LAZ preview image size and format");
 
             SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
             break;

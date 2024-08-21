@@ -86,7 +86,7 @@ li {
 }
 
 .myphoto{
-  width: 200px;
+  width: 100px;
   margin: 0.5rem;
   margin-left : 1rem;
   margin-right : 0rem;
@@ -270,8 +270,6 @@ img.project-image {
 .project-image-caption-launch {
   display: inline-block;
   width:fit-content;
-  /* transform: translate(66px, -140px);  */
-  /* background:cornsilk;  */
   color: #aaaaaa; 
   padding: 5px; 
   margin: 0;
@@ -285,7 +283,7 @@ img.project-image {
   position: inherit;
   cursor: pointer;
   width:fit-content;
-  transform: translate(66px, -140px); 
+  transform: translate(75px, -125px); 
   background:cornsilk; 
   color: black; 
   padding: 5px; 
