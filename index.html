@@ -268,7 +268,7 @@
           browsers.
         </article>
         <a href="./photomap.html" target="_blank">Launch Photo Mapper</a>
-        <img src="./images/projects/webapps/photomapper-2D.webp" class="project-image" width="250" />
+        <img src="./images/projects/webapps/photomapper-3D.webp" class="project-image" width="250" />
         <div class="project-image-caption-slides" data-slide-show-id="project-pmc-slides">Click for Slide Show</div>
         <details class="project-details">
           <summary>Project Details</summary>
@@ -280,7 +280,7 @@
         <article class="description-text">In Windows File Explorer, right click on point cloud .LAS/.LAZ files to
           produce quick
           thumbnail images.</article>
-        <a href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">Launch Short
+        <a href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">Short Youtube
           Video</a>
         <img id="project-pc" width="250px" src="./images/projects/shell_extensions/Pointcloud_Preview_Image.webp"
           class="project-image" data-slide-show-id="project-pc-slides" />
@@ -293,9 +293,7 @@
       </box>
       <box class="project">
         <h3 class="project-title">Web UI Components</h3>
-        <article class="description-text">Re-usable, stylable, responsive, pure javascript web UI components: application toolbar, pop-up message box and slide show.</article>
-        <a href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Launch Short
-          Video</a>
+        <article class="description-text">Re-usable, CSS stylable, responsive, pure javascript browser UI components: pop-up message box, slide show and command/action toolbar.</article>
         <img id="project-glb" width="250px" src="./images/projects/webapps/map_controls.webp"
           class="project-image" data-slide-show-id="project-wc-slides">
         <div class="project-image-caption-slides" data-slide-show-id="project-wc-slides">Click for Slide Show</div>
@@ -313,7 +311,7 @@
         <article class="description-text">Simple mapping of photos with GPS data. Drag and drop photo image files
           onto the 2D or 3D map or choose files to map. Uses backend rendering code. Supports desktop/laptop/mobile
           browsers.</article>
-        <a href="#" target="_blank" ">Launch Video Demo</a>
+        <a href="#" target="_blank" ">Short Youtube Video</a>
           <img src=" ./images/projects/webapps/photomapper-Drone-settings.webp" class="project-image" width="250px" />
         <div class="project-image-caption-slides" data-slide-show-id="project-pmsrv-slides">Click for Slide Show</div>
         <details class="project-details">
@@ -326,8 +324,7 @@
         <h3 class="project-title">GLTF/GLB Windows Shell Extension</h3>
         <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick
           thumbnail images.</article>
-        <a href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Launch Short
-          Video</a>
+        <a href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Short Youtube Video</a>
         <img id="project-glb" width="250px" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
           class="project-image" data-slide-show-id="project-glb-slides">
         <div class="project-image-caption-slides" data-slide-show-id="project-glb-slides">Click for Slide Show</div>
@@ -341,8 +338,7 @@
         <h3 class="project-title">Convert LandXML to GLTF Windows Shell Extension</h3>
         <article class="description-text">In Windows File Explorer, right click on LandXML .xml files to produce a 3D
           GLTF file. Works for LandXML 1.0 to 2.0 files containing surfaces with optional textures.</article>
-        <a href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Launch Short
-          Video</a>
+        <a href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Short Youtube Video</a>
         <img id="project-landxml" width="250px" src="./images/projects/shell_extensions/LandXML2glTFSample2.webp"
           class="project-image" data-slide-show-id="project-landxml-slides" />
         <div class="project-image-caption-slides" data-slide-show-id="project-landxml-slides">Click for Slide Show
@@ -370,49 +366,6 @@
     <span id="slide-show-close" class="slide-show-close">&times;</span>
   </dialog>
   <!-- ---------------------------- -->
-  <script>
-
-    function onTabClick(event) {
-      event.preventDefault();
-
-      event.target.classList.remove("inactive-tab");
-      event.target.classList.add("active-tab");
-
-      let pages = document.getElementsByClassName('page');
-      if (pages) {
-        for (let ii = 0; ii < pages.length; ii++) {
-          if (pages[ii] != event.target) {
-            pages[ii].classList.remove("active-page");
-            pages[ii].classList.add("inactive-page");
-          }
-        };
-      }
-
-      let tabs = document.getElementsByClassName('tab-button');
-      if (tabs) {
-        for (let ii = 0; ii < tabs.length; ii++) {
-          if (event.target != tabs[ii]) {
-            tabs[ii].classList.remove("active-tab");
-            tabs[ii].classList.add("inactive-tab");
-          }
-        };
-      }
-
-      let pageEl = document.getElementById(event.target.dataset.page);
-      if (pageEl) {
-        pageEl.classList.remove("inactive-page");
-        pageEl.classList.add('active-page');
-      }
-    }
-
-    let tabs = document.getElementsByClassName('tab-button');
-    if (tabs) {
-      for (let ii = 0; ii < tabs.length; ii++) {
-        tabs[ii].addEventListener('click', onTabClick);
-      };
-    }
-
-  </script>
 </body>
 
 </html>

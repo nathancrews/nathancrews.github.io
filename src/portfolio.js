@@ -29,6 +29,15 @@
 
 import { SlideShow } from "./slideshow.js";
 
+////////////////////////////////////////////////////////////
+// Helper JS for porfolio page behaviors.
+//
+// -- Handle Nav Menu tabs
+//
+// -- Setup and view project slide shows
+//
+////////////////////////////////////////////////////////////
+
 let imageClickCaptions = document.getElementsByClassName("project-image-caption-slides");
 
 for (let ii = 0; ii < imageClickCaptions.length; ii++) {
@@ -39,11 +48,11 @@ function StartSlideShow(event) {
     let slideShowDialog = document.getElementById(event.target.dataset.slideShowId);
 
     switch (event.target.dataset.slideShowId) {
-       case 'project-wc-slides':
+        case 'project-wc-slides':
             let wcimageNames = new Array("./images/projects/webapps/map_controls.webp",
-                                         "./images/projects/webapps/slideshow_component.webp");
-                
-            let wcimageCaptions = new Array("Easy to add toolbar commands and custom messages", "Simple to use SlideShow supports many per page");
+                "./images/projects/webapps/slideshow_component.webp");
+
+            let wcimageCaptions = new Array("Easy to add toolbar commands and custom messages", "Simple to use and supports many per page (You are using it now...)");
 
             SlideShow.StartSlideShow(wcimageNames, wcimageCaptions);
             break;
@@ -51,8 +60,8 @@ function StartSlideShow(event) {
         case 'project-pmc-slides':
             let pmimageNames = new Array("./images/projects/webapps/photomap.webp",
                 "./images/projects/webapps/photomapper-2D.webp", "./images/projects/webapps/photomapper-3D.webp",
-            "./images/projects/webapps/photomapper-settings.webp");
-                
+                "./images/projects/webapps/photomapper-settings.webp");
+
             let pmimageCaptions = new Array("Drag & Drop Photos on 2D or 3D Map", "Photos with GPS data in 2D Map", "Photos with GPS data in 3D Map",
                 "Photo Mapper Settings Options");
 
@@ -60,8 +69,8 @@ function StartSlideShow(event) {
             break;
         case 'project-pmsrv-slides':
             let pmsrvimageNames = new Array("./images/projects/webapps/photomapper-Drone.webp",
-                                            "./images/projects/webapps/photomapper-Drone-settings.webp",
-                                        "./images/projects/webapps/photomapsrv.webp");
+                "./images/projects/webapps/photomapper-Drone-settings.webp",
+                "./images/projects/webapps/photomapsrv.webp");
 
             let pmsrvimageCaptions = new Array("Aerial Drone Photos on 2D Map", "Photo Mapper Settings Options", "Drag & Drop Photos on 2D or 3D Map");
 
@@ -103,3 +112,45 @@ function StartSlideShow(event) {
             break;
     }
 }
+
+function onTabClick(event) {
+    event.preventDefault();
+
+    event.target.classList.remove("inactive-tab");
+    event.target.classList.add("active-tab");
+
+    let pages = document.getElementsByClassName('page');
+    if (pages) {
+        for (let ii = 0; ii < pages.length; ii++) {
+            if (pages[ii] != event.target) {
+                pages[ii].classList.remove("active-page");
+                pages[ii].classList.add("inactive-page");
+            }
+        };
+    }
+
+    let tabs = document.getElementsByClassName('tab-button');
+    if (tabs) {
+        for (let ii = 0; ii < tabs.length; ii++) {
+            if (event.target != tabs[ii]) {
+                tabs[ii].classList.remove("active-tab");
+                tabs[ii].classList.add("inactive-tab");
+            }
+        };
+    }
+
+    let pageEl = document.getElementById(event.target.dataset.page);
+    if (pageEl) {
+        pageEl.classList.remove("inactive-page");
+        pageEl.classList.add('active-page');
+    }
+}
+
+let tabs = document.getElementsByClassName('tab-button');
+if (tabs) {
+    for (let ii = 0; ii < tabs.length; ii++) {
+        tabs[ii].addEventListener('click', onTabClick);
+    };
+}
+
+
