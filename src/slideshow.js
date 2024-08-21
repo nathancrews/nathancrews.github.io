@@ -29,7 +29,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 // SlideShowClass is a re-usable control that uses the exported singleton defined below
-// Requires and HTML template and slideshow.css file
+// Requires HTML template and slideshow.css file
 //
 // HTML Template:
 //  <dialog id="slide-show-dialog" class="container-popup">

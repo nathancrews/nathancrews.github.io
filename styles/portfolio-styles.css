@@ -300,8 +300,8 @@ img.project-image {
 }
 
 .project-details {
-  display: flex;
-  flex-flow: row;
+  display: block;
+  /* flex-flow: row; */
   text-align: justify;
   margin: 1rem;
 }

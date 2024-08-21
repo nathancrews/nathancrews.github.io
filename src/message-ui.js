@@ -30,7 +30,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // MessageUIClass is a re-usable control that uses the exported singleton defined below
 //
-// Requires and HTML template below and message.css style file
+// Requires HTML template below and message.css style file
 //
 // HTML Template:
 //
