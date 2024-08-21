@@ -177,10 +177,10 @@ export class SlideShowClass {
       newSlidesDiv.appendChild(newSlide);
 
       let newSlideRow = document.createElement("div");
-      newSlideRow.classList.add("column");
+      newSlideRow.classList.add("slide-column");
 
       let newSlideRowImage = document.createElement("img");
-      newSlideRowImage.classList.add("slide-opacity", "cursor", "row-image");
+      newSlideRowImage.classList.add("slide-img", "slide-opacity", "slide-cursor", "slide-row-image");
       newSlideRowImage.src = this.imageNames[ii];
       newSlideRowImage.slideIndex = ii;
 
@@ -199,10 +199,12 @@ export class SlideShowClass {
     this.slideShowPrevButton.onclick = this.prevSlides;
 
     this.slides = this.slideShowContainer.getElementsByClassName("slide-show-slides");
-    this.rowSlides = this.slideShowRowContainer.getElementsByClassName("row-image");
+    this.rowSlides = this.slideShowRowContainer.getElementsByClassName("slide-row-image");
 
     this.showSlides(0);
     this.slideShowDialog.style.display = "flex";
+    this.slideShowDialog.showModal();
+    
   }
 
   onClose(event) {
@@ -210,6 +212,7 @@ export class SlideShowClass {
 
     let localSlideShowDialog = document.getElementById("slide-show-dialog");
 
+    localSlideShowDialog.close();
     localSlideShowDialog.style.display = "none";
 
     SlideShow.RemoveSlides();
@@ -239,12 +242,10 @@ export class SlideShowClass {
     if (n > this.slides.length - 1) { this.slideIndex = 0 }
     if (n < 0) { this.slideIndex = this.slides.length - 1 }
 
-    //console.log("this.slideIndex", this.slideIndex);
-    //console.log("this.slides", this.slides);
-    for (let i = 0; i < this.slides.length; i++) {
+    for (let ii = 0; ii < this.slides.length; ii++) {
 
-      if (this.slides[i]) {
-        this.slides[i].style.display = "none";
+      if (this.slides[ii]) {
+        this.slides[ii].style.display = "none";
       }
     }
 
@@ -252,15 +253,15 @@ export class SlideShowClass {
     this.slides[this.slideIndex].style.display = "block";
 
     if (this.rowSlides) {
-      for (let i = 0; i < this.rowSlides.length; i++) {
-        if (this.rowSlides[i]) {
-          this.rowSlides[i].className = this.rowSlides[i].className.replace(" active", "");
+      for (let ii = 0; ii < this.rowSlides.length; ii++) {
+        if (this.rowSlides[ii]) {
+          this.rowSlides[ii].className = this.rowSlides[ii].className.replace(" slide-active", "");
         }
       }
     }
 
     if (this.rowSlides && this.rowSlides[this.slideIndex]) {
-      this.rowSlides[this.slideIndex].className += " active";
+      this.rowSlides[this.slideIndex].className += " slide-active";
     }
 
     this.captionText.innerHTML = this.imageCaptions[this.slideIndex];

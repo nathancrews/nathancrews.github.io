@@ -1,36 +1,53 @@
- * {
-  box-sizing: border-box;
-} 
-
-img {
+.slide-img {
   vertical-align: middle;
 }
 
-.container-popup {
+.slide-container-popup {
   display: none;
   position: fixed;
   top: 50dvh;
   left: 50dvw;
-  transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 1000px;
-  height: max-content;
+  max-width: 850px;
+  height: fit-content;
   max-height: 900px;
+  transform: translate(-50%, -50%);
   background-color: #444444;
   border-radius: 20px;
 }
 
-.nc-slideshow {
-  display: flex;
+dialog::backdrop {
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
 }
 
 .slide-show-container {
-  width:100%; 
-  max-height: max-content;
+  width: 100%;
   margin-top: 1.5rem;
   margin-left: 1.5rem;
   margin-right: 0.2rem;
   position: relative;
+}
+
+/* The Close Button */
+.slide-show-close {
+  display: flex;
+  margin-top: -5px;
+  margin-left: 0px;
+  margin-right: 0.5rem;
+  vertical-align: top;
+  padding: 0px;
+  color: azure;
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.slide-show-close:hover,
+.slide-show-close:focus {
+  color: rgb(199, 2, 2);
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .slide-show-slides {
@@ -39,24 +56,24 @@ img {
 }
 
 .slide-show-slides-img {
-    width:100%; 
-    border-radius: 12px;
+  width: 100%;
+  max-height: 600px;
+  border-radius: 12px;
 }
 
-.slide-show-row-container{
-  max-height:100px;
+.slide-show-row-container {
+  max-height: 100px;
 }
-/* Add a pointer when hovering over the thumbnail images */
-.cursor {
+
+.slide-cursor {
   cursor: pointer;
 }
 
-/* Next & previous buttons */
 .slide-prev,
 .slide-next {
   cursor: pointer;
   position: absolute;
-  top: 40%; 
+  top: 40%;
   width: auto;
   padding: 16px;
   margin-top: -50px;
@@ -69,7 +86,7 @@ img {
   -webkit-user-select: none;
   user-select: none;
   z-index: 500;
-  opacity: 0.60;
+  opacity: 0.6;
 }
 
 .slide-next {
@@ -77,12 +94,11 @@ img {
   border-radius: 12px 0 0 12px;
 }
 
-
 .slide-prev:hover,
 .slide-next:hover {
   color: cornsilk;
   background-color: darkblue;
-  opacity: 1.0;
+  opacity: 1;
 }
 
 .slide-show-caption-container {
@@ -93,7 +109,7 @@ img {
   border-radius: 8px;
 }
 
-.slide-caption-text{
+.slide-caption-text {
   color: black;
   font-weight: bolder;
 }
@@ -104,45 +120,20 @@ img {
   clear: both;
 }
 
-
-.column {
+.slide-column {
   float: left;
   width: 13%;
 }
-
 
 .slide-opacity {
   opacity: 0.6;
 }
 
-.row-image{
+.slide-row-image {
   width: 100%;
 }
 
-.active,
+.slide-active,
 .slide-opacity:hover {
   opacity: 1;
 }
-
-
-/* The Close Button */
-.slide-show-close {
-  display:flex;
-    margin-top: -5px;
-    margin-left: 0px;
-    margin-right: 0.5rem;
-    vertical-align: top;
-    padding: 0px;
-    color: black;
-    float: right;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  
-  .slide-show-close:hover,
-  .slide-show-close:focus {
-    color: rgb(199, 2, 2);
-    text-decoration: none;
-    cursor: pointer;
-  }
-  
