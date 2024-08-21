@@ -39,6 +39,15 @@ function StartSlideShow(event) {
     let slideShowDialog = document.getElementById(event.target.dataset.slideShowId);
 
     switch (event.target.dataset.slideShowId) {
+       case 'project-wc-slides':
+            let wcimageNames = new Array("./images/projects/webapps/map_controls.webp",
+                                         "./images/projects/webapps/slideshow_component.webp");
+                
+            let wcimageCaptions = new Array("Easy to add toolbar commands and custom messages", "Simple to use SlideShow supports many per page");
+
+            SlideShow.StartSlideShow(wcimageNames, wcimageCaptions);
+            break;
+
         case 'project-pmc-slides':
             let pmimageNames = new Array("./images/projects/webapps/photomap.webp",
                 "./images/projects/webapps/photomapper-2D.webp", "./images/projects/webapps/photomapper-3D.webp",

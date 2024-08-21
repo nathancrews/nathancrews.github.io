@@ -27,6 +27,41 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////////
+// MessageUIClass is a re-usable control that uses the exported singleton defined below
+//
+// Requires and HTML template below and message.css style file
+//
+// HTML Template:
+//
+// <!-- Modal message dialog -->
+// <dialog class="message-modal message-modal-hide">
+//     <form>
+//         <div class="message-dialog">
+//             <fieldset class="message-form-fieldset">
+//                 <legend class="message-legend">Message</legend>
+//                 <div class="message-text"></div>
+//             </fieldset>
+//             <div class="message-button-bar">
+//                 <button id="ok" class="message-button-ok" type="button">Ok</button>
+//                 <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
+//             </div>
+//         </div>
+//     </form>
+// </dialog>
+//
+//
+// Primary Method: MessageUI.ShowMessage({Dialog Title Text}, {Dialog Message Text}, {Action callback for OK});
+//
+// Example:
+//
+// MessageUI.ShowMessage("Photo Mapper", "Do you really want to erase ALL photos from the Map?", PhotoMapApp.ResetMap);
+//
+// SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
+//
+////////////////////////////////////////////////////////////////////////////////////
+
+/** MessageUI.ShowMessage({Dialog Title Text}, {Dialog Message Text}, {Action callback for OK}); */
 export class MessageUIClass {
 
     _messageDialog = null;
