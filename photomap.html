@@ -71,8 +71,22 @@
             <button id="submit-button" class="map-drop-submit-button" type="submit" hidden="true"></button>
         </div>
         <img id="loading-image" class="map-loading-image" name="loading-image" src="images/loading.gif" />
+
+  <!-- Modal message dialog -->
+  <dialog class="message-modal message-modal-hide">
+    <form class="message-dialog">
+          <div class="message-text"></div>
+          <div class="message-div"></div>
+    </form>
+    <div class="message-button-bar">
+      <button id="ok" class="message-button-ok" type="button">Ok</button>
+      <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
+    </div>
+  </dialog>
+  <!-- Modal settings dialog -->
+
         <!-- Modal message dialog -->
-        <dialog class="message-modal message-modal-hide">
+        <!-- <dialog class="message-modal message-modal-hide">
             <form>
                 <div class="message-dialog">
                     <fieldset class="message-form-fieldset">
@@ -85,7 +99,7 @@
                     </div>
                 </div>
             </form>
-        </dialog>
+        </dialog> -->
         <!-- Modal settings dialog -->
         <form id="settings-modal" class="settings-modal settings-modal-hide">
             <fieldset id="settings-form-fieldset" class="settings-form-fieldset">

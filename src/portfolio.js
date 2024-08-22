@@ -26,92 +26,18 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
+import { MessageUI } from "./message-ui.js";
 
-import { SlideShow } from "./slideshow.js";
 
-////////////////////////////////////////////////////////////
-// Helper JS for porfolio page behaviors.
-//
-// -- Handle Nav Menu tabs
-//
-// -- Setup and view project slide shows
-//
-////////////////////////////////////////////////////////////
+// function test(){
+//     MessageUI.ShowMessage("<p>Portfolio aldkjsajdlsajdlsdj jdsljdlsajdskjasl jsakdjlasjdlkasjd</p>", 
+//                                 "<p>source code</p> \
+//                                 <img src='images/settings.png' style='width:400px'/>", null);
+// }
 
-let imageClickCaptions = document.getElementsByClassName("project-image-caption-slides");
+// test();
 
-for (let ii = 0; ii < imageClickCaptions.length; ii++) {
-    imageClickCaptions[ii].addEventListener('click', StartSlideShow);
-}
 
-function StartSlideShow(event) {
-    let slideShowDialog = document.getElementById(event.target.dataset.slideShowId);
-
-    switch (event.target.dataset.slideShowId) {
-        case 'project-wc-slides':
-            let wcimageNames = new Array("./images/projects/webapps/map_controls.webp",
-                "./images/projects/webapps/slideshow_component.webp");
-
-            let wcimageCaptions = new Array("Easy to add toolbar commands and custom messages", "Simple to use and supports many per page (You are using it now...)");
-
-            SlideShow.StartSlideShow(wcimageNames, wcimageCaptions);
-            break;
-
-        case 'project-pmc-slides':
-            let pmimageNames = new Array("./images/projects/webapps/photomap.webp",
-                "./images/projects/webapps/photomapper-2D.webp", "./images/projects/webapps/photomapper-3D.webp",
-                "./images/projects/webapps/photomapper-settings.webp");
-
-            let pmimageCaptions = new Array("Drag & Drop Photos on 2D or 3D Map", "Photos with GPS data in 2D Map", "Photos with GPS data in 3D Map",
-                "Photo Mapper Settings Options");
-
-            SlideShow.StartSlideShow(pmimageNames, pmimageCaptions);
-            break;
-        case 'project-pmsrv-slides':
-            let pmsrvimageNames = new Array("./images/projects/webapps/photomapper-Drone.webp",
-                "./images/projects/webapps/photomapper-Drone-settings.webp",
-                "./images/projects/webapps/photomapsrv.webp");
-
-            let pmsrvimageCaptions = new Array("Aerial Drone Photos on 2D Map", "Photo Mapper Settings Options", "Drag & Drop Photos on 2D or 3D Map");
-
-            SlideShow.StartSlideShow(pmsrvimageNames, pmsrvimageCaptions);
-            break;
-        case 'project-glb-slides':
-            let imageNames = new Array("./images/projects/shell_extensions/GLB_Thumbnail.webp",
-                "./images/projects/shell_extensions/GLTF_Preview_Image.webp",
-                "./images/projects/shell_extensions/GLBWindowsShellExtension.webp",
-                "./images/projects/shell_extensions/GLTF_Preview_Options.webp",
-                "./images/projects/shell_extensions/GLTF_Preview_Image_Directory.webp");
-
-            let imageCaptions = new Array("Automatic .GLB Thumbnails", "By File(s): Generate preview image for selected .GLTF file(s)",
-                "By File(s): Generate preview image for selected .GLTF file(s)",
-                "Options for .GLTF preview image size and format", "By Directory: Generate All preview images for .GLTF files in directory");
-
-            SlideShow.StartSlideShow(imageNames, imageCaptions);
-            break;
-        case 'project-landxml-slides':
-            let lximageNames = new Array("./images/projects/shell_extensions/LandXML2glTFSample2.webp",
-                "./images/projects/shell_extensions/LandXML2glTFMenu.webp");
-
-            let lximageCaptions = new Array("Generates 3D GLTF File", "By File(s): Generate GLTF for selected LandXML file(s)");
-
-            SlideShow.StartSlideShow(lximageNames, lximageCaptions);
-            break;
-
-        case 'project-pc-slides':
-            let pcimageNames = new Array("./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp",
-                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp",
-                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp",
-                "./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp", "./images/projects/shell_extensions/Pointcloud_Preview_Options.webp");
-
-            let pcimageCaptions = new Array("By File(s): Generate a 3D preview image for .LAS/.LAZ file(s)", "Generate a MERGED preview image for selected .LAS/.LAZ file(s)",
-                "Sample merged 3D preview image for 15 .LAZ files", "By Directory: Generate All preview images for .LAS/.LAZ files in directory",
-                "Options for .LAS/.LAZ preview image size and format");
-
-            SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
-            break;
-    }
-}
 
 function onTabClick(event) {
     event.preventDefault();
@@ -152,5 +78,4 @@ if (tabs) {
         tabs[ii].addEventListener('click', onTabClick);
     };
 }
-
 

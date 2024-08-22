@@ -1,14 +1,21 @@
 .message-modal {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
   position: fixed;
-  left: 25%;
-  top: 30%;
+  top: 50dvh;
+  left: 50dvw;
+  margin:0;
   padding: 1rem;
+  max-width: 80%;
+  max-height: 80%;
   width: fit-content;
   height: fit-content;
   background-color: #aaaaaa;
   z-index: 1000;
-  border-radius: 10px;
+  border-radius: 15px;
+  transform: translate(-50%, -50%);
 }
 
 .message-modal-hide {
@@ -16,28 +23,45 @@
 }
 
 .message-modal-show {
-  display: block;
+  display: flex;
 }
 
 /* Modal Content */
 
 .message-dialog {
-    display: block;
-    justify-content: center;
-    align-content: center;
-}
-  
-.message-form-fieldset {
   display: flex;
-  align-self: center;
-  max-width: 350px;
-  margin-top: 0.25rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  vertical-align: top;
-  border: 2px solid black;
-  border-radius: 6px;
+  margin: 0rem;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
+
+.message-text {
+  display: flex;
+  word-wrap: normal;
+  align-self: center;
+  width: fit-content;
+  height: fit-content;
+  margin: 0.5rem;
+  padding: 0px;
+  overflow: auto;
+}
+
+.message-div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  max-width: 75dvw;
+  max-height: 75dvh;
+  overflow: auto;
+  border: 3px solid black;
+  border-radius: 15px;
+}
+
 
 .message-legend {
   font-size: 1.2rem;
@@ -47,26 +71,30 @@
   padding: 0;
 }
 
-.message-text {
-  margin: 0.5rem;
+.message-form-fieldset {
+  display: flex;
+  align-self: center;
+  width: fit-content;
+  height: fit-content;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
   vertical-align: top;
-  padding: 0px;
-  color: black;
-  float: left;
-  font-size: 1rem;
+  border: 2px solid black;
+  border-radius: 6px;
 }
+
+
 
 .message-button-bar {
   margin: 0;
-  padding:0;
+  padding: 0;
   display: flex;
-  position: relative;
-  left: 40%;
-  flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   align-content: center;
+  flex-wrap: wrap;
   grid-gap: 1rem;
-  width: fit-content;
+  /* width: fit-content; */
   color: #aaaaaa;
   background-color: #aaaaaa;
 }
@@ -74,8 +102,8 @@
 .message-button-ok {
   display: flex;
   padding: 0.25rem;
-  background-color: cornsilk ;
-  border: 0.25rem  lightgreen;
+  background-color: cornsilk;
+  border: 0.25rem lightgreen;
   border-style: solid;
   border-radius: 10px;
 }
@@ -85,7 +113,7 @@
   vertical-align: middle;
   padding: 0.25rem;
   background-color: cornsilk;
-  border: 0.25rem   darkred;
+  border: 0.25rem darkred;
   border-style: solid;
   border-radius: 10px;
 }

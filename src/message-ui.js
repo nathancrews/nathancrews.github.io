@@ -65,28 +65,29 @@
 export class MessageUIClass {
 
     _messageDialog = null;
-    _messageLegend = null;
-    _messageText = null;
-    _messageTextnode = null;
+    _messageTitleText = null;
+    _messageDivNode = null;
     _messageOkButton = null;
     _messageCancelButton = null;
     _okAction = null;
+    _returnStatus = false;
 
     constructor() {
 
         this._messageDialog = document.getElementsByClassName("message-modal")[0];
-        this._messageLegend = document.getElementsByClassName("message-legend")[0];
-        this._messageText = document.getElementsByClassName("message-text")[0];
-        this._messageOkButton = document.getElementsByClassName("message-button-ok")[0];
-        this._messageCancelButton = document.getElementsByClassName("message-button-cancel")[0];
+        this._messageTitleText = this._messageDialog.getElementsByClassName("message-text")[0];
+        this._messageDivNode = this._messageDialog.getElementsByClassName("message-div")[0];
+        this._messageOkButton = this._messageDialog.getElementsByClassName("message-button-ok")[0];
+        this._messageCancelButton = this._messageDialog.getElementsByClassName("message-button-cancel")[0];
         console.log("MessageUIClass constructor called");
     }
 
     // message dialog UI
 
     OkButtonClickEvent(event) {
-
         event.preventDefault = true;
+
+        this._returnStatus = true;
         MessageUI.HideMessage();
         if (MessageUI._okAction) {
             //console.log("Ok, calling: ", MessageUI._okAction);
@@ -95,14 +96,26 @@ export class MessageUIClass {
     }
 
     CancelButtonClickEvent(event) {
-
         event.preventDefault = true;
+
+        this._returnStatus = false;
         console.log("MessageBox Cancelled");
         MessageUI.HideMessage();
     }
 
     ShowMessage(inTitle, inMessage, inAction) {
         //console.log("messageDialog.style.display: ", this._messageDialog.style.display);
+
+        if (!this._messageDialog || !this._messageTitleText || !this._messageDivNode) {
+            console.log("messageDialog HTML not found!");
+            return this._returnStatus;
+        }
+
+        this._messageTitleText.innerHTML = '';
+        this._messageDivNode.innerHTML = '';
+
+        this._messageTitleText.innerHTML = inTitle;
+        this._messageDivNode.innerHTML = inMessage;
 
         this._okAction = inAction;
         this._messageOkButton.onclick = this.OkButtonClickEvent;
@@ -117,16 +130,8 @@ export class MessageUIClass {
             this._messageCancelButton.style.display = 'flex';
         }
 
-        this._messageLegend.innerHTML = inTitle;
-        this._messageTextnode = document.createElement("div");
-
-        if (this._messageTextnode) {
-            this._messageTextnode.innerHTML = inMessage;
-            this._messageText.appendChild(this._messageTextnode);
-        }
-        
         if (!this._messageDialog.style.display || this._messageDialog.style.display == 'none') {
-            this._messageDialog.style.display = "block";
+            this._messageDialog.style.display = "flex";
         }
 
         this._messageDialog.showModal();
@@ -138,10 +143,10 @@ export class MessageUIClass {
 
         this._messageDialog.style.display = 'none';
 
-        if (this._messageTextnode) {
-            this._messageText.removeChild(this._messageTextnode);
+        if (this._messageDivNode) {
+            this._messageTitleText.innerHTML = '';
+            this._messageDivNode.innerHTML = '';
         }
-        this._messageTextnode = null;
 
     }
 }

@@ -43,15 +43,30 @@
 //    <span id="slide-show-close" class="slide-show-close">&times;</span>
 //  </dialog>
 //
-// Example Usage:
+// Example HTML only Usage:
+//
+//<div class="project-image-caption-slides" data-slide-show-id="my-slides"
+//        data-slide-show-slide-images = "./images/slide-image1.webp, ./images/slide-image2.webp"
+//        data-slide-show-slide-image-captions = "Slide Caption Text 1, Slide Caption Text 2"
+//        onclick="SlideShow.StartSlideShowFromElement(event)">
+//  View Slide Show
+//</div>
+//
+//
+// Example Code Usage:
 //
 // let imageNames = new Array("./images/image1.jpg",./images/image2.jpg", ./images/image3.jpg");
 // let imageCaptions = new Array("Image Caption 1", "Image Caption 2", "Image Caption 3",);
 //
 // SlideShow.StartSlideShow(pcimageNames, pcimageCaptions);
 //
+// Notes:
+// User's can close the slideShow dialog by clicking the close button, 
+// clicking anywhere else on the page or pressing the Escape key
+//
 ////////////////////////////////////////////////////////////////////////////////////
-export class SlideShowClass {
+
+class SlideShowClass {
 
   slideIndex = 0;
   slideShowDialog = null;
@@ -82,8 +97,116 @@ export class SlideShowClass {
     this.imageCaptions = null;
   }
 
+  StartSlideShowFromElement(evt) {
+
+    let imagesArray = null;
+    let imageCaptionArray = null;
+
+    if (!evt || !evt.target || !evt.target.dataset || !evt.target.dataset.slideShowSlideImages) {
+      console.log("Error: StartSlideShowFromElement event bad data: ", evt);
+      console.log("evt.target: ", evt.target);
+      console.log("evt.target.dataset: ", evt.target.dataset);
+      console.log("evt.target.dataset.slideShowSlideImages: ", evt.target.dataset.slideShowSlideImages);
+    }
+
+    let imgStrs = evt.target.dataset.slideShowSlideImages;
+
+    if (imgStrs) {
+      imagesArray = imgStrs.split(',');
+    }
+
+    if (evt.target.dataset.slideShowSlideImageCaptions) {
+      let capStrs = evt.target.dataset.slideShowSlideImageCaptions;
+
+      if (capStrs) {
+        imageCaptionArray = capStrs.split(',');
+      }
+    }
+
+    SlideShow.StartSlideShow(imagesArray, imageCaptionArray)
+  }
+
+  StartSlideShow(imagesArray, imageCaptionArray) {
+
+    // reset the slideShow
+    this.RemoveSlides();
+
+    if (!imagesArray.length) {
+      console.log("images Array is empty!");
+      return;
+    }
+
+    // If no image captions provided, just display the image name as caption
+
+    if (!imageCaptionArray) {
+      imageCaptionArray = new Array();
+      for (let ii = 0; ii < imagesArray.length; ii++) {
+        imageCaptionArray.push(imagesArray[ii])
+      }
+    }
+
+    this.SetSlideImages(imagesArray);
+    this.SetSlideCaptions(imageCaptionArray);
+
+    this.slideShowDialog = document.getElementById("slide-show-dialog");
+    this.slideShowNextButton = document.getElementById("slide-show-next-btn");
+    this.slideShowPrevButton = document.getElementById("slide-show-prev-btn");
+    this.captionText = this.slideShowDialog.getElementsByClassName("slide-caption-text")[0];
+
+    this.slideShowContainer = document.getElementById("slide-show-container");
+
+    this.slideShowRowContainer = document.createElement('div');
+    this.slideShowRowContainer.id = "slide-show-row-container";
+    this.slideShowRowContainer.classList.add("row");
+    this.slideShowRowContainer.classList.add("slide-show-row-container");
+
+    let newSlidesDivElem = document.createElement('div');
+    newSlidesDivElem.id = "newSlidesDiv";
+    newSlidesDivElem.className = "newSlidesDiv";
+
+    this.AddSlideImages(newSlidesDivElem);
+
+    this.slideShowContainer.appendChild(newSlidesDivElem);
+    this.slideShowContainer.appendChild(this.slideShowRowContainer);
+
+    // Hook up event handlers
+    this.slideShowCloseButton = document.getElementById("slide-show-close");
+    this.slideShowCloseButton.onclick = this.onClose;
+    this.slideShowNextButton.onclick = this.plusSlides;
+    this.slideShowPrevButton.onclick = this.prevSlides;
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      let slidesFound = false;
+      if (event.target.classList) {
+        for (let ii = 0; ii < event.target.classList.length; ii++) {
+          // console.log("event.target.classList[ii]: ", event.target.classList[ii]);
+          if (event.target.classList[ii].indexOf("slide") != -1) {
+            slidesFound = true;
+            break;
+          }
+        }
+      }
+
+      if (!slidesFound) {
+        SlideShow.onClose();
+      }
+    }
+
+    window.onkeydown = function (event) {
+      event.preventDefault = true;
+      if ((event.keyCode === 27) || event.key === "Escape") {
+          SlideShow.onClose();
+      }
+    }
+
+    this.showSlides(0);
+    this.slideShowDialog.style.display = "flex";
+  }
+
   RemoveSlides() {
 
+    // clean-up event handlers
     if (this.slideShowCloseButton) {
       this.slideShowCloseButton.removeEventListener('click', this.onClose);
     }
@@ -108,6 +231,7 @@ export class SlideShowClass {
     this.imageNames = null;
     this.imageCaptions = null;
 
+    // clean-up dynamic elements
     let localSlidesDiv = document.getElementById("newSlidesDiv");
 
     if (localSlidesDiv) {
@@ -129,42 +253,10 @@ export class SlideShowClass {
     this.imageCaptions = imageCaptions;
   }
 
-  StartSlideShow(imagesArray, imageCaptionArray) {
-
-    if (!imagesArray.length) {
-      console.log("images Array is empty!");
-      return;
-    }
-
-    if (!imageCaptionArray.length) {
-      for (let ii = 0; ii < imagesArray.length; ii++) {
-        imageCaptionArray.add(this.imagesArray[ii])
-      }
-    }
-
-    this.RemoveSlides();
-
-    this.SetSlideImages(imagesArray);
-    this.SetSlideCaptions(imageCaptionArray);
-
-    this.slideShowDialog = document.getElementById("slide-show-dialog");
-    this.slideShowNextButton = document.getElementById("slide-show-next-btn");
-    this.slideShowPrevButton = document.getElementById("slide-show-prev-btn");
-    this.captionText = this.slideShowDialog.getElementsByClassName("slide-caption-text")[0];
-
-    this.slideShowContainer = document.getElementById("slide-show-container");
-
-    this.slideShowRowContainer = document.createElement('div');
-    this.slideShowRowContainer.id = "slide-show-row-container";
-    this.slideShowRowContainer.classList.add("row");
-    this.slideShowRowContainer.classList.add("slide-show-row-container");
-
-    let newSlidesDiv = document.createElement('div');
-    newSlidesDiv.id = "newSlidesDiv";
-    newSlidesDiv.className = "newSlidesDiv";
-
+  AddSlideImages(newSlidesDivElem) {
     for (let ii = 0; ii < this.imageNames.length; ii++) {
 
+      // Add the slide image
       let newSlide = document.createElement('div');
       newSlide.classList.add("slide-show-slides");
       newSlide.style.display = "none";
@@ -174,8 +266,9 @@ export class SlideShowClass {
       newSlideImage.src = this.imageNames[ii];
 
       newSlide.appendChild(newSlideImage);
-      newSlidesDiv.appendChild(newSlide);
+      newSlidesDivElem.appendChild(newSlide);
 
+      // Add the cursor image row
       let newSlideRow = document.createElement("div");
       newSlideRow.classList.add("slide-column");
 
@@ -190,69 +283,8 @@ export class SlideShowClass {
       this.slideShowRowContainer.appendChild(newSlideRow);
     }
 
-    this.slideShowContainer.appendChild(newSlidesDiv);
-    this.slideShowContainer.appendChild(this.slideShowRowContainer);
-
-    this.slideShowCloseButton = document.getElementById("slide-show-close");
-    this.slideShowCloseButton.onclick = this.onClose;
-    this.slideShowNextButton.onclick = this.plusSlides;
-    this.slideShowPrevButton.onclick = this.prevSlides;
-
     this.slides = this.slideShowContainer.getElementsByClassName("slide-show-slides");
     this.rowSlides = this.slideShowRowContainer.getElementsByClassName("slide-row-image");
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-      let slidesFound = false;
-      if (event.target.classList) {
-        for (let ii = 0; ii < event.target.classList.length; ii++) {
-
-          console.log("event.target.classList[ii]: ", event.target.classList[ii]);
-          if (event.target.classList[ii].indexOf("slide") != -1) {
-            slidesFound = true;
-            break;
-          }
-        }
-      }
-
-      if (slidesFound == false) {
-        SlideShow.onClose();
-      }
-    }
-
-    this.showSlides(0);
-    this.slideShowDialog.style.display = "flex";
-
-  }
-
-  onClose(event) {
-    console.log("close clicked");
-
-    let localSlideShowDialog = document.getElementById("slide-show-dialog");
-
-    localSlideShowDialog.style.display = "none";
-
-    SlideShow.RemoveSlides();
-  }
-
-  plusSlides(event) {
-    SlideShow.showSlides(SlideShow.slideIndex += 1);
-    //console.log("next clicked, index : ", SlideShow.slideIndex);
-  }
-
-  prevSlides(event) {
-    SlideShow.showSlides(SlideShow.slideIndex -= 1);
-    //console.log("prev clicked, index : ", SlideShow.slideIndex);
-  }
-
-  SetCurrentSlide(event) {
-    //console.log("event.target.slideIndex  : ", event.target.slideIndex);
-    let n = event.target.slideIndex;
-    SlideShow.showSlides(SlideShow.slideIndex = n);
-  }
-
-  currentSlide(n) {
-    SlideShow.showSlides(SlideShow.slideIndex = n);
   }
 
   showSlides(slideNumber) {
@@ -282,6 +314,40 @@ export class SlideShowClass {
     this.captionText.innerHTML = this.imageCaptions[this.slideIndex];
   }
 
+  ///////////////////////////////////////////////////////////
+  // Start Event Handlers
+  
+  onClose(event) {
+    console.log("closing SlideShow");
+
+    let localSlideShowDialog = document.getElementById("slide-show-dialog");
+
+    localSlideShowDialog.style.display = "none";
+
+    SlideShow.RemoveSlides();
+  }
+
+  plusSlides(event) {
+    SlideShow.showSlides(SlideShow.slideIndex += 1);
+  }
+
+  prevSlides(event) {
+    SlideShow.showSlides(SlideShow.slideIndex -= 1);
+  }
+
+  SetCurrentSlide(event) {
+    let n = event.target.slideIndex;
+    SlideShow.showSlides(SlideShow.slideIndex = n);
+  }
+
+  currentSlide(n) {
+    SlideShow.showSlides(SlideShow.slideIndex = n);
+  }
+
+  // End Event Handlers
+  ///////////////////////////////////////////////////////////
+
 }
 
-export let SlideShow = new SlideShowClass();
+let SlideShow = new SlideShowClass();
+
