@@ -176,11 +176,19 @@ class SlideShowClass {
     this.slideShowPrevButton.onclick = this.prevSlides;
 
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
+    window.onclick = this.OnWindowClickEvent;
+    window.onkeydown = this.OnWindowKeyDownEvent;
+
+    this.showSlides(0);
+    this.slideShowDialog.style.display = "flex";
+  }
+
+  OnWindowClickEvent(event) {
+    if (SlideShow.slideShowDialog && SlideShow.slideShowDialog.style.display != 'none') {
+
       let slidesFound = false;
       if (event.target.classList) {
         for (let ii = 0; ii < event.target.classList.length; ii++) {
-          // console.log("event.target.classList[ii]: ", event.target.classList[ii]);
           if (event.target.classList[ii].indexOf("slide") != -1) {
             slidesFound = true;
             break;
@@ -192,21 +200,24 @@ class SlideShowClass {
         SlideShow.onClose();
       }
     }
+  }
 
-    window.onkeydown = function (event) {
+  OnWindowKeyDownEvent(event) {
+    if (SlideShow.slideShowDialog.style.display != 'none') {
       event.preventDefault = true;
       if ((event.keyCode === 27) || event.key === "Escape") {
-          SlideShow.onClose();
+        SlideShow.onClose();
       }
     }
-
-    this.showSlides(0);
-    this.slideShowDialog.style.display = "flex";
   }
 
   RemoveSlides() {
 
     // clean-up event handlers
+
+    window.removeEventListener('click', this.OnWindowClickEvent);
+    window.removeEventListener('keydown', this.OnWindowKeyDownEvent);
+
     if (this.slideShowCloseButton) {
       this.slideShowCloseButton.removeEventListener('click', this.onClose);
     }
@@ -316,7 +327,7 @@ class SlideShowClass {
 
   ///////////////////////////////////////////////////////////
   // Start Event Handlers
-  
+
   onClose(event) {
     console.log("closing SlideShow");
 

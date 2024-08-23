@@ -32,29 +32,83 @@ import { MessageUI } from "./message-ui.js";
 
 let landxmlDetailsBtn = document.getElementById('project-landxml-details-btn');
 
-landxmlDetailsBtn.onclick = showLandxmlDetails;
+if (landxmlDetailsBtn) {
+    landxmlDetailsBtn.onclick = showLandxmlDetails;
+}
 
-function showLandxmlDetails(event){
+function showLandxmlDetails(event) {
 
     let landxmlDetails = document.getElementById('project-landxml-details');
-
-    MessageUI.ShowMessage("<p>LandXML to GLTF Format Converter and Windows Shell Extension</p>", 
-                          landxmlDetails.innerHTML, null);
+    if (landxmlDetails) {
+        MessageUI.ShowMessage("<p>LandXML to GLTF Format Converter & Windows Shell Extension</p>",
+            landxmlDetails.innerHTML, null);
+    }
 }
 
 let pmDetailsBtn = document.getElementById('project-pm-details-btn');
-
-pmDetailsBtn.onclick = showPMDetails;
-
-function showPMDetails(event){
-
-    let pmDetails = document.getElementById('project-pm-details');
-
-    MessageUI.ShowMessage("<p>Photo Mapper browser-only web application</p>", 
-                          pmDetails.innerHTML, null);
+if (pmDetailsBtn) {
+    pmDetailsBtn.onclick = showPMDetails;
 }
 
+function showPMDetails(event) {
 
+    let pmDetails = document.getElementById('project-pm-details');
+    if (pmDetails) {
+        MessageUI.ShowMessage("<p>Photo Mapper Browser-only Web Application</p>", pmDetails.innerHTML, null);
+    }
+}
+
+let pcDetailsBtn = document.getElementById('project-pc-details-btn');
+if (pcDetailsBtn) {
+    pcDetailsBtn.onclick = showPCDetails;
+}
+
+function showPCDetails(event) {
+
+    let pcDetails = document.getElementById('project-pc-details');
+    if (pcDetails) {
+        MessageUI.ShowMessage("<p>Pointcloud Quickview Windows Shell Extension</p>", pcDetails.innerHTML, null);
+    }
+}
+
+let glbDetailsBtn = document.getElementById('project-glb-details-btn');
+if (glbDetailsBtn) {
+    glbDetailsBtn.onclick = showglbDetails;
+}
+
+function showglbDetails(event) {
+
+    let glbDetails = document.getElementById('project-glb-details');
+    if (glbDetails) {
+        MessageUI.ShowMessage("<p>GLTF/GLB Windows Shell Extension</p>", glbDetails.innerHTML, null);
+    }
+}
+
+let wcDetailsBtn = document.getElementById('project-wc-details-btn');
+if (wcDetailsBtn) {
+    wcDetailsBtn.onclick = showwcDetails;
+}
+
+function showwcDetails(event) {
+
+    let wcDetails = document.getElementById('project-wc-details');
+    if (wcDetails) {
+        MessageUI.ShowMessage("<p>Web Browser UI Components</p>", wcDetails.innerHTML, null);
+    }
+}
+
+let pmsrvcDetailsBtn = document.getElementById('project-pmsrv-details-btn');
+if (pmsrvcDetailsBtn) {
+    pmsrvcDetailsBtn.onclick = showpmsrvDetails;
+}
+
+function showpmsrvDetails(event) {
+
+    let pmsrvDetails = document.getElementById('project-pmsrv-details');
+    if (pmsrvDetails) {
+        MessageUI.ShowMessage("<p>Photo Mapper Client/Server Web Application</p>", pmsrvDetails.innerHTML, null);
+    }
+}
 
 function onTabClick(event) {
     event.preventDefault();

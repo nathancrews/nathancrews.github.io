@@ -103,7 +103,10 @@ export class MessageUIClass {
         //console.log("messageDialog.style.display: ", this._messageDialog.style.display);
 
         if (!this._messageDialog || !this._messageTitleText || !this._messageDivNode) {
-            console.log("messageDialog HTML not found!");
+            console.log("messageDialog HTML data not found!");
+            console.log("_messageDialog: ", this._messageDialog);
+            console.log("_messageTitleText: ", this._messageTitleText);
+            console.log("_messageDivNode: ", this._messageDivNode);
             return this._returnStatus;
         }
 
