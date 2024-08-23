@@ -269,7 +269,7 @@ font-size: large;
 
 .project-title {
   font-size: large;
-  color:cornsilk;
+  color:black;
   text-align: center;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid black;
@@ -349,6 +349,7 @@ img.project-image {
 .description-text {
   height: 6rem;
   font-size: medium;
+  font-weight:400;
   text-align: left;
   margin: 1rem;
 }
