@@ -6,12 +6,14 @@
   width:fit-content;
   background:cornsilk; 
   color: black; 
-  padding: 5px; 
+  padding: 0.33rem; 
   margin: 0;
-  font-size: larger; 
-  font-weight: bolder;
+  font-size: large; 
+  font-weight: bold;
   text-align: center;
+  height: 1.2rem;
   opacity: 0.6;
+  border-radius: 10px;
 }
 
 .slide-button-caption:hover {

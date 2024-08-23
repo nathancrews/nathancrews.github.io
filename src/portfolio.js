@@ -29,14 +29,18 @@
 import { MessageUI } from "./message-ui.js";
 
 
-// function test(){
-//     MessageUI.ShowMessage("<p>Portfolio aldkjsajdlsajdlsdj jdsljdlsajdskjasl jsakdjlasjdlkasjd</p>", 
-//                                 "<p>source code</p> \
-//                                 <img src='images/settings.png' style='width:400px'/>", null);
-// }
 
-// test();
+let landxmlDetailsBtn = document.getElementById('project-landxml-details-btn');
 
+landxmlDetailsBtn.onclick = showLandxmlDetails;
+
+function showLandxmlDetails(event){
+
+    let landxmlDetails = document.getElementById('project-landxml-details');
+
+    MessageUI.ShowMessage("<p>LandXML to GLTF Format Converter and Windows Shell Extension</p>", 
+                          landxmlDetails.innerHTML, null);
+}
 
 
 function onTabClick(event) {

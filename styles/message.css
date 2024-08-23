@@ -39,7 +39,8 @@
 
 .message-text {
   display: flex;
-  word-wrap: normal;
+  word-wrap:break-word;
+  word-break: break-word;
   align-self: center;
   width: fit-content;
   height: fit-content;
@@ -49,8 +50,8 @@
 }
 
 .message-div {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  justify-content: left;
   align-content: center;
   flex-wrap: wrap;
   margin: 0.5rem;
@@ -100,6 +101,7 @@
 }
 
 .message-button-ok {
+  cursor: pointer;
   display: flex;
   padding: 0.25rem;
   background-color: cornsilk;
@@ -109,6 +111,7 @@
 }
 
 .message-button-cancel {
+  cursor: pointer;
   display: flex;
   vertical-align: middle;
   padding: 0.25rem;

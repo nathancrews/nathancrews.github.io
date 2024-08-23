@@ -36,18 +36,14 @@
 //
 // <!-- Modal message dialog -->
 // <dialog class="message-modal message-modal-hide">
-//     <form>
-//         <div class="message-dialog">
-//             <fieldset class="message-form-fieldset">
-//                 <legend class="message-legend">Message</legend>
-//                 <div class="message-text"></div>
-//             </fieldset>
-//             <div class="message-button-bar">
-//                 <button id="ok" class="message-button-ok" type="button">Ok</button>
-//                 <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
-//             </div>
-//         </div>
-//     </form>
+// <form class="message-dialog">
+//       <div class="message-text"></div>
+//       <div class="message-div"></div>
+// </form>
+// <div class="message-button-bar">
+//   <button id="ok" class="message-button-ok" type="button">Ok</button>
+//   <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
+// </div>
 // </dialog>
 //
 //

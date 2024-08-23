@@ -22,6 +22,37 @@ h2 {
   text-align: left;
 }
 
+.about-a{
+  padding:0.25rem;
+  color:darkblue;
+  font-size: small;
+  border-radius: 5px;
+}
+
+.about-a:hover{
+  background-color:cornsilk;
+}
+
+ul{
+  padding-top: 0.25rem;
+}
+
+li {
+  list-style: none;
+  padding-bottom: 0.5rem;
+}
+
+.sub-li {
+  margin-left: 1.5rem;
+  font-size: medium;
+}
+
+.sub-li-1 {
+  margin-left: 1.5rem;
+  font-size: medium;
+  color: #5b5b5b;
+}
+
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
@@ -104,6 +135,15 @@ nav li:hover {
   text-align: center;
 }
 
+.about-info{
+  display: inline-grid; 
+  margin: 1rem;
+  padding: 1rem;
+  height: fit-content;
+  background-color: #aaaaaa;
+  border-radius: 20px;
+}
+
 .about-page {
   display: flex;
   flex-wrap: wrap;
@@ -119,10 +159,11 @@ nav li:hover {
   display: flex; 
   flex-wrap: wrap; 
   justify-content: flex-start;
-
+  border-radius: 20px;
 }
 
 .about-text{
+  justify-content:left;
   word-break: normal;
   font-size: large;
   padding: 0rem;
@@ -141,30 +182,6 @@ nav li:hover {
   flex-wrap: wrap; 
   gap: 1rem;
   height:fit-content;
-}
-
-a{
-  color:lightblue;
-}
-
-ul{
-  padding-top: 0.25rem;
-}
-
-li {
-  list-style: none;
-  padding-bottom: 0.5rem;
-}
-
-.sub-li {
-  margin-left: 1.5rem;
-  font-size: medium;
-}
-
-.sub-li-1 {
-  margin-left: 1.5rem;
-  font-size: medium;
-  color: #5b5b5b;
 }
 
 .myphoto{
@@ -286,6 +303,27 @@ img.project-image {
   text-align: center;
 }
 
+.details-button-caption {
+  display: inline-block;
+  align-self: center;
+  cursor: pointer;
+  width:fit-content;
+  background:cornsilk; 
+  color: black; 
+  padding: 0.33rem; 
+  margin: 0;
+  font-size: large; 
+  font-weight: bold;
+  text-align: center;
+  height: 1.2rem;
+  opacity: 0.6;
+  border-radius: 10px;
+}
+
+.details-button-caption:hover {
+  background: darkblue; 
+  color:cornsilk; 
+}
 
 .project-image-caption-slides {
   display: inline-block;
