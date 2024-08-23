@@ -42,6 +42,19 @@ function showLandxmlDetails(event){
                           landxmlDetails.innerHTML, null);
 }
 
+let pmDetailsBtn = document.getElementById('project-pm-details-btn');
+
+pmDetailsBtn.onclick = showPMDetails;
+
+function showPMDetails(event){
+
+    let pmDetails = document.getElementById('project-pm-details');
+
+    MessageUI.ShowMessage("<p>Photo Mapper browser-only web application</p>", 
+                          pmDetails.innerHTML, null);
+}
+
+
 
 function onTabClick(event) {
     event.preventDefault();

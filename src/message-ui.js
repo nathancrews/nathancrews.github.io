@@ -130,12 +130,50 @@ export class MessageUIClass {
             this._messageDialog.style.display = "flex";
         }
 
-        this._messageDialog.showModal();
+      //  this._messageDialog.showModal();
+
+        window.onclick = this.OnWindowClickEvent;
+
+        window.onkeydown = this.OnWindowKeyDownEvent;
+    }
+
+    OnWindowClickEvent(event) {
+        if (MessageUI._messageDialog.style.display != 'none') {
+
+            let classesFound = false;
+            if (event.target.classList) {
+                for (let ii = 0; ii < event.target.classList.length; ii++) {
+                    //console.log("event.target.classList[ii]: ", event.target.classList[ii]);
+                    if ( (event.target.classList[ii].indexOf("message") != -1) || 
+                        (event.target.classList[ii].indexOf("details-button") != -1)) {
+                        classesFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!classesFound) {
+                MessageUI.HideMessage();
+            }
+        }
+    }
+
+    OnWindowKeyDownEvent(event) {
+        if (MessageUI._messageDialog.style.display != 'none') {
+            event.preventDefault = true;
+            if ((event.keyCode === 27) || event.key === "Escape") {
+                MessageUI.HideMessage();
+            }
+        }
     }
 
     HideMessage() {
 
-        this._messageDialog.close();
+        console.log("Hiding Message Box...");
+       // this._messageDialog.close();
+
+        window.removeEventListener('click', this.OnWindowClickEvent);
+        window.removeEventListener('keydown', this.OnWindowKeyDownEvent);
 
         this._messageDialog.style.display = 'none';
 
