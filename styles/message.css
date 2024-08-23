@@ -42,6 +42,7 @@
   word-wrap:break-word;
   word-break: break-word;
   align-self: center;
+  font-size: small;
   width: fit-content;
   height: fit-content;
   margin: 0.5rem;
