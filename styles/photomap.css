@@ -159,6 +159,5 @@ nav li:hover {
   border-radius: 5px;
   cursor: pointer;
   color:blue;
- 
-  border-bottom-color: blue;
+   border-bottom-color: blue;
 }

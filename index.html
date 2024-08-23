@@ -39,7 +39,6 @@
     <nav>
       <ul>
         <li class="tab-button active-tab" data-page="about">About</li>
-        <!-- <li class="tab-button inactive-tab" data-page="projects">Projects</li> -->
         <li class="tab-button inactive-tab" data-page="resume">Resume</li>
       </ul>
     </nav>
@@ -49,19 +48,20 @@
       <div class="about-info">
         <img src="./images/projects/nathan-speaker.webp" class="myphoto" alt="Nathan Crews">
         <p class="about-name myname">Nathan Crews</p>
-        <br/>
-        <span >
+        <br />
+        <span>
           <img src="./images/linkedin-logo.svg" />
           <a class="about-a" rel="noopener" href="https://www.linkedin.com/in/nathancrews4" target="_blank">LinkedIn</a>
         </span>
         <span style="margin:0.25rem;font-size: small;"><img src="./images/utube-logo.svg" width="24px" height="18px" />
-          <a  class="about-a" rel="noopener" href=" https://www.youtube.com/@nathancrews" target="_blank">Youtube</a>
+          <a class="about-a" rel="noopener" href=" https://www.youtube.com/@nathancrews" target="_blank">Youtube</a>
         </span>
         <span style="margin:0.25rem;font-size: small;"><img src="./images/github-logo.svg" />
-          <a  class="about-a" rel="noopener" href="https://github.com/nathancrews" target="_blank">Github</a>
+          <a class="about-a" rel="noopener" href="https://github.com/nathancrews" target="_blank">Github</a>
         </span>
         <span style="margin:0.25rem;font-size: small;"><img src="./images/sourceforge-logo.svg" />
-          <a  class="about-a" rel="noopener" href="https://sourceforge.net/u/nathancrews/profile/" target="_blank">SourceForge</a>
+          <a class="about-a" rel="noopener" href="https://sourceforge.net/u/nathancrews/profile/"
+            target="_blank">SourceForge</a>
         </span>
       </div>
       <div>
@@ -162,10 +162,14 @@
                     <details class="my-details">
                       <summary class="summary-header-details my-details-sub">Open Standards Participation</summary>
                       <ul class="sub-li-1">
-                        <li>Founder <a href="https://www.landxml.org" target="_blank">LandXML.org</a> (Principal XML Schema Architect)</li>
-                        <li><a href="https://www.iso.org/committee/52172.html" target="_blank">TC-127 Earth-moving machinery</a> (Technical Expert)</li>
-                        <li><a href="https://ecma-international.org/publications-and-standards/standards/ecma-388/" target="_blank">ECMA-388 OpenXPS</a> (Technical Expert)</li>
-                        <li><a href="https://www.ogc.org/" target="_blank">Open Geospatial Consortium</a> (Technical Expert)</li>
+                        <li>Founder <a href="https://www.landxml.org" target="_blank">LandXML.org</a> (Principal XML
+                          Schema Architect)</li>
+                        <li><a href="https://www.iso.org/committee/52172.html" target="_blank">TC-127 Earth-moving
+                            machinery</a> (Technical Expert)</li>
+                        <li><a href="https://ecma-international.org/publications-and-standards/standards/ecma-388/"
+                            target="_blank">ECMA-388 OpenXPS</a> (Technical Expert)</li>
+                        <li><a href="https://www.ogc.org/" target="_blank">Open Geospatial Consortium</a> (Technical
+                          Expert)</li>
                       </ul>
                     </details>
                   </li>
@@ -272,98 +276,244 @@
           with GPS data by dragging and dropping photo image files onto the 2D or 3D map. Supports desktop/laptop/mobile
           browsers.
         </article>
-        <div>
-          <img src="./images/favicon.ico" width="24" height="24" style="padding:0;margin: 0;"/> 
-          <a class="about-a"  href="./photomap.html" target="_blank">Launch Photo Mapper</a>
+        <div style="margin: 0.5rem">
+          <img src="./images/favicon.ico" width="24" height="24" style="padding:0;margin: 0;" />
+          <a class="about-a" href="./photomap.html" target="_blank">Launch Photo Mapper</a>
         </div>
-        <div><img src="./images/utube-logo.svg" width="24px" height="18px" /><a  class="about-a"  href="https://youtu.be/3rAOE-som4c" rel="noopener" target="_blank">
-          Video</a></div>
+        <div style="margin: 0.5rem">
+          <img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
+            href="https://youtu.be/3rAOE-som4c" rel="noopener" target="_blank">
+            Video</a>
+        </div>
         <img anchor-name="photo-mapper-img" id="photo-mapper-img" src="./images/projects/webapps/photomapper-3D.webp"
           class="project-image" width="250" />
-        <div class="slide-button-caption" data-slide-show-id="project-pmc-slides" data-slide-show-slide-images="./images/projects/webapps/photomap.webp, 
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-pm-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-pm-details">
+              <div class="message-text">Browser JavaScript App. Runs client-side only for all file and image processing.
+              </div>
+              <div class="message-text">Languages: JavaScript, HTML, CSS</div>
+              <div class="message-text">Build Tools: Chrome, Edge, Safari</div>
+              <div class="message-text">Platforms: all desktop and mobile browsers</div>
+              <div class="message-text">Framework: DOM JavaScript</div>
+              <div class="message-text">Libraries: leafletJS, CesiumJS, GeoJSON, EXIFReader</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/nathancrews.github.io/blob/main" target="_blank">GitHub
+                  Source</a>
+              </div>
+            </div>
+          </details>
+          <div class="slide-button-caption" data-slide-show-id="project-pmc-slides" data-slide-show-slide-images="./images/projects/webapps/photomap.webp, 
                                           ./images/projects/webapps/photomapper-2D.webp, 
                                           ./images/projects/webapps/photomapper-3D.webp, 
                                           ./images/projects/webapps/photomapper-settings.webp"
-          data-slide-show-slide-image-captions="Drag & Drop Photos on 2D or 3D Map, 
+            data-slide-show-slide-image-captions="Drag & Drop Photos on 2D or 3D Map, 
                                                   Photos with GPS data in 2D Map, 
                                                   Photos with GPS data in 3D Map,
                                                   Photo Mapper Settings Options" ;
-          onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
-          <div id='project-pm-details-btn' class="details-button-caption">Project Details</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div id="project-pm-details">
-            <div class="message-text">Browser JavaScript App. Runs client-side only for all file and image processing.</div>
-            <div class="message-text">Languages: JavaScript, HTML, CSS</div>
-            <div class="message-text">Build Tools: Chrome, Edge, Safari</div>
-            <div class="message-text">Platforms: all desktop and mobile browsers</div>
-            <div class="message-text">Framework: DOM JavaScript</div>
-            <div class="message-text">Libraries: leafletJS, CesiumJS, GeoJSON, EXIFReader</div>
-            <div style="display: block;align-self: center;justify-self: center; border:none">
-              <br /><img src="./images/github-logo.svg" /><a class="about-a" href="https://github.com/nathancrews/nathancrews.github.io/blob/main"
-                target="_blank">GitHub Source</a>
-            </div>
-          </div>
-        </details>
+            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+        </div>
       </box>
       <box class="project">
         <h3 class="project-title">Point Cloud Windows Shell Extension</h3>
         <article class="description-text">Quickview point cloud .LAS/.LAZ files in Windows File Explorer. Right click on
           .LAS/.LAZ files to produce thumbnail images.</article>
-          <div><img src="./images/utube-logo.svg" width="24px" height="18px" /><a  class="about-a"  href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">
-          Video</a></div>
+        <div><img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
+            href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">
+            Video</a></div>
         <img id="project-pc" width="250px" src="./images/projects/shell_extensions/Pointcloud_Preview_Image.webp"
           class="project-image" data-slide-show-id="project-pc-slides" />
-        <div class="slide-button-caption" data-slide-show-id="project-pc-slides" data-slide-show-slide-images="./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp, 
+
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-pc-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-pc-details">
+              <div class="message-text">LAS/LAZ Pointcloud Windows Shell Extension: This "quick viewer" shell extension
+                provides a Windows File Explorer right click menu option to quickly generate 3D preview images for large
+                and small .las and .laz files. (Disclaimer: Processing time depends on compute hardware) Typical
+                processing time for 100mb .las 25mb .laz files is about 2 seconds. Files
+                are processed in parallel using available CPU cores. A second option will create a merged 3D image for
+                all selected .las/laz files. Both menu options support multi-file select and directory processing.
+                <a style="display:contents" href="https://buymeacoffee.com/nathancrews/e/256687"
+                  target="_blank">Pre-built Windows x64 installer available here</a>
+              </div>
+              <div class="message-text">Languages: C++, C#</div>
+              <div class="message-text">Build Tools: Visual Studio 2022</div>
+              <div class="message-text">Platforms: Windows</div>
+              <div class="message-text">Framework: Win API/ATL/Shell, .net</div>
+              <div class="message-text">Libraries: LASLib, PDAL, Open3D, Intel TBB</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/NCrewsShellExtensions" target="_blank">GitHub
+                  Source</a>
+              </div>
+            </div>
+          </details>
+          <div class="slide-button-caption" data-slide-show-id="project-pc-slides" data-slide-show-slide-images="./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp, 
                                         ./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp,
                                         ./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp, 
                                         ./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp, 
                                         ./images/projects/shell_extensions/Pointcloud_Preview_Options.webp"
-          data-slide-show-slide-image-captions="By File(s): Generate a 3D preview image for .LAS/.LAZ file(s), 
+            data-slide-show-slide-image-captions="By File(s): Generate a 3D preview image for .LAS/.LAZ file(s), 
                                                 Generate a MERGED preview image for selected .LAS/.LAZ file(s),
                                                 Sample merged 3D preview image for 15 .LAZ files, 
                                                 By Directory: Generate All preview images for .LAS/.LAZ files in directory,
                                                 Options for .LAS/.LAZ preview image size and format"
-          onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div class="project-details"><a href="https://github.com/nathancrews/NCrewsShellExtensions">GitHub Source</a>
-            <br /><a href="https://sourceforge.net/projects/ncrewsshellextensions/">SourceForge</a>
-          </div>
-        </details>
+            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+        </div>
+      </box>
+      <box class="project">
+        <h3 class="project-title">GLTF/GLB Windows Shell Extension</h3>
+        <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick
+          thumbnail images.</article>
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Video</a>
+        </div>
+        <img id="project-glb" width="250px" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
+          class="project-image" data-slide-show-id="project-glb-slides">
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-glb-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-glb-details">
+              <div class="message-text">This Windows shell extension automatically adds thumbnail images to .glb
+                files in Windows File Explorer. It also provides a right click menu option to generate a 3D preview
+                images for .gltf files.
+                Supports multi-file select and directory processing.
+                <a style="display:contents" href="https://buymeacoffee.com/nathancrews/e/255640"
+                  target="_blank">Pre-built Windows x64 installer available here</a>
+              </div>
+              <div class="message-text">Languages: C++, C#</div>
+              <div class="message-text">Build Tools: Visual Studio 2022</div>
+              <div class="message-text">Platforms: Windows</div>
+              <div class="message-text">Framework: Win API/ATL/Shell, .net</div>
+              <div class="message-text">Libraries: MS GLTF SDK, Open3D, Intel TBB</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/NCrewsShellExtensions" target="_blank">GitHub
+                  Source</a>
+              </div>
+            </div>
+          </details>
+          <div class="slide-button-caption" data-slide-show-id="project-glb-slides" data-slide-show-slide-images="./images/projects/shell_extensions/GLB_Thumbnail.webp,
+                                        ./images/projects/shell_extensions/GLTF_Preview_Image.webp,
+                                        ./images/projects/shell_extensions/GLBWindowsShellExtension.webp,
+                                        ./images/projects/shell_extensions/GLTF_Preview_Options.webp,
+                                        ./images/projects/shell_extensions/GLTF_Preview_Image_Directory.webp"
+            data-slide-show-slide-image-captions="Automatic .GLB Thumbnails, 
+                                                By File(s): Generate preview image for selected .GLTF file(s),
+                                                By File(s): Generate preview image for selected .GLTF file(s),
+                                                Options for .GLTF preview image size and format, 
+                                                By Directory: Generate All preview images for .GLTF files in directory"
+            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+        </div>
+      </box>
+      <box class="project">
+        <h3 class="project-title">LandXML to GLTF Windows Shell Extension</h3>
+        <article class="description-text">In Windows File Explorer, right click on LandXML .xml files to produce a 3D
+          GLTF file. Works for LandXML 1.0 to 2.0 .xml files containing surfaces with optional textures.</article>
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Video</a>
+        </div>
+        <img id="project-landxml" width="250px" src="./images/projects/shell_extensions/LandXML2glTFSample2.webp"
+          class="project-image" data-slide-show-id="project-landxml-slides" />
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-landxml-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-landxml-details">
+              <div class="message-text">Console application that is re-used as a Windows shell extension.
+                A Windows Registry script adds a File Explorer right-click custom menu entry, "Convert to GLTF", for
+                .xml files <a style="display:contents" href="https://buymeacoffee.com/nathancrews/e/256643"
+                  target="_blank">Pre-built Windows x64 installer available here</a></div>
+              <div class="message-text">Languages: C++</div>
+              <div class="message-text">Build Tools: CMake, VS Studio 2022, gcc, XCode</div>
+              <div class="message-text">Platforms: Windows, Linux, MacOS</div>
+              <div class="message-text">Framework: Windows Shell/Registry</div>
+              <div class="message-text">Libraries: STL, Microsoft GLTF SDK, TinyXML</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/LandXML2glTF" target="_blank">GitHub Source</a>
+                <br /><img src="./images/sourceforge-logo.svg" /><a class="about-a"
+                  href="https://sourceforge.net/projects/landxml2gltf/" target="_blank">SourceForge</a>
+              </div>
+            </div>
+          </details>
+          <div class="slide-button-caption" data-slide-show-id="project-landxml-slides" data-slide-show-slide-images="./images/projects/shell_extensions/LandXML2glTFSample2.webp,
+          ./images/projects/shell_extensions/LandXML2glTFMenu.webp" data-slide-show-slide-image-captions="Generates 3D GLTF File, 
+                  By File(s): Generate GLTF for selected LandXML file(s)"
+            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+        </div>
       </box>
       <box class="project">
         <h3 class="project-title">Web UI Components</h3>
         <article class="description-text">Re-usable, CSS stylable, responsive, pure javascript browser UI components:
           pop-up message box, slide show and command/action toolbar.</article>
-        <img id="project-glb" width="250px" src="./images/projects/webapps/map_controls.webp" class="project-image"
-          data-slide-show-id="project-wc-slides">
-        <div class="slide-button-caption" data-slide-show-id="project-wc-slides" data-slide-show-slide-images="./images/projects/webapps/map_controls.webp, 
+        <img id="project-web" width="250px" src="./images/projects/webapps/map_controls.webp" class="project-image">
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-wc-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-wc-details">
+              <div class="message-text">Re-usable, CSS stylable, responsive, pure javascript browser UI components:
+                pop-up message box, slide show and command/action toolbar.
+              </div>
+              <div class="message-text">Languages: JavaScript, HTML, CSS</div>
+              <div class="message-text">Build Tools: Chrome, Edge, Safari</div>
+              <div class="message-text">Platforms: all desktop and mobile browsers</div>
+              <div class="message-text">Framework: DOM JavaScript</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/nathancrews.github.io/blob/main/src/slideshow.js"
+                  target="_blank">SlideShow GitHub
+                  Source</a>
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/nathancrews.github.io/blob/main/src/message-ui.js"
+                  target="_blank">Message Dialog GitHub Source</a>
+              </div>
+            </div>
+          </details>
+          <div class="slide-button-caption" data-slide-show-id="project-wc-slides" data-slide-show-slide-images="./images/projects/webapps/map_controls.webp, 
                                         ./images/projects/webapps/slideshow_component.webp"
-          data-slide-show-slide-image-captions="Easy to add toolbar commands and custom messages, 
+            data-slide-show-slide-image-captions="Easy to add toolbar commands and custom messages, 
                                                 Simple to use and supports many per page (You are using it now...)" ;
-          onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div class="project-details">
-            <a href="https://github.com/nathancrews/nathancrews.github.io/blob/main/src/slideshow.js"
-              target="_blank">SlideShow Source</a>
-            <br />
-            <a href="https://github.com/nathancrews/nathancrews.github.io/blob/main/src/message-ui.js"
-              target="_blank">Message Dialog Source</a>
-          </div>
-        </details>
+            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+        </div>
       </box>
       <box class="project">
         <h3 class="project-title">Photo Mapper Server</h3>
         <article class="description-text">Simple mapping of photos with GPS data. Drag and drop photo image files
           onto the 2D or 3D map or choose files to map. Uses backend rendering code. Supports desktop/laptop/mobile
           browsers.</article>
-          <div>
-            <img src="./images/utube-logo.svg" width="24px" height="18px" /> 
-            <a  class="about-a" href="https://youtu.be/wfOQpKJ3RZo" target="_blank">Video</a>
-          </div>
-          <img src=" ./images/projects/webapps/photomapper-Drone-settings.webp" class="project-image" width="250px" />
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/wfOQpKJ3RZo" target="_blank">Video</a>
+        </div>
+        <img src=" ./images/projects/webapps/photomapper-Drone-settings.webp" class="project-image" width="250px" />
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-pmsrv-details-btn' class="details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-pmsrv-details">
+              <div class="message-text">Client/server photo mapping image processing. Re-uses 90% of client-only Photo Map code. Image processing runs in NodeJS CGI.</div>
+              <div class="message-text">Languages: JavaScript, HTML, CSS</div>
+              <div class="message-text">Build Tools: Chrome, Edge, Safari</div>
+              <div class="message-text">Platforms: all desktop and mobile browsers</div>
+              <div class="message-text">Framework: DOM JavaScript, NodeJS, CGI</div>
+              <div class="message-text">Libraries: TinyJSON, EXIFReader</div>
+              <div style="display: block;align-self: center;justify-self: center; border:none">
+                <br /><img src="./images/github-logo.svg" /><a class="about-a"
+                  href="https://github.com/nathancrews/nathancrews.github.io/blob/main" target="_blank">GitHub
+                  Source</a>
+              </div>
+            </div>
+          </details>
         <div class="slide-button-caption" data-slide-show-id="project-pmsrv-slides" data-slide-show-slide-images="./images/projects/webapps/photomapper-Drone.webp, 
                                         ./images/projects/webapps/photomapper-Drone-settings.webp,
                                         ./images/projects/webapps/photomapsrv.webp"
@@ -371,74 +521,7 @@
                                                 Photo Mapper Settings Options, 
                                                 Drag & Drop Photos on 2D or 3D Map" ;
           onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div class="project-details">put details here</div>
-        </details>
-      </box>
-      <box class="project">
-        <h3 class="project-title">GLTF/GLB Windows Shell Extension</h3>
-        <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick
-          thumbnail images.</article>
-          <div>
-            <img src="./images/utube-logo.svg" width="24px" height="18px" /> 
-            <a  class="about-a" href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Video</a>
-          </div>
-        <img id="project-glb" width="250px" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
-          class="project-image" data-slide-show-id="project-glb-slides">
-        <div class="slide-button-caption" data-slide-show-id="project-glb-slides" data-slide-show-slide-images="./images/projects/shell_extensions/GLB_Thumbnail.webp,
-                                        ./images/projects/shell_extensions/GLTF_Preview_Image.webp,
-                                        ./images/projects/shell_extensions/GLBWindowsShellExtension.webp,
-                                        ./images/projects/shell_extensions/GLTF_Preview_Options.webp,
-                                        ./images/projects/shell_extensions/GLTF_Preview_Image_Directory.webp"
-          data-slide-show-slide-image-captions="Automatic .GLB Thumbnails, 
-                                                By File(s): Generate preview image for selected .GLTF file(s),
-                                                By File(s): Generate preview image for selected .GLTF file(s),
-                                                Options for .GLTF preview image size and format, 
-                                                By Directory: Generate All preview images for .GLTF files in directory"
-          onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div class="project-details"><a href="https://github.com/nathancrews/NCrewsShellExtensions">GitHub Source</a>
-            <br /> <a href="https://sourceforge.net/projects/ncrewsshellextensions/">SourceForge</a>
-          </div>
-        </details>
-      </box>
-      <box class="project">
-        <h3 class="project-title">LandXML to GLTF Windows Shell Extension</h3>
-        <article class="description-text">In Windows File Explorer, right click on LandXML .xml files to produce a 3D
-          GLTF file. Works for LandXML 1.0 to 2.0 .xml files containing surfaces with optional textures.</article>
-          <div>
-            <img src="./images/utube-logo.svg" width="24px" height="18px" /> 
-          <a  class="about-a" href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Video</a>
-          </div>
-          <img id="project-landxml" width="250px" src="./images/projects/shell_extensions/LandXML2glTFSample2.webp"
-          class="project-image" data-slide-show-id="project-landxml-slides" />
-        <div class="slide-button-caption" data-slide-show-id="project-landxml-slides" data-slide-show-slide-images="./images/projects/shell_extensions/LandXML2glTFSample2.webp,
-                                        ./images/projects/shell_extensions/LandXML2glTFMenu.webp"
-          data-slide-show-slide-image-captions="Generates 3D GLTF File, 
-                                                By File(s): Generate GLTF for selected LandXML file(s)"
-          onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show
         </div>
-        <div id='project-landxml-details-btn' class="details-button-caption">Project Details</div>
-        <details class="project-details">
-          <summary>Project Details</summary>
-          <div id="project-landxml-details">
-            <div class="message-text">Builds a console application that is re-used as a Windows shell extension. 
-              A Windows Registry script adds a File Explorer right-click custom menu entry, "Convert to GLTF", for .xml files</div>
-            <div class="message-text">Languages: C++</div>
-            <div class="message-text">Build Tools: CMake, VS Studio 2022, gcc, XCode</div>
-            <div class="message-text">Platforms: Windows, Linux, MacOS</div>
-            <div class="message-text">Framework: Windows Shell/Registry</div>
-            <div class="message-text">Libraries: STL, Microsoft GLTF SDK, TinyXML</div>
-            <div style="display: block;align-self: center;justify-self: center; border:none">
-              <br /><img src="./images/github-logo.svg" /><a class="about-a" href="https://github.com/nathancrews/LandXML2glTF"
-                target="_blank">GitHub Source</a>
-              <br /><img src="./images/sourceforge-logo.svg" /><a class="about-a" href="https://sourceforge.net/projects/landxml2gltf/"
-                target="_blank">SourceForge</a>
-            </div>
-          </div>
-        </details>
       </box>
     </div>
   </div>
