@@ -37,12 +37,13 @@ div.leaflet-popup-content {
   margin-left: 10px;
   margin-right: 0px;
   color: cornsilk;
-  height: 100%;
+  width: 100%;
   display: block;
-  background-image: url(../images/dark-geom-small.jpg);
+  background-color: #444444;
+  /* background-image: url(../images/dark-geom-small.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; */
 }
 
 .map-drop-zone__input {
