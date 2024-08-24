@@ -48,7 +48,7 @@
 //<div class="project-image-caption-slides" data-slide-show-id="my-slides"
 //        data-slide-show-slide-images = "./images/slide-image1.webp, ./images/slide-image2.webp"
 //        data-slide-show-slide-image-captions = "Slide Caption Text 1, Slide Caption Text 2"
-//        onclick="SlideShow.StartSlideShowFromElement(event)">
+//        onclick="SlideShow.StartSlideShowFromElemEvent(event)">
 //  View Slide Show
 //</div>
 //
@@ -97,26 +97,37 @@ class SlideShowClass {
     this.imageCaptions = null;
   }
 
-  StartSlideShowFromElement(evt) {
+  StartSlideShowFromElemEvent(evt) {
 
     let imagesArray = null;
     let imageCaptionArray = null;
 
-    if (!evt || !evt.target || !evt.target.dataset || !evt.target.dataset.slideShowSlideImages) {
-      console.log("Error: StartSlideShowFromElement event bad data: ", evt);
+    if (!evt || !evt.target || !evt.target.dataset) {
+      console.log("Error: StartSlideShowFromElement bad event data: ", evt);
       console.log("evt.target: ", evt.target);
       console.log("evt.target.dataset: ", evt.target.dataset);
-      console.log("evt.target.dataset.slideShowSlideImages: ", evt.target.dataset.slideShowSlideImages);
     }
 
-    let imgStrs = evt.target.dataset.slideShowSlideImages;
+    let slideShowElem = evt.target;
+
+    if (!evt.target.dataset.slideShowSlideImages) {
+      slideShowElem = document.getElementById(evt.target.dataset.slideShowId);
+    }
+
+    if (!slideShowElem) {
+      console.log("Error: StartSlideShowFromElement slideShowID: ", evt);
+      console.log("evt.target.dataset.slideShowId: ", evt.target.dataset.slideShowId);
+      return;
+    }
+
+    let imgStrs = slideShowElem.dataset.slideShowSlideImages;
 
     if (imgStrs) {
       imagesArray = imgStrs.split(',');
     }
 
-    if (evt.target.dataset.slideShowSlideImageCaptions) {
-      let capStrs = evt.target.dataset.slideShowSlideImageCaptions;
+    if (slideShowElem.dataset.slideShowSlideImageCaptions) {
+      let capStrs = slideShowElem.dataset.slideShowSlideImageCaptions;
 
       if (capStrs) {
         imageCaptionArray = capStrs.split(',');
@@ -189,7 +200,8 @@ class SlideShowClass {
       let slidesFound = false;
       if (event.target.classList) {
         for (let ii = 0; ii < event.target.classList.length; ii++) {
-          if (event.target.classList[ii].indexOf("slide") != -1) {
+          if ((event.target.classList[ii].indexOf("slide") != -1) ||
+          (event.target.classList[ii].indexOf("project-image") != -1)) {
             slidesFound = true;
             break;
           }

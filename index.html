@@ -35,14 +35,14 @@
 </head>
 
 <body>
-  <div class="nav-bar">
+  <!-- <div class="nav-bar">
     <nav>
       <ul>
         <li class="tab-button active-tab" data-page="about">About</li>
         <li class="tab-button inactive-tab" data-page="resume">Resume</li>
       </ul>
     </nav>
-  </div>
+  </div> -->
   <div id="about" class="active-page page about-page">
     <div class="about-container">
       <div class="about-info">
@@ -65,8 +65,10 @@
         </span>
       </div>
       <div>
-        <p class="about-text">I am a professional software engineer with diverse work experience, application design, and development skills.</p>
-        <p class="about-text">My goal is to deliver quality software solutions - on time.</p>
+        <p class="about-text">I am a professional software engineer with diverse work experience, application design,
+          and development skills.</p>
+        <p class="about-text about-text-quote">&ldquo;Providing quality software solutions - on time, everytime.&rdquo;
+        </p>
 
         <div class="outer-container">
           <div>
@@ -161,7 +163,7 @@
                     <details class="my-details">
                       <summary class="summary-header-details my-details-sub">Open Standards Participation</summary>
                       <ul class="sub-li-1">
-                        <li>Founder <a href="https://www.landxml.org" target="_blank">LandXML.org</a> (Principal XML
+                        <li>Founder <a href="http://www.landxml.org" target="_blank">LandXML.org</a> (Principal XML
                           Schema Architect)</li>
                         <li><a href="https://www.iso.org/committee/52172.html" target="_blank">TC-127 Earth-moving
                             machinery</a> (Technical Expert)</li>
@@ -275,19 +277,9 @@
           with GPS data by dragging and dropping photo image files onto the 2D or 3D map. Supports desktop/laptop/mobile
           browsers.
         </article>
-        <div style="margin: 0.5rem">
-          <img src="./images/favicon.ico" width="24" height="24" style="padding:0;margin: 0;" />
-          <a class="about-a" href="./photomap.html" target="_blank">Launch Photo Mapper</a>
-        </div>
-        <div style="margin: 0.5rem">
-          <img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
-            href="https://youtu.be/3rAOE-som4c" rel="noopener" target="_blank">
-            Video</a>
-        </div>
-        <img anchor-name="photo-mapper-img" id="photo-mapper-img" src="./images/projects/webapps/photomapper-3D.webp"
-          class="project-image" width="250" />
+
         <div style="display: flex;flex-direction: column;">
-          <div id='project-pm-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-pm-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-pm-details">
@@ -305,36 +297,45 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-pmc-slides" data-slide-show-slide-images="./images/projects/webapps/photomap.webp, 
-                                          ./images/projects/webapps/photomapper-2D.webp, 
-                                          ./images/projects/webapps/photomapper-3D.webp, 
-                                          ./images/projects/webapps/photomapper-settings.webp"
-            data-slide-show-slide-image-captions="Drag & Drop Photos on 2D or 3D Map, 
-                                                  Photos with GPS data in 2D Map, 
+          <div id="project-pmc-slides" class="slide-button-caption" data-slide-show-id="project-pmc-slides" 
+          data-slide-show-slide-images="./images/projects/webapps/photomapper-2D.webp, 
+                                        ./images/projects/webapps/photomapper-3D.webp, 
+                                        ./images/projects/webapps/photomapper-settings.webp"
+            data-slide-show-slide-image-captions="Photos with GPS data in 2D Map, 
                                                   Photos with GPS data in 3D Map,
                                                   Photo Mapper Settings Options" ;
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
         </div>
+        <img id="project-pm-img" src="./images/projects/webapps/photomapper-3D.webp" class="project-image"
+          width="250" 
+          data-slide-show-id="project-pmc-slides"
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)" />
+
+        <div style="margin: 0.5rem">
+          <img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
+            href="https://youtu.be/3rAOE-som4c" rel="noopener" target="_blank">
+            Video</a>
+        </div>
+        <div style="margin: 0.5rem">
+          <a class="about-a" href="./photomap.html" target="_blank">Launch Photo Mapper</a>
+        </div>
+
       </box>
       <box class="project">
         <h3 class="project-title">Point Cloud Windows Shell Extension</h3>
-        <article class="description-text">Quickview point cloud .LAS/.LAZ files in Windows File Explorer. Right click on
+        <article class="description-text">Quickview huge point cloud .LAS/.LAZ files in Windows File Explorer. Right click on
           .LAS/.LAZ files to produce thumbnail images.</article>
-        <div><img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
-            href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">
-            Video</a></div>
-        <img id="project-pc" width="250px" src="./images/projects/shell_extensions/Pointcloud_Preview_Image.webp"
-          class="project-image" data-slide-show-id="project-pc-slides" />
 
         <div style="display: flex;flex-direction: column;">
-          <div id='project-pc-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-pc-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-pc-details">
               <div class="message-text">LAS/LAZ Pointcloud Windows Shell Extension: This "quick viewer" shell extension
                 provides a Windows File Explorer right click menu option to quickly generate 3D preview images for large
                 and small .las and .laz files. Typical
-                processing time for 100mb .las 25mb .laz files is about 2 seconds. (Disclaimer: Processing time depends on compute hardware)</div>
+                processing time for 100mb .las 25mb .laz files is about 2 seconds. (Disclaimer: Processing time depends
+                on compute hardware)</div>
               <div class="message-text">Files are processed in parallel using available CPU cores. A second option will
                 create a merged 3D image for
                 all selected .las/laz files. Both menu options support multi-file select and directory processing.
@@ -353,31 +354,36 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-pc-slides" data-slide-show-slide-images="./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp, 
-                                        ./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp,
-                                        ./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp, 
-                                        ./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp, 
-                                        ./images/projects/shell_extensions/Pointcloud_Preview_Options.webp"
+          <div id="project-pc-slides" class="slide-button-caption" data-slide-show-id="project-pc-slides" data-slide-show-slide-images="./images/projects/shell_extensions/PointCloudWindowsShellExtension.webp, 
+                                            ./images/projects/shell_extensions/Pointcloud_Preview_Image_Merging.webp,
+                                            ./images/projects/shell_extensions/Pointcloud_Preview_Image_Viewing.webp, 
+                                            ./images/projects/shell_extensions/Pointcloud_Preview_Image_Directory.webp, 
+                                            ./images/projects/shell_extensions/Pointcloud_Preview_Options.webp"
             data-slide-show-slide-image-captions="By File(s): Generate a 3D preview image for .LAS/.LAZ file(s), 
-                                                Generate a MERGED preview image for selected .LAS/.LAZ file(s),
-                                                Sample merged 3D preview image for 15 .LAZ files, 
-                                                By Directory: Generate All preview images for .LAS/.LAZ files in directory,
-                                                Options for .LAS/.LAZ preview image size and format"
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+                                                    Generate a MERGED preview image for selected .LAS/.LAZ file(s),
+                                                    Sample merged 3D preview image for 15 .LAZ files, 
+                                                    By Directory: Generate All preview images for .LAS/.LAZ files in directory,
+                                                    Options for .LAS/.LAZ preview image size and format"
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
         </div>
+
+        <img id="project-pc-img" width="250px" src="./images/projects/shell_extensions/Pointcloud_Preview_Image.webp"
+          class="project-image" 
+          data-slide-show-id="project-pc-slides" 
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)" />
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" /><a class="about-a"
+            href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">
+            Video</a>
+        </div>
+
       </box>
       <box class="project">
         <h3 class="project-title">GLTF/GLB Windows Shell Extension</h3>
         <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick
           thumbnail images.</article>
-        <div>
-          <img src="./images/utube-logo.svg" width="24px" height="18px" />
-          <a class="about-a" href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Video</a>
-        </div>
-        <img id="project-glb" width="250px" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
-          class="project-image" data-slide-show-id="project-glb-slides">
         <div style="display: flex;flex-direction: column;">
-          <div id='project-glb-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-glb-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-glb-details">
@@ -400,7 +406,7 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-glb-slides" data-slide-show-slide-images="./images/projects/shell_extensions/GLB_Thumbnail.webp,
+          <div id="project-glb-slides" class="slide-button-caption" data-slide-show-id="project-glb-slides" data-slide-show-slide-images="./images/projects/shell_extensions/GLB_Thumbnail.webp,
                                         ./images/projects/shell_extensions/GLTF_Preview_Image.webp,
                                         ./images/projects/shell_extensions/GLBWindowsShellExtension.webp,
                                         ./images/projects/shell_extensions/GLTF_Preview_Options.webp,
@@ -410,21 +416,26 @@
                                                 By File(s): Generate preview image for selected .GLTF file(s),
                                                 Options for .GLTF preview image size and format, 
                                                 By Directory: Generate All preview images for .GLTF files in directory"
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
         </div>
+
+        <img id="project-glb-img" width="250px" src="./images/projects/shell_extensions/GLBWindowsShellExtension.webp"
+          class="project-image" 
+          data-slide-show-id="project-glb-slides" 
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)">
+
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/5MZkpkvcfAQ" rel="noopener" target="_blank">Video</a>
+        </div>
+
       </box>
       <box class="project">
         <h3 class="project-title">LandXML to GLTF Windows Shell Extension</h3>
         <article class="description-text">In Windows File Explorer, right click on LandXML .xml files to produce a 3D
           GLTF file. Works for LandXML 1.0 to 2.0 .xml files containing surfaces with optional textures.</article>
-        <div>
-          <img src="./images/utube-logo.svg" width="24px" height="18px" />
-          <a class="about-a" href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Video</a>
-        </div>
-        <img id="project-landxml" width="250px" src="./images/projects/shell_extensions/LandXML2glTFSample2.webp"
-          class="project-image" data-slide-show-id="project-landxml-slides" />
         <div style="display: flex;flex-direction: column;">
-          <div id='project-landxml-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-landxml-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-landxml-details">
@@ -445,19 +456,28 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-landxml-slides" data-slide-show-slide-images="./images/projects/shell_extensions/LandXML2glTFSample2.webp,
-          ./images/projects/shell_extensions/LandXML2glTFMenu.webp" data-slide-show-slide-image-captions="Generates 3D GLTF File, 
-                  By File(s): Generate GLTF for selected LandXML file(s)"
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+          <div id="project-landxml-slides" class="slide-button-caption" data-slide-show-id="project-landxml-slides" 
+          data-slide-show-slide-images="./images/projects/shell_extensions/LandXML2glTFSample1.webp,
+                                        ./images/projects/shell_extensions/LandXML2glTFMenu.webp" 
+          data-slide-show-slide-image-captions="Generates 3D GLTF File, 
+                                                By File(s): Generate GLTF for selected LandXML file(s)"
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
+        </div>
+        <img id="project-landxml-img" width="250px" src="./images/projects/shell_extensions/LandXML2glTFSample1.webp"
+          class="project-image" 
+          data-slide-show-id="project-landxml-slides" 
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)"/>
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/4IGm0ef89lw" rel="noopener" target="_blank">Video</a>
         </div>
       </box>
       <box class="project">
         <h3 class="project-title">Web UI Components</h3>
         <article class="description-text">Re-usable, CSS stylable, responsive, pure javascript browser UI components:
           pop-up message box, slide show and command/action toolbar.</article>
-        <img id="project-web" width="250px" src="./images/projects/webapps/map_controls.webp" class="project-image">
         <div style="display: flex;flex-direction: column;">
-          <div id='project-wc-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-wc-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-wc-details">
@@ -479,25 +499,23 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-wc-slides" data-slide-show-slide-images="./images/projects/webapps/map_controls.webp, 
-                                        ./images/projects/webapps/slideshow_component.webp"
+          <div id="project-wc-slides" class="slide-button-caption" data-slide-show-id="project-wc-slides" data-slide-show-slide-images="./images/projects/webapps/map_controls.webp, 
+                                          ./images/projects/webapps/slideshow_component.webp"
             data-slide-show-slide-image-captions="Easy to add toolbar commands and custom messages, 
-                                                Simple to use and supports many per page (You are using it now...)" ;
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+                                                  Simple to use and supports many per page (You are using it now...)" ;
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
         </div>
+        <img id="project-web-img" width="250px" src="./images/projects/webapps/map_controls.webp" class="project-image" 
+        data-slide-show-id="project-wc-slides"
+        onclick="SlideShow.StartSlideShowFromElemEvent(event)">
       </box>
       <box class="project">
         <h3 class="project-title">Photo Mapper Server</h3>
         <article class="description-text">Simple mapping of photos with GPS data. Drag and drop photo image files
           onto the 2D or 3D map or choose files to map. Uses backend rendering code. Supports desktop/laptop/mobile
           browsers.</article>
-        <div>
-          <img src="./images/utube-logo.svg" width="24px" height="18px" />
-          <a class="about-a" href="https://youtu.be/wfOQpKJ3RZo" target="_blank">Video</a>
-        </div>
-        <img src=" ./images/projects/webapps/photomapper-Drone-settings.webp" class="project-image" width="250px" />
         <div style="display: flex;flex-direction: column;">
-          <div id='project-pmsrv-details-btn' class="details-button-caption">Project Details</div>
+          <div id='project-pmsrv-details-btn' class="project-details-button-caption">Project Details</div>
           <details class="project-details">
             <summary>Project Details</summary>
             <div id="project-pmsrv-details">
@@ -515,14 +533,23 @@
               </div>
             </div>
           </details>
-          <div class="slide-button-caption" data-slide-show-id="project-pmsrv-slides" data-slide-show-slide-images="./images/projects/webapps/photomapper-Drone.webp, 
-                                        ./images/projects/webapps/photomapper-Drone-settings.webp,
-                                        ./images/projects/webapps/photomapsrv.webp"
+          <div id="project-pmsrv-slides" class="slide-button-caption" data-slide-show-id="project-pmsrv-slides" data-slide-show-slide-images="./images/projects/webapps/photomapper-Drone.webp, 
+                                          ./images/projects/webapps/photomapper-Drone-settings.webp,
+                                          ./images/projects/webapps/photomapsrv.webp"
             data-slide-show-slide-image-captions="Aerial Drone Photos on 2D Map, 
-                                                Photo Mapper Settings Options, 
-                                                Drag & Drop Photos on 2D or 3D Map" ;
-            onclick="SlideShow.StartSlideShowFromElement(event)">View Slide Show</div>
+                                                  Photo Mapper Settings Options, 
+                                                  Drag & Drop Photos on 2D or 3D Map" ;
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
         </div>
+        <img id="project-pmsrv-img" src=" ./images/projects/webapps/photomapper-Drone-settings.webp"
+          class="project-image" width="250px" 
+          data-slide-show-id="project-pmsrv-slides"
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)"/>
+        <div>
+          <img src="./images/utube-logo.svg" width="24px" height="18px" />
+          <a class="about-a" href="https://youtu.be/wfOQpKJ3RZo" target="_blank">Video</a>
+        </div>
+
       </box>
     </div>
   </div>

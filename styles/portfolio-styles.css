@@ -174,7 +174,12 @@ nav li:hover {
   margin: 1rem;
   text-align: left;
   min-width: 15rem;
-  max-width: 30rem;
+  max-width: 35rem;
+}
+
+.about-text-quote{
+ font-size: larger;
+ font-style: italic;
 }
 
 .outer-container{
@@ -271,8 +276,8 @@ font-size: large;
   font-size: large;
   color:black;
   text-align: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid black;
+  padding-bottom: 0.25rem;
+  border-bottom: 3px solid black;
 }
 
 a.project-image {
@@ -291,11 +296,12 @@ img.project-image {
 }
 
 .project-image {
-  margin: 1rem;
-  width: 250px;
-  max-width: 250px;
+  margin: 0.5rem;
+  width: 300px;
+  max-width: 300px;
   align-self: center;
-  padding: 0.5rem;
+  padding: 0rem;
+  cursor: pointer;
 }
 
 .project-image-caption-launch {
@@ -309,7 +315,7 @@ img.project-image {
   text-align: center;
 }
 
-.details-button-caption {
+.project-details-button-caption {
   display: inline-block;
   align-self: center;
   cursor: pointer;
@@ -326,8 +332,8 @@ img.project-image {
   border-radius: 10px;
 }
 
-.details-button-caption:hover {
-  background: darkblue; 
+.project-details-button-caption:hover {
+  background: darkgreen; 
   color:cornsilk; 
 }
 

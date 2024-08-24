@@ -29,9 +29,7 @@
 import { MessageUI } from "./message-ui.js";
 
 
-
 let landxmlDetailsBtn = document.getElementById('project-landxml-details-btn');
-
 if (landxmlDetailsBtn) {
     landxmlDetailsBtn.onclick = showLandxmlDetails;
 }
@@ -110,43 +108,46 @@ function showpmsrvDetails(event) {
     }
 }
 
-function onTabClick(event) {
-    event.preventDefault();
 
-    event.target.classList.remove("inactive-tab");
-    event.target.classList.add("active-tab");
 
-    let pages = document.getElementsByClassName('page');
-    if (pages) {
-        for (let ii = 0; ii < pages.length; ii++) {
-            if (pages[ii] != event.target) {
-                pages[ii].classList.remove("active-page");
-                pages[ii].classList.add("inactive-page");
-            }
-        };
-    }
 
-    let tabs = document.getElementsByClassName('tab-button');
-    if (tabs) {
-        for (let ii = 0; ii < tabs.length; ii++) {
-            if (event.target != tabs[ii]) {
-                tabs[ii].classList.remove("active-tab");
-                tabs[ii].classList.add("inactive-tab");
-            }
-        };
-    }
+// function onTabClick(event) {
+//     event.preventDefault();
 
-    let pageEl = document.getElementById(event.target.dataset.page);
-    if (pageEl) {
-        pageEl.classList.remove("inactive-page");
-        pageEl.classList.add('active-page');
-    }
-}
+//     event.target.classList.remove("inactive-tab");
+//     event.target.classList.add("active-tab");
 
-let tabs = document.getElementsByClassName('tab-button');
-if (tabs) {
-    for (let ii = 0; ii < tabs.length; ii++) {
-        tabs[ii].addEventListener('click', onTabClick);
-    };
-}
+//     let pages = document.getElementsByClassName('page');
+//     if (pages) {
+//         for (let ii = 0; ii < pages.length; ii++) {
+//             if (pages[ii] != event.target) {
+//                 pages[ii].classList.remove("active-page");
+//                 pages[ii].classList.add("inactive-page");
+//             }
+//         };
+//     }
+
+//     let tabs = document.getElementsByClassName('tab-button');
+//     if (tabs) {
+//         for (let ii = 0; ii < tabs.length; ii++) {
+//             if (event.target != tabs[ii]) {
+//                 tabs[ii].classList.remove("active-tab");
+//                 tabs[ii].classList.add("inactive-tab");
+//             }
+//         };
+//     }
+
+//     let pageEl = document.getElementById(event.target.dataset.page);
+//     if (pageEl) {
+//         pageEl.classList.remove("inactive-page");
+//         pageEl.classList.add('active-page');
+//     }
+// }
+
+// let tabs = document.getElementsByClassName('tab-button');
+// if (tabs) {
+//     for (let ii = 0; ii < tabs.length; ii++) {
+//         tabs[ii].addEventListener('click', onTabClick);
+//     };
+// }
 
