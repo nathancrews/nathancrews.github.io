@@ -102,24 +102,38 @@
 }
 
 .message-button-ok {
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   padding: 0.25rem;
   background-color: cornsilk;
-  border: 0.25rem lightgreen;
-  border-style: solid;
+  color: black;
+  border: 2px solid black;
   border-radius: 10px;
+  opacity: 0.6;
+}
+
+.message-button-ok:hover{
+  background-color: darkgreen;
+  color: cornsilk;
 }
 
 .message-button-cancel {
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   vertical-align: middle;
   padding: 0.25rem;
-  background-color: cornsilk;
-  border: 0.25rem darkred;
-  border-style: solid;
+  background-color: darkred;
+  color: cornsilk;
+  border: 2px solid black;
   border-radius: 10px;
+  opacity: 0.6;
+}
+
+.message-button-cancel:hover{
+  background-color: cornsilk;
+  color: darkred;
 }
 
 .message-close:hover,
