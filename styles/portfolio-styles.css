@@ -47,7 +47,9 @@ li {
 }
 
 .sub-li {
-  margin-left: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  margin-left: 1rem;
   font-size: medium;
 }
 
@@ -183,7 +185,16 @@ nav li:hover {
 }
 
 .outer-container{
-  display: flex; flex-wrap: wrap; justify-content: flex-start;
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content:space-evenly;
+  flex-direction: column;
+}
+
+.inner-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .inner-content{
@@ -222,6 +233,8 @@ font-size: large;
   margin-bottom: 0.5rem;
   font-size: larger;
   font-weight: bold;
+  min-width: 25dvw;
+  max-width: 100dvw;
 }
 
 .summary-header-details{
@@ -262,8 +275,8 @@ font-size: large;
   margin-right: 0.5rem;
   display: flow;
   grid-auto-flow: column;
-  max-width: 350px;
-  min-width: 300px;
+  max-width: 325px;
+  min-width: 250px;
   height: auto;
   text-align: center;
   border: azure;
