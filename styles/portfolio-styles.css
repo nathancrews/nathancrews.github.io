@@ -1,8 +1,8 @@
 * {
   margin: 0px;
   padding: 0px;
-  font-family: 'Roboto';
-  font-weight: 400;
+  font-family: "Roboto";
+  /* font-weight: 400; */
   font-size: 1rem;
 }
 
@@ -22,22 +22,54 @@ h2 {
   text-align: left;
 }
 
-.about-a{
-  padding-top:1rem;
-  padding-bottom:1rem;
+.button {
+  display: inline-block;
+  align-self: center;
+  cursor: pointer;
+  width: fit-content;
+  background: cornsilk;
+  color: black;
+  padding: 0.33rem;
+  margin: 0.5rem;
+  font-size: medium;
+  font-weight: bold;
+  text-align: center;
+  height: fit-content;
+  width: fit-content;
+  max-height: 1.2rem;
+  opacity: 0.6;
+  border-radius: 10px;
+}
+
+a {
+  margin: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.button:hover,
+a:hover {
+  background-color: darkgreen;
+  color: cornsilk;
+}
+
+.a-logo-img {
+  position: relative;
+  top: 4px;
+}
+
+.about-a {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   margin: 0;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  color:darkblue;
+  color: darkblue;
   font-size: small;
   border-radius: 5px;
 }
 
-/* .about-a:hover{
-  background-color:cornsilk;
-} */
-
-ul{
+ul {
   padding-top: 0.25rem;
 }
 
@@ -63,7 +95,7 @@ li {
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
-  background-color:cornsilk;
+  background-color: cornsilk;
   color: darkblue;
   border-bottom: 2px solid darkblue;
   border-radius: 6px;
@@ -78,20 +110,20 @@ li {
 }
 
 .active-page {
-  display:flex;
+  display: flex;
 }
 
 .inactive-page {
   display: none;
 }
 
-.nav-bar{
+.nav-bar {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-content: center;
   min-width: fit-content;
-} 
+}
 
 nav {
   display: flex;
@@ -100,7 +132,7 @@ nav {
   margin: 1rem;
   width: 50vw;
   min-width: fit-content;
-  grid-gap: 1rem; 
+  grid-gap: 1rem;
   background-color: #aaaaaa;
   border-radius: 15px;
 }
@@ -119,18 +151,18 @@ nav li {
 
 nav li:hover {
   cursor: pointer;
-  color:black;
+  color: black;
   background-color: azure;
   border-bottom-color: blue;
 }
 
-.page{
+.page {
   padding: 0;
 }
 
 .page-container {
   flex-wrap: wrap;
-  grid-gap: 1rem; 
+  grid-gap: 1rem;
   padding: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -138,18 +170,19 @@ nav li:hover {
   border-radius: 20px;
 }
 
-.page-title{
+.page-title {
   font-size: x-large;
   font-weight: bold;
   text-align: center;
 }
 
-.about-info{
-  display: inline-grid; 
+.about-info {
+  display: inline-grid;
+  color: cornsilk;
   margin: 1rem;
   padding: 1rem;
   height: fit-content;
-  background-color: #aaaaaa;
+  background-color: #6f6f6f;
   border-radius: 20px;
 }
 
@@ -158,22 +191,22 @@ nav li:hover {
   flex-wrap: wrap;
   margin: 1rem;
   margin-bottom: 0.25rem;
-  padding : 1rem;
-  border: 0.25rem solid  #aaaaaa;
+  padding: 1rem;
+  border: 0.25rem solid #aaaaaa;
   border-radius: 20px;
   color: #222222;
   background-color: cornsilk;
 }
 
-.about-container{
-  display: flex; 
-  flex-wrap: wrap; 
+.about-container {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
   border-radius: 20px;
 }
 
-.about-text{
-  justify-content:left;
+.about-text {
+  justify-content: left;
   word-break: normal;
   font-size: large;
   padding: 0rem;
@@ -183,57 +216,57 @@ nav li:hover {
   max-width: 35rem;
 }
 
-.about-text-quote{
- font-size: larger;
- font-style: italic;
+.about-text-quote {
+  font-size: larger;
+  font-style: italic;
 }
 
-.outer-container{
-  display: flex; 
-  flex-wrap: wrap; 
-  justify-content:space-evenly;
+.outer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   flex-direction: column;
 }
 
-.inner-container{
+.inner-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.inner-content{
-  display: flex; 
-  flex-wrap: wrap; 
+.inner-content {
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  height:fit-content;
+  height: fit-content;
 }
 
-.myphoto{
+.myphoto {
   width: 100px;
   margin: 0.5rem;
-  margin-left : 1rem;
-  margin-right : 0rem;
+  margin-left: 1rem;
+  margin-right: 0rem;
   border-top: 2px solid cornsilk;
   border-right: 2px solid cornsilk;
   border-radius: 100px;
 }
 
-.myname{
+.myname {
   justify-content: center;
 }
 
 .my-details {
-font-size: large;
+  font-size: large;
   margin-left: 1rem;
 }
 
 .my-details-sub {
-  color:#5b5b5b;
+  color: #5b5b5b;
   margin-left: 0.5rem;
   /* list-style-type: "❯ "; */
 }
 
-.summary-header{
+.summary-header {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-size: large;
@@ -242,7 +275,7 @@ font-size: large;
   max-width: 100dvw;
 }
 
-.summary-header-details{
+.summary-header-details {
   font-size: medium;
   font-weight: bold;
 }
@@ -252,7 +285,7 @@ font-size: large;
   font-size: larger;
   text-align: center;
   margin-top: 0.5rem;
-  padding : 0.25rem;
+  padding: 0.25rem;
   height: fit-content;
 }
 
@@ -260,7 +293,7 @@ font-size: large;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  grid-gap: 1rem; 
+  grid-gap: 1rem;
   padding: 0.5rem;
   margin: 0rem;
   margin-top: 0.25rem;
@@ -293,7 +326,7 @@ font-size: large;
 
 .project-title {
   font-size: large;
-  color:black;
+  color: black;
   text-align: center;
   padding-bottom: 0.25rem;
   border-bottom: 3px solid black;
@@ -325,11 +358,11 @@ img.project-image {
 
 .project-image-caption-launch {
   display: inline-block;
-  width:fit-content;
-  color: #aaaaaa; 
-  padding: 5px; 
+  width: fit-content;
+  color: #aaaaaa;
+  padding: 5px;
   margin: 0;
-  font-size: medium; 
+  font-size: medium;
   font-weight: normal;
   text-align: center;
 }
@@ -338,12 +371,12 @@ img.project-image {
   display: inline-block;
   align-self: center;
   cursor: pointer;
-  width:fit-content;
-  background:cornsilk; 
-  color: black; 
-  padding: 0.33rem; 
+  width: fit-content;
+  background: cornsilk;
+  color: black;
+  padding: 0.33rem;
   margin: 0.5rem;
-  font-size: medium; 
+  font-size: medium;
   font-weight: bold;
   text-align: center;
   height: 1.2rem;
@@ -352,21 +385,21 @@ img.project-image {
 }
 
 .project-details-button-caption:hover {
-  background: darkgreen; 
-  color:cornsilk; 
+  background: darkgreen;
+  color: cornsilk;
 }
 
 .project-image-caption-slides {
   display: inline-block;
   align-self: center;
   cursor: pointer;
-  width:fit-content;
-  background:cornsilk; 
-  color: black; 
-  padding: 5px; 
+  width: fit-content;
+  background: cornsilk;
+  color: black;
+  padding: 5px;
   margin: 0;
-  font-size: larger; 
-  font-weight: bolder;
+  font-size: larger;
+  font-weight: bold;
   text-align: center;
   opacity: 0.6;
 }
@@ -374,7 +407,7 @@ img.project-image {
 .description-text {
   height: 6rem;
   font-size: medium;
-  font-weight:400;
+  font-weight: 400;
   text-align: left;
   margin: 1rem;
 }
@@ -393,5 +426,3 @@ div.project-details {
   border-width: medium;
   border-style: ridge;
 }
-
-

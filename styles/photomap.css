@@ -7,9 +7,17 @@
 }
 
 a {
+  color: cornsilk;
+  background-color: #aaaaaa;
   text-decoration: none;
   border-radius: 5px;
 }
+
+a:hover {
+  color: darkblue;
+  border-radius: 5px;
+}
+
 
 div.leaflet-popup-content-wrapper{
   width: fit-content;
