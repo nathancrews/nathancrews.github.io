@@ -67,7 +67,7 @@ function shownmaineDetails(event) {
 
     let maineDetails = document.getElementById('maine-details');
     if (maineDetails) {
-        MessageUI.ShowMessage("<h3>Maine Cetnral Power/Itron Systems</h3>",
+        MessageUI.ShowMessage("<h3>Maine Central Power/Itron Systems</h3>",
             maineDetails.innerHTML, null);
     }
 }
