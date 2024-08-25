@@ -6,16 +6,16 @@
   position: fixed;
   top: 50dvh;
   left: 50dvw;
+  transform: translate(-50%, -50%);
   margin:0;
   padding: 1rem;
   max-width: 80%;
   min-width: 250px;
   width: fit-content;
   height: fit-content;
-  background-color: #aaaaaa;
+  background-color: #8D8C8A;
   z-index: 1000;
   border-radius: 15px;
-  transform: translate(-50%, -50%);
 }
 
 .message-modal-hide {
@@ -97,8 +97,8 @@
   flex-wrap: wrap;
   grid-gap: 1rem;
   /* width: fit-content; */
-  color: #aaaaaa;
-  background-color: #aaaaaa;
+  color: #8D8C8A;
+  background-color: #8D8C8A;
 }
 
 .message-button-ok {
@@ -106,16 +106,15 @@
   cursor: pointer;
   display: flex;
   padding: 0.25rem;
-  background-color: cornsilk;
+  background-color: #F6F6F6;
   color: black;
-  border: 2px solid black;
   border-radius: 10px;
   opacity: 0.6;
 }
 
 .message-button-ok:hover{
-  background-color: darkgreen;
-  color: cornsilk;
+  background-color: #408697;
+  color: #F6F6F6;
 }
 
 .message-button-cancel {
@@ -125,14 +124,13 @@
   vertical-align: middle;
   padding: 0.25rem;
   background-color: darkred;
-  color: cornsilk;
-  border: 2px solid black;
+  color: #F6F6F6;
   border-radius: 10px;
   opacity: 0.6;
 }
 
 .message-button-cancel:hover{
-  background-color: cornsilk;
+  background-color: #F6F6F6;
   color: darkred;
 }
 

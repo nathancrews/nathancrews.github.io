@@ -1,7 +1,8 @@
 .settings-modal {
-  position: fixed; 
-  left: 60px;
-  top: 120px;
+  position: fixed;
+  top: 50dvh;
+  left: 50dvw;
+  transform: translate(-50%, -50%);
   padding-left: 1.5rem;
   width: -moz-fit-content; 
   height: -moz-fit-content; 

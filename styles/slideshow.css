@@ -4,7 +4,7 @@
   align-self: center;
   cursor: pointer;
   width:fit-content;
-  background:cornsilk; 
+  background: #F6F6F6; 
   color: black; 
   padding: 0.33rem; 
   margin: 0.5rem;
@@ -17,8 +17,8 @@
 }
 
 .slide-button-caption:hover {
-  background: green; 
-  color:cornsilk; 
+  background: #408697; 
+  color: #F6F6F6; 
 }
 
 .slide-img {
@@ -36,7 +36,7 @@
   max-height: 100dvh;
   min-height: min-content;
   transform: translate(-50%, -50%);
-  background-color: #444444;
+  background-color:  #363538;
   border-radius: 20px;
 }
 
@@ -115,7 +115,7 @@
 
 .slide-prev:hover,
 .slide-next:hover {
-  color: cornsilk;
+  color:  #F6F6F6;
   background-color: darkblue;
   opacity: 1;
 }
@@ -123,7 +123,7 @@
 .slide-show-caption-container {
   margin-bottom: 1.5rem;
   text-align: center;
-  background-color: cornsilk;
+  background-color:  #F6F6F6;
   padding: 2px 16px;
   border-radius: 8px;
 }

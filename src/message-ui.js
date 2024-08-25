@@ -148,7 +148,8 @@ export class MessageUIClass {
                 for (let ii = 0; ii < event.target.classList.length; ii++) {
                     //console.log("event.target.classList[ii]: ", event.target.classList[ii]);
                     if ( (event.target.classList[ii].indexOf("message") != -1) || 
-                        (event.target.classList[ii].indexOf("project-details") != -1)) {
+                        (event.target.classList[ii].indexOf("project-details") != -1) ||
+                        (event.target.classList[ii].indexOf("button") != -1)) {
                         classesFound = true;
                         break;
                     }

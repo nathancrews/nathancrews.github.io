@@ -7,11 +7,11 @@
 }
 
 body {
-  color: cornsilk;
+  color: #F6F6F6;
   display: block;
   width: 100%;
   height: 100vh;
-  background-color: #444444;
+  background-color: #363538;
 }
 
 h1 {
@@ -23,11 +23,14 @@ h2 {
 }
 
 .button {
-  display: inline-block;
+  /* display: block; */
+    align-self: center;
+    justify-self: center;
+  display: inline;
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: cornsilk;
+  background: #F6F6F6;
   color: black;
   padding: 0.33rem;
   margin: 0.5rem;
@@ -41,16 +44,30 @@ h2 {
   border-radius: 10px;
 }
 
+.nested-button {
+margin-top: 0;
+margin-bottom: 0;
+}
+
+
+.nested-buttons {
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: space-evenly;
+}
+
 a {
+  color: #52D6F4;
   margin: 1rem;
   font-weight: bold;
   text-decoration: none;
+  border-radius: 8px;
 }
 
 .button:hover,
 a:hover {
-  background-color: darkgreen;
-  color: cornsilk;
+  background-color: #408697;
+  color: #F6F6F6;
 }
 
 .a-logo-img {
@@ -64,9 +81,9 @@ a:hover {
   margin: 0;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  color: darkblue;
+  color:  #52D6F4;
   font-size: small;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 ul {
@@ -95,7 +112,7 @@ li {
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
-  background-color: cornsilk;
+  background-color: #F6F6F6;
   color: darkblue;
   border-bottom: 2px solid darkblue;
   border-radius: 6px;
@@ -103,8 +120,8 @@ li {
 
 .inactive-tab {
   padding: 0.25rem;
-  background-color: #aaaaaa;
-  color: #444444;
+  background-color: #8D8C8A;
+  color: #363538;
   border-bottom: none;
   border-radius: 6px;
 }
@@ -133,7 +150,7 @@ nav {
   width: 50vw;
   min-width: fit-content;
   grid-gap: 1rem;
-  background-color: #aaaaaa;
+  background-color: #8D8C8A;
   border-radius: 15px;
 }
 
@@ -178,11 +195,11 @@ nav li:hover {
 
 .about-info {
   display: inline-grid;
-  color: cornsilk;
+  color: #F6F6F6;
   margin: 1rem;
   padding: 1rem;
   height: fit-content;
-  background-color: #6f6f6f;
+  background-color: #8D8C8A;
   border-radius: 20px;
 }
 
@@ -192,10 +209,10 @@ nav li:hover {
   margin: 1rem;
   margin-bottom: 0.25rem;
   padding: 1rem;
-  border: 0.25rem solid #aaaaaa;
+  border: 0.25rem solid #8D8C8A;
   border-radius: 20px;
-  color: #222222;
-  background-color: cornsilk;
+  color:  #363538;
+  background-color: #F6F6F6;
 }
 
 .about-container {
@@ -246,8 +263,8 @@ nav li:hover {
   margin: 0.5rem;
   margin-left: 1rem;
   margin-right: 0rem;
-  border-top: 2px solid cornsilk;
-  border-right: 2px solid cornsilk;
+  border-top: 2px solid #F6F6F6;
+  border-right: 2px solid #F6F6F6;
   border-radius: 100px;
 }
 
@@ -293,7 +310,7 @@ nav li:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  grid-gap: 1rem;
+  grid-gap: 0.25rem;
   padding: 0.5rem;
   margin: 0rem;
   margin-top: 0.25rem;
@@ -302,13 +319,13 @@ nav li:hover {
 }
 
 .projectBox {
-  background-color: #6f6f6f;
+  background-color: #8D8C8A;
   border-radius: 20px;
 }
 
 .project {
   min-height: 475px;
-  color: cornsilk;
+  color: #F6F6F6;
   padding: 1rem;
   margin: 0.5rem;
   padding: 0.5rem;
@@ -318,7 +335,7 @@ nav li:hover {
   min-width: 250px;
   height: auto;
   text-align: center;
-  border: azure;
+  border: #8D8C8A;
   border-width: medium;
   border-style: ridge;
   border-radius: 20px;
@@ -334,7 +351,7 @@ nav li:hover {
 
 a.project-image {
   cursor: pointer;
-  color: greenyellow;
+  color: #408697;
   text-align: center;
   padding: 1rem;
 }
@@ -359,7 +376,7 @@ img.project-image {
 .project-image-caption-launch {
   display: inline-block;
   width: fit-content;
-  color: #aaaaaa;
+  color: #8D8C8A;
   padding: 5px;
   margin: 0;
   font-size: medium;
@@ -372,7 +389,7 @@ img.project-image {
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: cornsilk;
+  background: #F6F6F6;
   color: black;
   padding: 0.33rem;
   margin: 0.5rem;
@@ -385,8 +402,8 @@ img.project-image {
 }
 
 .project-details-button-caption:hover {
-  background: darkgreen;
-  color: cornsilk;
+  background: #408697;
+  color: #F6F6F6;
 }
 
 .project-image-caption-slides {
@@ -394,7 +411,7 @@ img.project-image {
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: cornsilk;
+  background: #F6F6F6;
   color: black;
   padding: 5px;
   margin: 0;
@@ -422,7 +439,7 @@ img.project-image {
 div.project-details {
   text-align: justify;
   margin: 0.5rem;
-  border: azure;
+  border: #8D8C8A;
   border-width: medium;
-  border-style: ridge;
+  border-style: solid;
 }

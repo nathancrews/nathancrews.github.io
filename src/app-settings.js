@@ -72,7 +72,7 @@ export class AppSettingsUIClass {
 
     UpdateMapName(event) {
         // not trapping the enter key causes the page to reload!!!!
-        if ((event instanceof KeyboardEvent) && event.key == "Enter" ) {
+        if ((event instanceof KeyboardEvent) && event.key == "Enter") {
             event.preventDefault();
             event.stopPropagation();
             return;
@@ -83,8 +83,33 @@ export class AppSettingsUIClass {
         }
     }
 
-    // Settings dialog UI
+    // Events: Settings dialog UI
+    OnWindowClickEvent(event) {
+        event.preventDefault = true;
+        let settingsFound = false;
 
+        if (event.target.classList) {
+            for (let ii = 0; ii < event.target.classList.length; ii++) {
+                if (event.target.classList[ii].indexOf("setting") != -1) {
+                    settingsFound = true;
+                    break;
+                }
+            }
+        }
+
+        if (settingsFound == false) {
+            AppSettings.GetSettingsUI().HideDialog();
+        }
+    }
+
+    OnWindowKeyDownEvent(event) {
+        event.preventDefault = true;
+
+        if ((event.keyCode === 27) || event.key === "Escape") {
+            AppSettings.GetSettingsUI().HideDialog();
+        }
+    }
+    
     CloseDialogEvent(event) {
         AppSettings.GetSettingsUI()._settingsDialog.style.display = "none";
         AppSettings.Save();
@@ -93,20 +118,33 @@ export class AppSettingsUIClass {
     ShowDialog() {
         // console.log("settingsDialog.style.display: ", this._settingsDialog.style.display);
 
+        window.onclick = this.OnWindowClickEvent;
+        window.onkeydown = this.OnWindowKeyDownEvent;
+
+        AppSettings.GetSettingsUI()._mapIconSelector.onchange = this.UpdateMapIcons;
+        AppSettings.GetSettingsUI()._settingsMapName.onchange = this.UpdateMapName;
+        AppSettings.GetSettingsUI()._settingsMapName.onkeydown = this.UpdateMapName;
+
         if (!this._settingsDialog.style.display || this._settingsDialog.style.display == 'none') {
             this._settingsDialog.style.display = "flex";
         }
         else {
             this._settingsDialog.style.display = 'none';
         }
-
     }
 
     HideDialog() {
         this._settingsDialog.style.display = 'none';
+
+        window.removeEventListener('click', this.OnWindowClickEvent);
+        window.removeEventListener('keydown', this.OnWindowKeyDownEvent);
+
+        AppSettings.GetSettingsUI()._mapIconSelector.removeEventListener('change', this.UpdateMapIcons);
+        AppSettings.GetSettingsUI()._settingsMapName.removeEventListener('change', this.UpdateMapName);
+        AppSettings.GetSettingsUI()._settingsMapName.removeEventListener('keydown', this.UpdateMapName);
     }
 
-
+    // Initialization: Settings dialog UI
     InitUI(inParentButton) {
 
         this._inParentButton = inParentButton;
@@ -116,14 +154,14 @@ export class AppSettingsUIClass {
         // When the user clicks on <span> (x), close the modal
         this._close.onclick = this.CloseDialogEvent;
 
-        if (this._settingsMapName){
+        if (this._settingsMapName) {
             this._settingsMapName.value = AppSettings.mapName;
         }
-        
-        if (this._mapIconSelector){
+
+        if (this._mapIconSelector) {
             this._mapIconSelector.value = AppSettings.imageIcon2DType;
         }
-        
+
 
         switch (this._mapIconSelector.value) {
             case 'thumbnail':
@@ -135,34 +173,22 @@ export class AppSettingsUIClass {
         }
 
         // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            let settingsFound = false;
-            if (event.target.classList) {
-                for (let ii=0; ii < event.target.classList.length; ii++){
-                    if (event.target.classList[ii].indexOf("setting") != -1){
-                        settingsFound = true;
-                        break;
-                    }
-                }
-            }
-
-            if (settingsFound == false) {
-                AppSettings.GetSettingsUI().HideDialog();
-            }
-        }
+        window.onclick = this.OnWindowClickEvent;
+        window.onkeydown = this.OnWindowKeyDownEvent;
 
         AppSettings.GetSettingsUI()._mapIconSelector.onchange = this.UpdateMapIcons;
         AppSettings.GetSettingsUI()._settingsMapName.onchange = this.UpdateMapName;
         AppSettings.GetSettingsUI()._settingsMapName.onkeydown = this.UpdateMapName;
     }
 
+    // Update map based on changd settings
     UpdateUI() {
 
-        if (this._settingsMapName){
+        if (this._settingsMapName) {
             this._settingsMapName.value = AppSettings.mapName;
         }
-        
-        if (this._mapIconSelector){
+
+        if (this._mapIconSelector) {
             this._mapIconSelector.value = AppSettings.imageIcon2DType;
         }
         switch (this._mapIconSelector.value) {

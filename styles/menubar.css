@@ -9,7 +9,7 @@
     margin-bottom: 0.5rem;
     width: fit-content;
     height: auto;
-    background-color: #aaaaaa;
+    background-color: #8D8C8A;
     border-radius: 12px;
   }
   
@@ -17,8 +17,8 @@
     display: flex;
     width: fit-content;
     height: 40px;
-    color: #aaaaaa;
-    background-color: #aaaaaa;
+    color: #8D8C8A;
+    background-color: #8D8C8A;
     align-items: center;
     vertical-align: middle;
     border: 0.10rem black;
