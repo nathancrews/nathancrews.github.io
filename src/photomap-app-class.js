@@ -100,7 +100,7 @@ class PhotoMapAppClass {
                                     geoJSONObj = JSON.parse(fr.result);
                                 }
                                 catch (error) {
-                                    MessageUI.ShowMessage("Photo Mapper", `Error loading file: ${allowedFiles[ii].name}`, null);
+                                    MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Error loading file: ${allowedFiles[ii].name}`, null);
                                     geoJSONObj = null;
                                 }
 
@@ -256,12 +256,12 @@ class PhotoMapAppClass {
                     downloadMap.href = downloadURL;
                     downloadMap.download = AppSettings.mapName + ".geojson";
 
-                    MessageUI.ShowMessage("Photo Mapper", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
+                    MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
                 }
             }
         }
         else {
-            MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no map data to download.", null);
+            MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there is no map data to download.", null);
         }
     }
 
@@ -376,7 +376,7 @@ class PhotoMapAppClass {
 
     /** Erases all images from map and resets 2D and 3D map views */
     ResetMaps() {
-        MessageUI.ShowMessage("Photo Mapper", "Do you really want to erase ALL photos from the Map?", PhotoMapApp.ResetMap);
+        MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Do you really want to erase ALL photos from the Map?", PhotoMapApp.ResetMap);
     }
 
     async ResetMap() {
@@ -410,13 +410,13 @@ class PhotoMapAppClass {
                     console.log(`Map save geoJSON size: ${(saveLength / 1024 * 2)} kb`);
 
                     if (saveLength > maxSingleLength) {
-                        MessageUI.ShowMessage("Photo Mapper", ":( Map size too large to save locally, try reducing the number of photos.", null);
+                        MessageUI.ShowMessage("<h3>Photo Mapper</h3>", ":( Map size too large to save locally, try reducing the number of photos.", null);
                         // window.alert(":( Map size too large to save locally, try reducing the number of photos.")
                     }
                     else {
                         window.localStorage.setItem(AppMapData.MAP_DATA_SAVE_KEY, geoJSONStr);
 
-                        MessageUI.ShowMessage("Photo Mapper", "SUCCESS, Map data saved locally", null);
+                        MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "SUCCESS, Map data saved locally", null);
                         //window.alert("SUCCESS, Map data saved locally");
                     }
 
@@ -424,17 +424,17 @@ class PhotoMapAppClass {
                 }
                 else {
                     // window.alert("Sorry, there was no map data saved.");
-                    MessageUI.ShowMessage("Photo Mapper", "Sorry, there was no map data saved.", null);
+                    MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there was no map data saved.", null);
                 }
             }
             else {
-                MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no map data to save. Try adding another photo.", null);
+                MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there is no map data to save. Try adding another photo.", null);
                 //window.alert("Sorry, there is no map data to save. Try adding another photo.");
             }
         }
         catch (error) {
             console.log("Error map data to large to save: ", error);
-            MessageUI.ShowMessage("Photo Mapper", ":( ERROR map data to large to save: ", null);
+            MessageUI.ShowMessage("<h3>Photo Mapper</h3>", ":( ERROR map data to large to save: ", null);
             //window.alert(":( ERROR map data to large to save: ", error);
         }
     }
@@ -479,18 +479,18 @@ class PhotoMapAppClass {
                 }
                 else {
                     //window.alert("ERROR, loading local map data.");
-                    MessageUI.ShowMessage("Photo Mapper", "ERROR, loading local map data.", null);
+                    MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "ERROR, loading local map data.", null);
                 }
 
             }
             else {
                 // window.alert("Sorry, there is no local map data to load.");
-                MessageUI.ShowMessage("Photo Mapper", "Sorry, there is no local map data to load.", null);
+                MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there is no local map data to load.", null);
             }
         }
         catch (error) {
             console.log("Error loading map data: ", error);
-            MessageUI.ShowMessage("Photo Mapper", `:( ${error} unable to load map data`, null);
+            MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `:( ${error} unable to load map data`, null);
             // window.alert(`:( ${error} unable to load map data`)
         }
     }

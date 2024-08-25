@@ -38,7 +38,7 @@ function showLandxmlDetails(event) {
 
     let landxmlDetails = document.getElementById('project-landxml-details');
     if (landxmlDetails) {
-        MessageUI.ShowMessage("<p>LandXML to GLTF Format Converter & Windows Shell Extension</p>",
+        MessageUI.ShowMessage("<h3>LandXML to GLTF Format Converter & Windows Shell Extension</h3>",
             landxmlDetails.innerHTML, null);
     }
 }
@@ -52,7 +52,7 @@ function showPMDetails(event) {
 
     let pmDetails = document.getElementById('project-pm-details');
     if (pmDetails) {
-        MessageUI.ShowMessage("<p>Photo Mapper Browser-only Web Application</p>", pmDetails.innerHTML, null);
+        MessageUI.ShowMessage("<h3>Photo Mapper Browser-only Web Application</h3>", pmDetails.innerHTML, null);
     }
 }
 
@@ -65,7 +65,7 @@ function showPCDetails(event) {
 
     let pcDetails = document.getElementById('project-pc-details');
     if (pcDetails) {
-        MessageUI.ShowMessage("<p>Pointcloud Quickview Windows Shell Extension</p>", pcDetails.innerHTML, null);
+        MessageUI.ShowMessage("<h3>Pointcloud Quickview Windows Shell Extension</h3>", pcDetails.innerHTML, null);
     }
 }
 
@@ -78,7 +78,7 @@ function showglbDetails(event) {
 
     let glbDetails = document.getElementById('project-glb-details');
     if (glbDetails) {
-        MessageUI.ShowMessage("<p>GLTF/GLB Windows Shell Extension</p>", glbDetails.innerHTML, null);
+        MessageUI.ShowMessage("<h3>GLTF/GLB Windows Shell Extension</h3>", glbDetails.innerHTML, null);
     }
 }
 
@@ -91,7 +91,7 @@ function showwcDetails(event) {
 
     let wcDetails = document.getElementById('project-wc-details');
     if (wcDetails) {
-        MessageUI.ShowMessage("<p>Web Browser UI Components</p>", wcDetails.innerHTML, null);
+        MessageUI.ShowMessage("<h3>Web Browser UI Components</h3>", wcDetails.innerHTML, null);
     }
 }
 
@@ -104,7 +104,7 @@ function showpmsrvDetails(event) {
 
     let pmsrvDetails = document.getElementById('project-pmsrv-details');
     if (pmsrvDetails) {
-        MessageUI.ShowMessage("<p>Photo Mapper Client/Server Web Application</p>", pmsrvDetails.innerHTML, null);
+        MessageUI.ShowMessage("<h3>Photo Mapper Client/Server Web Application</h3>", pmsrvDetails.innerHTML, null);
     }
 }
 
