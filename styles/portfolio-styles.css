@@ -7,7 +7,7 @@
 }
 
 body {
-  color: #F6F6F6;
+  color: #f6f6f6;
   display: block;
   width: 100%;
   height: 100vh;
@@ -23,14 +23,13 @@ h2 {
 }
 
 .button {
-  /* display: block; */
-    align-self: center;
-    justify-self: center;
+  align-self: center;
+  justify-self: center;
   display: inline;
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: #F6F6F6;
+  background: #f6f6f6;
   color: black;
   padding: 0.33rem;
   margin: 0.5rem;
@@ -38,26 +37,27 @@ h2 {
   font-weight: bold;
   text-align: center;
   height: fit-content;
-  width: fit-content;
+  min-width: 145px;
   max-height: 1.2rem;
   opacity: 0.6;
   border-radius: 10px;
 }
 
 .nested-button {
-margin-top: 0;
-margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: fit-content;
+  min-width: fit-content;
 }
 
-
 .nested-buttons {
-  display: flex; 
-  flex-wrap: wrap; 
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
 }
 
 a {
-  color: #52D6F4;
+  color: #52d6f4;
   margin: 1rem;
   font-weight: bold;
   text-decoration: none;
@@ -67,7 +67,7 @@ a {
 .button:hover,
 a:hover {
   background-color: #408697;
-  color: #F6F6F6;
+  color: #f6f6f6;
 }
 
 .a-logo-img {
@@ -81,7 +81,7 @@ a:hover {
   margin: 0;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  color:  #52D6F4;
+  color: #52d6f4;
   font-size: small;
   border-radius: 8px;
 }
@@ -112,7 +112,7 @@ li {
 .active-tab {
   padding: 0.25rem;
   padding-bottom: 0rem;
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
   color: darkblue;
   border-bottom: 2px solid darkblue;
   border-radius: 6px;
@@ -120,7 +120,7 @@ li {
 
 .inactive-tab {
   padding: 0.25rem;
-  background-color: #8D8C8A;
+  background-color: #8d8c8a;
   color: #363538;
   border-bottom: none;
   border-radius: 6px;
@@ -150,7 +150,7 @@ nav {
   width: 50vw;
   min-width: fit-content;
   grid-gap: 1rem;
-  background-color: #8D8C8A;
+  background-color: #8d8c8a;
   border-radius: 15px;
 }
 
@@ -195,11 +195,11 @@ nav li:hover {
 
 .about-info {
   display: inline-grid;
-  color: #F6F6F6;
+  color: #f6f6f6;
   margin: 1rem;
   padding: 1rem;
   height: fit-content;
-  background-color: #8D8C8A;
+  background-color: #8d8c8a;
   border-radius: 20px;
 }
 
@@ -209,10 +209,10 @@ nav li:hover {
   margin: 1rem;
   margin-bottom: 0.25rem;
   padding: 1rem;
-  border: 0.25rem solid #8D8C8A;
+  border: 0.25rem solid #8d8c8a;
   border-radius: 20px;
-  color:  #363538;
-  background-color: #F6F6F6;
+  color: #363538;
+  background-color: #f6f6f6;
 }
 
 .about-container {
@@ -263,8 +263,8 @@ nav li:hover {
   margin: 0.5rem;
   margin-left: 1rem;
   margin-right: 0rem;
-  border-top: 2px solid #F6F6F6;
-  border-right: 2px solid #F6F6F6;
+  border-top: 2px solid #f6f6f6;
+  border-right: 2px solid #f6f6f6;
   border-radius: 100px;
 }
 
@@ -319,13 +319,13 @@ nav li:hover {
 }
 
 .projectBox {
-  background-color: #8D8C8A;
+  background-color: #8d8c8a;
   border-radius: 20px;
 }
 
 .project {
   min-height: 475px;
-  color: #F6F6F6;
+  color: #f6f6f6;
   padding: 1rem;
   margin: 0.5rem;
   padding: 0.5rem;
@@ -335,7 +335,7 @@ nav li:hover {
   min-width: 250px;
   height: auto;
   text-align: center;
-  border: #8D8C8A;
+  border: #8d8c8a;
   border-width: medium;
   border-style: ridge;
   border-radius: 20px;
@@ -376,7 +376,7 @@ img.project-image {
 .project-image-caption-launch {
   display: inline-block;
   width: fit-content;
-  color: #8D8C8A;
+  color: #8d8c8a;
   padding: 5px;
   margin: 0;
   font-size: medium;
@@ -389,7 +389,7 @@ img.project-image {
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: #F6F6F6;
+  background: #f6f6f6;
   color: black;
   padding: 0.33rem;
   margin: 0.5rem;
@@ -403,7 +403,7 @@ img.project-image {
 
 .project-details-button-caption:hover {
   background: #408697;
-  color: #F6F6F6;
+  color: #f6f6f6;
 }
 
 .project-image-caption-slides {
@@ -411,7 +411,7 @@ img.project-image {
   align-self: center;
   cursor: pointer;
   width: fit-content;
-  background: #F6F6F6;
+  background: #f6f6f6;
   color: black;
   padding: 5px;
   margin: 0;
@@ -439,7 +439,7 @@ img.project-image {
 div.project-details {
   text-align: justify;
   margin: 0.5rem;
-  border: #8D8C8A;
+  border: #8d8c8a;
   border-width: medium;
   border-style: solid;
 }
