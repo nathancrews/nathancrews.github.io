@@ -29,6 +29,80 @@
 import { MessageUI } from "./message-ui.js";
 
 
+
+let ncrewsDetailsBtn = document.getElementById('ncrews-details-btn');
+if (ncrewsDetailsBtn) {
+    ncrewsDetailsBtn.onclick = showncrewsDetails;
+}
+
+function showncrewsDetails(event) {
+
+    let ncrewsDetails = document.getElementById('ncrews-details');
+    if (ncrewsDetails) {
+        MessageUI.ShowMessage("<h3>NCrews Software</h3>",
+            ncrewsDetails.innerHTML, null);
+    }
+}
+
+let carlsonDetailsBtn = document.getElementById('carlson-details-btn');
+if (carlsonDetailsBtn) {
+    carlsonDetailsBtn.onclick = showncarlsonDetails;
+}
+
+function showncarlsonDetails(event) {
+
+    let carlsonDetails = document.getElementById('carlson-details');
+    if (carlsonDetails) {
+        MessageUI.ShowMessage("<h3>Carlson Software</h3>",
+            carlsonDetails.innerHTML, null);
+    }
+}
+
+let maineDetailsBtn = document.getElementById('maine-details-btn');
+if (maineDetailsBtn) {
+    maineDetailsBtn.onclick = shownmaineDetails;
+}
+
+function shownmaineDetails(event) {
+
+    let maineDetails = document.getElementById('maine-details');
+    if (maineDetails) {
+        MessageUI.ShowMessage("<h3>Maine Cetnral Power/Itron Systems</h3>",
+            maineDetails.innerHTML, null);
+    }
+}
+
+let logosDetailsBtn = document.getElementById('logos-details-btn');
+if (logosDetailsBtn) {
+    logosDetailsBtn.onclick = showlogosDetails;
+}
+
+function showlogosDetails(event) {
+
+    let maineDetails = document.getElementById('logos-details');
+    if (maineDetails) {
+        MessageUI.ShowMessage("<h3>Logos Systems</h3>",
+            maineDetails.innerHTML, null);
+    }
+}
+
+let adeskDetailsBtn = document.getElementById('adesk-details-btn');
+if (adeskDetailsBtn) {
+    adeskDetailsBtn.onclick = showadeskDetails;
+}
+
+function showadeskDetails(event) {
+
+    let adeskDetails = document.getElementById('adesk-details');
+    if (adeskDetails) {
+        MessageUI.ShowMessage("<h3>Autodesk, Inc.</h3>",
+            adeskDetails.innerHTML, null);
+    }
+}
+
+
+
+
 let landxmlDetailsBtn = document.getElementById('project-landxml-details-btn');
 if (landxmlDetailsBtn) {
     landxmlDetailsBtn.onclick = showLandxmlDetails;

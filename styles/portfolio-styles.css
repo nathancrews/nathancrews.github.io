@@ -38,7 +38,7 @@ h2 {
   text-align: center;
   height: fit-content;
   min-width: 145px;
-  max-height: 1.2rem;
+  max-height: 1.5rem;
   opacity: 0.6;
   border-radius: 10px;
 }
@@ -54,6 +54,11 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+}
+
+.li-button{
+  margin: 0;
+
 }
 
 a {
@@ -104,9 +109,17 @@ li {
 }
 
 .sub-li-1 {
-  margin-left: 1.5rem;
+  margin-left: 1rem;
   font-size: medium;
   color: #5b5b5b;
+}
+
+.sub-li-2 {
+  padding: 0rem;
+  margin: 0rem;
+  font-size: medium;
+  color: #5b5b5b;
+  list-style: none;
 }
 
 .active-tab {
