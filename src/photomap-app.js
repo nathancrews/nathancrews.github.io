@@ -37,11 +37,13 @@ if (bearBtn) {
     bearBtn.onclick = showBear;
 }
 
-async function showBear(event){
+async function showBear(event) {
     event.preventDefault();
-    PhotoMapApp.LoadMapFromURL("./docs/BearMemories.geojson");
+
 }
 
 await PhotoMapApp.RunApp();
 
-
+if (bearBtn) {
+    PhotoMapApp.LoadMapFromURL("./docs/BearMemories.geojson");
+}
