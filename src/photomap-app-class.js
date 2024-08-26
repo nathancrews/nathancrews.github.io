@@ -240,11 +240,7 @@ class PhotoMapAppClass {
 
     async LoadMapFromURL(jsonFileURL) {
 
-        console.log("jsonFileURL", jsonFileURL);
-
         let geoJSONval = await FileUtils.LoadGeoJSONFile(jsonFileURL);
-
-        console.log("geoJSONval", geoJSONval);
 
         if (geoJSONval) {
 
