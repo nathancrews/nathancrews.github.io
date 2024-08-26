@@ -112,14 +112,14 @@ li {
 .sub-li-1 {
   margin-left: 1rem;
   font-size: medium;
-  color: #5b5b5b;
+  color: #f6f6f6;
 }
 
 .sub-li-2 {
-  padding: 0rem;
+  padding: 0.25rem;
   margin: 0.25rem;
   font-size: medium;
-  color: #5b5b5b;
+  color: #f6f6f6;
   list-style: none;
   -webkit-details-marker {
     display: none;
@@ -241,6 +241,7 @@ nav li:hover {
 }
 
 .about-text {
+  color:#f6f6f6;
   justify-content: left;
   word-break: normal;
   font-size: large;
