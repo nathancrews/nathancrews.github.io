@@ -238,6 +238,19 @@ class PhotoMapAppClass {
         await this.Show2DMap(null);
     }
 
+    async LoadMapFromURL(jsonFileURL) {
+
+        let geoJSONval = await FileUtils.LoadGeoJSONFile(jsonFileURL);
+
+        if (geoJSONval) {
+
+            await Map2D.UpdateMap2D(geoJSONval);
+
+            await Map3D.UpdateMap3D(geoJSONval);
+        }
+
+    }
+
     /** Produces a downloadable map GeoJSON file */
     DownloadMap(event) {
         if (!event) { return; }

@@ -29,6 +29,24 @@
 
 
 import { PhotoMapApp } from "./photomap-app-class.js"
+import { FileUtils } from "./file-utils.js"
+
+let bearBtn = document.getElementById("birthday-bear");
+
+console.log("bearBtn: ", bearBtn);
+
+if (bearBtn) {
+    bearBtn.onclick = showBear;
+}
+
+async function showBear(event){
+    event.preventDefault();
+
+    let jsonFileURL = "./docs/BearMemories.geojson";
+
+    PhotoMapApp.LoadMapFromURL(jsonFileURL);
+}
+
 
 await PhotoMapApp.RunApp();
 
