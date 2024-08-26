@@ -81,7 +81,7 @@ function showlogosDetails(event) {
 
     let maineDetails = document.getElementById('logos-details');
     if (maineDetails) {
-        MessageUI.ShowMessage("<h3>Logos Systems</h3>",
+        MessageUI.ShowMessage("<h2>Logos Systems</h2>",
             maineDetails.innerHTML, null);
     }
 }
