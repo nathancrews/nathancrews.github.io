@@ -104,8 +104,8 @@ export class Map2DClass {
                     return L.marker(latlng, { icon: currentDroneIcon });
                 },
             }).bindPopup(function (layer) {
-                return "<div style='width:min-content'><p><b>" + layer.feature.properties.name + "</b></p> \
-                    <img ' src='" +
+                return "<div><p class='leaflet-div-p'><b>" + layer.feature.properties.name + "</b></p> \
+                   <p class='leaflet-div-p'>Date: " + layer.feature.properties.date + "</p><img ' src='" +
                     layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
             });
 

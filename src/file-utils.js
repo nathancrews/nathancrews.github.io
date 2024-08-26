@@ -56,7 +56,7 @@ export class FileUtils {
     static async LoadGeoJSONFile(jsonFileURL) {
         let fetchData = "";
 
-        // console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
+        console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
 
         let fetchResponse = await fetch(jsonFileURL);
         if (fetchResponse.status === 200) {
@@ -66,7 +66,7 @@ export class FileUtils {
             console.log("Load GeoJSON file failed: ", jsonFileURL)
         }
 
-        // console.log("LoadGeoJSONFile: fetchData=", fetchData);
+        console.log("LoadGeoJSONFile: fetchData=", fetchData);
 
         return fetchData;
     }

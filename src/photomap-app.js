@@ -38,7 +38,10 @@ if (bearBtn) {
 
 async function showBear(event) {
     event.preventDefault();
-    await PhotoMapApp.LoadMapFromURL("./docs/BearMemories.geojson");
+
+    let geoJsonURL = "https://drive.google.com/file/d/1Y4EMsQo_ju_03wcsb17iWsuxWUFvLEPp";
+
+    await PhotoMapApp.LoadMapFromURL(geoJsonURL);
 }
 
 await PhotoMapApp.RunApp();
