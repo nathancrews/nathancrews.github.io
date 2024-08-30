@@ -80,6 +80,8 @@ export class AppSettingsUIClass {
 
         if (event.target && event.target.value) {
             AppSettings.mapName = event.target.value;
+
+            AppSettings.Save();
         }
     }
 
@@ -213,8 +215,8 @@ export class AppSettingsDataClass {
         this.mapName = "PhotoMap";
         this.imageIcon2DType = "thumbnail";
         this.thumbnailImageWidth = 300;
-        this.thumbnailImageHeight = 350;
-        this.imageIcon2DQuality = 0.5;
+        this.thumbnailImageHeight = 400;
+        this.imageIcon2DQuality = 0.85;
         this.imageIcon2DFormat = 'image/webp';
         this.imageIcon3DWidth = 64;
         this.droneIcon2D = 'images/drone-icon.jpg';

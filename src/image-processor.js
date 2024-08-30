@@ -33,10 +33,10 @@ const ExifReader = await import('./exifreader/src/exif-reader.js');
 export class ImageProcessorClass {
 
     _ThumbnailReadyEventStr = "ThumbnailReadyEvent";
-    _max_thumb_width = 300;
-    _max_thumb_height = 350;
+    _max_thumb_width = 800;
+    _max_thumb_height = 950;
     _imageIcon2DFormat = 'image/webp';
-    _imageIcon2DQuality = 0.5;
+    _imageIcon2DQuality = 0.85;
 
     async ProcessImages(FilesDataArray, canvasEl, imageIcon2DWidth, imageIcon2DHeight, imageIcon2DFormat, imageIcon2DQuality) {
         //  console.log("Worker FilesDataArray = ", FilesDataArray);
@@ -119,11 +119,12 @@ export class ImageProcessorClass {
             canvasEl.width = max_thumb_width;
             canvasEl.height = (max_thumb_height / (largeImageRatio));
     
-            //console.log('canvasEl.height = ', canvasEl.height);
+           // console.log('canvasEl.width = ', canvasEl.height);
+           // console.log('canvasEl.height = ', canvasEl.height);
     
             if (canvasEl.height > max_thumb_height) {
                 canvasEl.width *= largeImageRatio;
-                //console.log('new canvasEl.width = ', canvasEl.width);
+             //   console.log('new canvasEl.width = ', canvasEl.width);
     
                 canvasEl.height = max_thumb_height;
             }

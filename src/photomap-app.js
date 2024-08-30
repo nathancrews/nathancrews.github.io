@@ -39,13 +39,23 @@ if (bearBtn) {
 async function showBear(event) {
     event.preventDefault();
 
-    let geoJsonURL = "https://drive.google.com/file/d/1Y4EMsQo_ju_03wcsb17iWsuxWUFvLEPp";
+    let geoJsonURL = "./docs/BearMemories.geojson"; 
 
     await PhotoMapApp.LoadMapFromURL(geoJsonURL);
 }
 
 await PhotoMapApp.RunApp();
 
-if (bearBtn) {
-    await PhotoMapApp.LoadMapFromURL("./docs/BearMemories.geojson");
+let jsonFileURLEl = document.getElementById("jsonFileURL");
+
+
+if (jsonFileURLEl) {
+
+    console.log("jsonFileURLEl.innerHTML: ", jsonFileURLEl.innerHTML)
+
+    PhotoMapApp.ShowLoadingImage(true);
+
+    await PhotoMapApp.LoadMapFromURL(jsonFileURLEl.innerHTML);
+
+    PhotoMapApp.ShowLoadingImage(false);
 }

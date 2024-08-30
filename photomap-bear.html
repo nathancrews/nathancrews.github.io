@@ -45,8 +45,10 @@
     <div class="button" data-page="about">
         <a href="https://apps.nathancrews.com" target="_blank">About</a>
     </div>
-
+    
+    
     <div id="birthday-bear" class="button" style="position: relative;left: 25%;font-size: larger;" data-page="about">Happy B-Day Bear!</div>
+
 
     <header id="loading-header" name="loading-header" class="map-header">
         <h1 class="map-h1">Drop photos on map or choose</h1>
@@ -130,6 +132,104 @@
     </header>
     <div id="map2d" class="map-drop-zone map-base"></div>
     <div id="map3d" class="map-drop-zone map-base"></div>
+
+    <form id="javascript_form">
+        <input type="text" name="subject" placeholder="Subject" />
+        <textarea name="text" placeholder="Message"></textarea>
+        <input type="submit" id="js_send" value="Send" />
+    
+        <!-- not required, but we'd appreciate it if you'd link to us somewhere on your site -->
+        <p>Powered by <a href="https://postmail.invotes.com" target="_blank">PostMail</a></p>
+    </form>
+
+    
+    <a target="_blank" rel="nofollow" href={`mailto:nathan@nathancrews.com`}>mail</a>
+
+    <div id="myText">
+        Lorem ipsum...
+    </div>
+    <button onclick="sendMail()">Send</button>
+
+    <script>
+    
+    function sendMail(event) {
+        console.log("email send clicked: ",event )
+    var link = "mailto:me@example.com"
+             + "?cc=myCCaddress@example.com"
+             + "&subject=" + encodeURIComponent("This is my subject")
+             + "&body=" + encodeURIComponent(document.getElementById('myText').innerHTML)
+
+             
+    ;
+    console.log("email link: ",link )
+
+    window.location.href = link;
+
+    window.open(link);
+}
+
+        //update this with your js_form selector
+        var form_id_js = "javascript_form";
+    
+        var data_js = {
+            "access_token": "ycrerd87mta13594839yrlbg"
+        };
+    
+        function js_onSuccess() {
+            // remove this to avoid redirect
+            window.location = window.location.pathname + "?message=Email+Successfully+Sent%21&isError=0";
+        }
+    
+        function js_onError(error) {
+            // remove this to avoid redirect
+            window.location = window.location.pathname + "?message=Email+could+not+be+sent.&isError=1";
+        }
+    
+        var sendButton = document.getElementById("js_send");
+    
+        function js_send() {
+            sendButton.value='Sending…';
+            sendButton.disabled=true;
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    js_onSuccess();
+                } else
+                if(request.readyState == 4) {
+                    js_onError(request.response);
+                }
+            };
+    
+            var subject = document.querySelector("#" + form_id_js + " [name='subject']").value;
+            var message = document.querySelector("#" + form_id_js + " [name='text']").value;
+            data_js['subject'] = subject;
+            data_js['text'] = message;
+            var params = toParams(data_js);
+    
+            request.open("POST", "https://postmail.invotes.com/send", true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    
+            request.send(params);
+    
+            return false;
+        }
+    
+        sendButton.onclick = js_send;
+    
+        function toParams(data_js) {
+            var form_data = [];
+            for ( var key in data_js ) {
+                form_data.push(encodeURIComponent(key) + "=" + encodeURIComponent(data_js[key]));
+            }
+    
+            return form_data.join("&");
+        }
+    
+        var js_form = document.getElementById(form_id_js);
+        js_form.addEventListener("submit", function (e) {
+            e.preventDefault();
+        });
+    </script>
 </body>
 
 </html>

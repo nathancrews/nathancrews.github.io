@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Photo Mapper</title>
+    <title>Photo Map Creator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Nathan Crews">
     <meta name="description" content="drag and drop photos onto 2D or 3D map to geo-locate">
@@ -45,9 +45,8 @@
     <div class="button" data-page="about">
         <a href="https://apps.nathancrews.com" target="_blank">About</a>
     </div>
-
-     <header id="loading-header" name="loading-header" class="map-header">
-        <h1 class="map-h1">Drop photos on map or choose</h1>
+    <header id="loading-header" name="loading-header" class="map-header">
+        <h1 class="map-h1">Photo Map Creator: Drop photos on map or choose</h1>
         <div class="menu-controls">
             <img id="menu-button-home" title="Show Map Menu" alt="Map Menu" src="images/menu.svg"
                 class="menu-button menu-button-home" />
@@ -88,23 +87,6 @@
             </div>
         </dialog>
         <!-- Modal settings dialog -->
-
-        <!-- Modal message dialog -->
-        <!-- <dialog class="message-modal message-modal-hide">
-            <form>
-                <div class="message-dialog">
-                    <fieldset class="message-form-fieldset">
-                        <legend class="message-legend">Message</legend>
-                        <div class="message-text"></div>
-                    </fieldset>
-                    <div class="message-button-bar">
-                        <button id="ok" class="message-button-ok" type="button">Ok</button>
-                        <button id="cancel" class="message-button-cancel" type="button">Cancel</button>
-                    </div>
-                </div>
-            </form>
-        </dialog> -->
-        <!-- Modal settings dialog -->
         <form id="settings-modal" class="settings-modal settings-modal-hide">
             <fieldset id="settings-form-fieldset" class="settings-form-fieldset">
                 <legend id="settings-legend" class="settings-legend">Map Settings</legend>
@@ -125,6 +107,24 @@
             </fieldset>
             <span class="settings-close">&times;</span>
         </form>
+
+        <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.cgi" target="results"
+        class="map-form-input" class="map-form-input" hidden="true">
+        <input id="file" type="file" name="file" class="map-drop-zone__input map-menu-button map-file-upload-button"
+            multiple="true" accept=".geojson" hidden="true">
+        </div>
+        <button id="submit-button" class="map-drop-submit-button" name="submit-button" type="submit"
+            hidden="true">Upload</button>
+            <input id="directory" name="directory" value="" type="text"
+                class="map-menu-button map-form-input-text">
+        <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
+        <input id="redirectCGI" name="redirectCGI" hidden="true"
+            value="photomap-loader.js?dir=%s&response_type=json" />
+        <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.geojson" />
+        <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+    </form>
+
+
     </header>
     <div id="map2d" class="map-drop-zone map-base"></div>
     <div id="map3d" class="map-drop-zone map-base"></div>

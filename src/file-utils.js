@@ -27,6 +27,9 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
 
+import { AppSettings } from "./app-settings.js";
+
+
 export class FileUtils {
 
     static IsFileTypeAllowed(fileName, allowedFileTypes) {
@@ -56,7 +59,7 @@ export class FileUtils {
     static async LoadGeoJSONFile(jsonFileURL) {
         let fetchData = "";
 
-        console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
+        //console.log("LoadGeoJSONFile: jsonFileURL=", jsonFileURL);
 
         let fetchResponse = await fetch(jsonFileURL);
         if (fetchResponse.status === 200) {
@@ -66,9 +69,48 @@ export class FileUtils {
             console.log("Load GeoJSON file failed: ", jsonFileURL)
         }
 
-        console.log("LoadGeoJSONFile: fetchData=", fetchData);
+        //console.log("LoadGeoJSONFile: fetchData=", fetchData);
 
         return fetchData;
+    }
+
+    static async MapFileUploader(formEl, mapFilename, inGeoJSON, remoteServerURL) {
+
+        //console.log("formEl: ", formEl);
+
+        let formData = new FormData(formEl);
+        let redirectCGIKey = "redirectCGI";
+        let formAction = "cgi-bin/ncupload.cgi";
+
+        if (remoteServerURL){
+            formAction = remoteServerURL + formAction;
+        }
+
+        formData.getAll("file").forEach((fileEntry) => { formData.delete("file"); })
+        
+        let localGeoJSONStr = JSON.stringify(inGeoJSON);
+        let mapFile = FileUtils.CreateFileBlob(localGeoJSONStr);
+
+       // console.log("mapFile: ", mapFile);
+
+        formData.append("file", mapFile, mapFilename);
+ 
+        let response = await fetch(formAction, {
+            method: "POST",
+            body: formData
+        }).catch(error => {
+            console.log("Error: MapFileUploader: fetch error: ");
+            console.log(error);
+            return null;
+        });
+
+        if (response && response.status >= 200 && response.status < 300) {
+
+            let responseRes = await response.text();
+          //  console.log("responseRes=", responseRes)
+            return responseRes;
+        }
+
     }
 
     static async ChunkFileUploader(formEl, fileInputEl) {
@@ -105,7 +147,7 @@ export class FileUtils {
 
             let fileEntries = formData.getAll("file");
 
-            //console.log(fileEntries);
+            console.log(fileEntries);
 
             fileEntries.forEach((fileEntry) => {
                 if (FileUtils.IsFileTypeAllowed(fileEntry.name, allowedFileTypes)) {
@@ -132,7 +174,7 @@ export class FileUtils {
                     //console.log('ii= ', ii, ' yy= ', yy);
 
                     if (ii + yy < filesArray.length) {
-                        //console.log('adding file : ', filesArray[ii + yy].name);
+                        console.log('adding file : ', filesArray[ii + yy].name);
                         formData.append("file", filesArray[ii + yy])
                     }
                 }
@@ -155,7 +197,7 @@ export class FileUtils {
                 if (doAction === true && response && response.status >= 200 && response.status < 300) {
 
                     let responseRes = await response.text();
-                    //console.log("responseRes=", responseRes)
+                    console.log("responseRes=", responseRes)
                     return responseRes;
                 }
 
@@ -168,10 +210,22 @@ export class FileUtils {
 
     static CreateDownloadURL(inFileData, inType) {
 
-        let fBlob = new Blob([inFileData], { type: inType });
+        let fBlob = new File([inFileData], { type: inType });
 
-        return (URL.createObjectURL(fBlob));
+        let fr = URL.createObjectURL(fBlob);
+  //      console.log(fr);
+
+
+        return fr;
     }
+
+    static CreateFileBlob(inFileData, inType) {
+
+        let fBlob = new File([inFileData], { type: inType });
+
+        return fBlob;
+    }
+
 
     static async ReadDataFile(urlToRead) {
 

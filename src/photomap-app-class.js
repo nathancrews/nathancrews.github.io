@@ -252,7 +252,7 @@ class PhotoMapAppClass {
     }
 
     /** Produces a downloadable map GeoJSON file */
-    DownloadMap(event) {
+    async DownloadMap(event) {
         if (!event) { return; }
 
         event.preventDefault = true;
@@ -269,8 +269,33 @@ class PhotoMapAppClass {
                     downloadMap.href = downloadURL;
                     downloadMap.download = AppSettings.mapName + ".geojson";
 
-                    MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
+                 //   MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
                 }
+            }
+
+            AppUIData.formEl = document.getElementById("uploadForm");
+
+            if (AppUIData.formEl) {
+                
+                PhotoMapApp.ShowLoadingImage(true);
+
+                let mapFilename = AppSettings.mapName + ".geojson";
+    
+                await FileUtils.MapFileUploader(AppUIData.formEl, mapFilename, AppMapData.geoJSONFileData, AppMapData.remoteServerURL);
+    
+                let uploadPath = "uploads";
+    
+                let uploadPathEl = document.getElementById("basePathMap");
+                if (uploadPathEl){
+                    uploadPath = uploadPathEl.value;
+                }
+
+                PhotoMapApp.ShowLoadingImage(false);
+    
+                let clientLoadMapURL = AppMapData.remoteServerURL + "cgi-bin/photomap-loader.js?dir=" + uploadPath
+                    + "&filename=" + AppSettings.mapName + ".geojson&response_type=html";
+    
+                MessageUI.ShowMessage("<h3>Photo Mapper Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
             }
         }
         else {
