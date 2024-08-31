@@ -6,6 +6,7 @@ import { Map2D } from "./map-view2D.js";
 import { Map3D } from "./map-view3D.js";
 import { FileUtils } from "./file-utils.js";
 import { ImageProcessor } from "./image-processor.js"
+import { ImageData } from "./image-data.js"
 
 class PhotoMapAppClass {
 
@@ -104,10 +105,50 @@ class PhotoMapAppClass {
                                     geoJSONObj = null;
                                 }
 
-                                let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONObj);
+                                if (geoJSONObj) {
+                                    AppMapData.imageDataArray = null;
+                                    AppMapData.imageDataArray = [];
 
-                                if (UpdateMapEvent) {
-                                    AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                                    let splits = allowedFiles[ii].name.split(".");
+
+                                    if (splits && splits.length > 0) {
+                                        AppSettings.mapName = splits[0];
+                                    }
+
+                                    console.log("Rebuilding Data from loaded geoJSONObj");
+
+                                    for (let ii = 0; ii < geoJSONObj.features.length; ii++) {
+                                        // console.log("geoJSONObj.features[ii]:  ", geoJSONObj.features[ii])
+
+                                        let reloadImageData = new ImageData();
+
+                                        reloadImageData.name = geoJSONObj.features[ii].properties.name;
+                                        reloadImageData.imageHeight = geoJSONObj.features[ii].properties.imageHeight;
+                                        reloadImageData.imageWidth = geoJSONObj.features[ii].properties.imageWidth;
+                                        reloadImageData.thumbnailImageHeight = geoJSONObj.features[ii].properties.thumbnailImageHeight;
+                                        reloadImageData.thumbnailImageWidth = geoJSONObj.features[ii].properties.thumbnailImageWidth;
+
+                                        reloadImageData.imageURLData = geoJSONObj.features[ii].properties.imageURLData;
+                                        reloadImageData.lat = geoJSONObj.features[ii].geometry.coordinates[1];
+                                        reloadImageData.lng = geoJSONObj.features[ii].geometry.coordinates[0];
+                                        reloadImageData.elevation = geoJSONObj.features[ii].properties.elevation;
+                                        reloadImageData.flightDirection = geoJSONObj.features[ii].properties.flightDirection;
+                                        reloadImageData.cameraDirection = geoJSONObj.features[ii].properties.cameraDirection;
+                                        reloadImageData.cameraPitch = geoJSONObj.features[ii].properties.cameraPitch;
+                                        reloadImageData.date = geoJSONObj.features[ii].properties.date;
+                                        reloadImageData.originalDataSize = geoJSONObj.features[ii].properties.originalDataSize;
+                                        reloadImageData.imageRatio = geoJSONObj.features[ii].properties.imageRatio;
+
+                                        AppMapData.imageDataArray.push(reloadImageData);
+                                    }
+
+                                    //console.log("AppMapData.imageDataArray:  ", AppMapData.imageDataArray)
+
+                                    let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONObj);
+
+                                    if (UpdateMapEvent) {
+                                        AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                                    }
                                 }
                             }
                         });
@@ -128,6 +169,7 @@ class PhotoMapAppClass {
                 AppUIData.resultArray = await ImageProcessor.ProcessImages(files, AppUIData.canvasEl,
                     AppSettings.thumbnailImageWidth, AppSettings.thumbnailImageHeight,
                     AppSettings.imageIcon2DFormat, AppSettings.imageIcon2DQuality);
+
                 AppUIData.processingArrayCount = AppUIData.resultArray.length;
             }
             //console.log("OnDrop AppUIData.processingArrayCount = ", AppUIData.processingArrayCount)
@@ -164,7 +206,7 @@ class PhotoMapAppClass {
 
                 PhotoMapApp.ShowLoadingImage(false);
                 // clear the array and count for the next drop operation
-                AppUIData.GarbageCollect();
+                //AppUIData.GarbageCollect();
             }
             else {
                 // console.log("waiting for complete results array.... ")
@@ -244,63 +286,68 @@ class PhotoMapAppClass {
 
         if (geoJSONval) {
 
+            await PhotoMapApp.ResetMap();
+
             await Map2D.UpdateMap2D(geoJSONval);
 
             await Map3D.UpdateMap3D(geoJSONval);
-        }
 
+            PhotoMapApp.ShowLoadingImage(false);
+        }
     }
 
     /** Produces a downloadable map GeoJSON file */
-    async DownloadMap(event) {
+    async DownloadMapEvent(event) {
         if (!event) { return; }
 
         event.preventDefault = true;
         //console.log("AppMapData.geoJSONFileData: ", AppMapData.geoJSONFileData);
-        if (AppMapData.geoJSONFileData) {
 
-            let localGeoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
-            let downloadURL = FileUtils.CreateDownloadURL(localGeoJSONStr);
-
-            //console.log("downloadURL: ", downloadURL);
-            if (downloadURL) {
-                let downloadMap = document.getElementById("download-map-a");
-                if (downloadMap) {
-                    downloadMap.href = downloadURL;
-                    downloadMap.download = AppSettings.mapName + ".geojson";
-
-                 //   MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
-                }
-            }
-
-            AppUIData.formEl = document.getElementById("uploadForm");
-
-            if (AppUIData.formEl) {
-                
-                PhotoMapApp.ShowLoadingImage(true);
-
-                let mapFilename = AppSettings.mapName + ".geojson";
-    
-                await FileUtils.MapFileUploader(AppUIData.formEl, mapFilename, AppMapData.geoJSONFileData, AppMapData.remoteServerURL);
-    
-                let uploadPath = "uploads";
-    
-                let uploadPathEl = document.getElementById("basePathMap");
-                if (uploadPathEl){
-                    uploadPath = uploadPathEl.value;
-                }
-
-                PhotoMapApp.ShowLoadingImage(false);
-    
-                let clientLoadMapURL = AppMapData.remoteServerURL + "cgi-bin/photomap-loader.js?dir=" + uploadPath
-                    + "&filename=" + AppSettings.mapName + ".geojson&response_type=html";
-    
-                MessageUI.ShowMessage("<h3>Photo Mapper Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
-            }
-        }
-        else {
+        if (!AppMapData.geoJSONFileData) {
             MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there is no map data to download.", null);
+            return;
         }
+
+        let localGeoJSONStr = JSON.stringify(AppMapData.geoJSONFileData);
+        let downloadURL = FileUtils.CreateDownloadURL(localGeoJSONStr);
+
+        //console.log("downloadURL: ", downloadURL);
+        if (downloadURL) {
+            let downloadMap = document.getElementById("download-map-a");
+            if (downloadMap) {
+                downloadMap.href = downloadURL;
+                downloadMap.download = AppSettings.mapName + ".geojson";
+
+                //   MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
+            }
+        }
+
+        AppUIData.formEl = document.getElementById("uploadForm");
+
+        if (AppUIData.formEl) {
+
+            PhotoMapApp.ShowLoadingImage(true);
+
+            let mapFilename = AppSettings.mapName + ".geojson";
+
+            await FileUtils.MapFileUploader(AppUIData.formEl, mapFilename, AppMapData.geoJSONFileData, AppMapData.remoteServerURL);
+
+            let uploadPath = "uploads";
+
+            let uploadPathEl = document.getElementById("basePathMap");
+            if (uploadPathEl) {
+                uploadPath = uploadPathEl.value;
+            }
+
+            PhotoMapApp.ShowLoadingImage(false);
+
+            let clientLoadMapURL = AppMapData.remoteServerURL + "cgi-bin/photomap-loader.js?dir=" + uploadPath
+                + "&filename=" + AppSettings.mapName + ".geojson&response_type=html";
+
+            MessageUI.ShowMessage("<h3>Photo Mapper Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
+        }
+
+
     }
 
     MenuButtonSettingsOnClick(event) {
@@ -362,7 +409,7 @@ class PhotoMapAppClass {
 
         let menuButtonDownloadMap = document.getElementById("download-map");
         if (menuButtonDownloadMap) {
-            menuButtonDownloadMap.addEventListener("click", this.DownloadMap);
+            menuButtonDownloadMap.addEventListener("click", this.DownloadMapEvent);
         }
 
     }
@@ -419,7 +466,7 @@ class PhotoMapAppClass {
 
     async ResetMap() {
 
-        //    console.log("ResetMap() called");
+        console.log("ResetMap() called");
 
         AppMapData.geoJSONFileData = null;
 

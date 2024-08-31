@@ -69,7 +69,7 @@ export class AppMapDataClass {
     geoJSONFileURL = "uploads/test_drop/geo-images.json";
     geoJSONFileName = "geo-images.json";
     imageDataArray = [];
-    remoteServerURL = "https://photomap.nathancrews.com/";
+    remoteServerURL = "";
 
     constructor() {
         this.geoJSONFileData = null;
@@ -80,7 +80,7 @@ export class AppMapDataClass {
         this.geoJSONFileURL = "uploads/test_drop/geo-images.json";
         this.geoJSONFileName = "geo-images.json";
         this.imageDataArray = [];
-        this.remoteServerURL = "https://photomap.nathancrews.com/";
+        this.remoteServerURL = "https://photomap.nathancrews.com/"; // "http://localhost/";
         console.log("AppMapDataClass constructor called");
     }
 

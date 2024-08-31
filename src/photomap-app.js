@@ -57,5 +57,5 @@ if (jsonFileURLEl) {
 
     await PhotoMapApp.LoadMapFromURL(jsonFileURLEl.innerHTML);
 
-    PhotoMapApp.ShowLoadingImage(false);
+    
 }

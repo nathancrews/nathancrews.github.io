@@ -121,7 +121,7 @@ export class Map2DClass {
 
     async UpdateMap2D(geoJSONResults) {
 
-       // console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
+       console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
 
         let localgeoJSONResults = geoJSONResults;
 

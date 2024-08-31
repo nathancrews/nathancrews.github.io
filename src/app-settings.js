@@ -55,10 +55,14 @@ export class AppSettingsUIClass {
 
         switch (event.target.value) {
             case 'thumbnail':
-                AppSettings.GetSettingsUI()._settingsIconPreview.src = 'images/image-thumb.png';
+                if (AppSettings.GetSettingsUI()._settingsIconPreview) {
+                    AppSettings.GetSettingsUI()._settingsIconPreview.src = 'images/image-thumb.png';
+                }
                 break;
             case 'drone2d':
-                AppSettings.GetSettingsUI()._settingsIconPreview.src = 'images/drone-icon.jpg';
+                if (AppSettings.GetSettingsUI()._settingsIconPreview) {
+                    AppSettings.GetSettingsUI()._settingsIconPreview.src = 'images/drone-icon.jpg';
+                }
                 break;
         }
 
@@ -111,7 +115,7 @@ export class AppSettingsUIClass {
             AppSettings.GetSettingsUI().HideDialog();
         }
     }
-    
+
     CloseDialogEvent(event) {
         AppSettings.GetSettingsUI()._settingsDialog.style.display = "none";
         AppSettings.Save();
@@ -119,6 +123,10 @@ export class AppSettingsUIClass {
 
     ShowDialog() {
         // console.log("settingsDialog.style.display: ", this._settingsDialog.style.display);
+
+        if (this._settingsMapName) {
+            this._settingsMapName.value = AppSettings.mapName;
+        }
 
         window.onclick = this.OnWindowClickEvent;
         window.onkeydown = this.OnWindowKeyDownEvent;
@@ -167,10 +175,14 @@ export class AppSettingsUIClass {
 
         switch (this._mapIconSelector.value) {
             case 'thumbnail':
-                this._settingsIconPreview.src = 'images/image-thumb.png';
+                if (this._settingsIconPreview) {
+                    this._settingsIconPreview.src = 'images/image-thumb.png';
+                }
                 break;
             case 'drone2d':
-                this._settingsIconPreview.src = 'images/drone-icon.jpg';
+                if (this._settingsIconPreview) {
+                    this._settingsIconPreview.src = 'images/drone-icon.jpg';
+                }
                 break;
         }
 
@@ -195,10 +207,14 @@ export class AppSettingsUIClass {
         }
         switch (this._mapIconSelector.value) {
             case 'thumbnail':
-                this._settingsIconPreview.src = 'images/image-thumb.png';
+                if (this._settingsIconPreview) {
+                    this._settingsIconPreview.src = 'images/image-thumb.png';
+                }
                 break;
             case 'drone2d':
-                this._settingsIconPreview.src = 'images/drone-icon.jpg';
+                if (this._settingsIconPreview) {
+                    this._settingsIconPreview.src = 'images/drone-icon.jpg';
+                }
                 break;
         }
     }

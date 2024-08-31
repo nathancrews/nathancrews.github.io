@@ -86,6 +86,8 @@ export class FileUtils {
             formAction = remoteServerURL + formAction;
         }
 
+        console.log("formAction: ", formAction);
+
         formData.getAll("file").forEach((fileEntry) => { formData.delete("file"); })
         
         let localGeoJSONStr = JSON.stringify(inGeoJSON);
