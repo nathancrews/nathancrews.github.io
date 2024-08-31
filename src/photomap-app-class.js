@@ -355,7 +355,8 @@ class PhotoMapAppClass {
             let clientLoadMapURL = AppMapData.remoteServerURL + "cgi-bin/photomap-loader.js?dir=" + uploadPath
                 + "&filename=" + AppSettings.mapName + ".geojson&response_type=html";
 
-            MessageUI.ShowMessage("<h3>Photo Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
+            navigator.clipboard.writeText(clientLoadMapURL);
+            MessageUI.ShowMessage("<h3>Photo Map share link created and copied to your clipboard</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
         }
 
 
