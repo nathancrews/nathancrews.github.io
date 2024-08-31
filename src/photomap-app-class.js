@@ -317,9 +317,20 @@ class PhotoMapAppClass {
             if (downloadMap) {
                 downloadMap.href = downloadURL;
                 downloadMap.download = AppSettings.mapName + ".geojson";
-
-                //   MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
+                MessageUI.ShowMessage("<h3>Photo Mapper</h3>", `Success!<br/>Downloaded file: ${downloadMap.download}`, null);
             }
+        }
+    }
+
+    async ShareMapEvent(event) {
+        if (!event) { return; }
+
+        event.preventDefault = true;
+        //console.log("AppMapData.geoJSONFileData: ", AppMapData.geoJSONFileData);
+
+        if (!AppMapData.geoJSONFileData) {
+            MessageUI.ShowMessage("<h3>Photo Mapper</h3>", "Sorry, there is no map data to share.", null);
+            return;
         }
 
         AppUIData.formEl = document.getElementById("uploadForm");
@@ -344,7 +355,7 @@ class PhotoMapAppClass {
             let clientLoadMapURL = AppMapData.remoteServerURL + "cgi-bin/photomap-loader.js?dir=" + uploadPath
                 + "&filename=" + AppSettings.mapName + ".geojson&response_type=html";
 
-            MessageUI.ShowMessage("<h3>Photo Mapper Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
+            MessageUI.ShowMessage("<h3>Photo Map Share Link</h3>", `<a class="a-normal" href ="${clientLoadMapURL}" target="_blank">${clientLoadMapURL}</a>`, null);
         }
 
 
@@ -397,14 +408,9 @@ class PhotoMapAppClass {
             menuButtonResetMap.addEventListener('click', this.ResetMaps);
         }
 
-        let menuButtonSaveMap = document.getElementById("save-map");
-        if (menuButtonSaveMap) {
-            menuButtonSaveMap.addEventListener("click", this.SaveMapToLocalStorage);
-        }
-
-        let menuButtonLoadMap = document.getElementById("load-map");
-        if (menuButtonLoadMap) {
-            menuButtonLoadMap.addEventListener("click", this.LoadMapFromLocalStorage);
+        let menuButtonShareMap = document.getElementById("share-map");
+        if (menuButtonShareMap) {
+            menuButtonShareMap.addEventListener("click", this.ShareMapEvent);
         }
 
         let menuButtonDownloadMap = document.getElementById("download-map");

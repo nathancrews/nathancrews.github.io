@@ -65,11 +65,10 @@
                     title="Pick photos" type="file" name="upload-files" multiple="true">
             </div>
             <div id="menu-bar-3" class="menu-bar">
-                <!-- <img id="save-map" title="Save Map" alt="Save Map" src="images/save.svg" class="menu-button" />
-                <img id="load-map" title="Load Local Map" alt="Load Local Map" src="images/loadlocal.svg"
-                    class="menu-button" /> -->
                 <a id="download-map-a" download="photoMap.geojson"><img id="download-map" title="Download Map File"
                         alt="Download Map File" src="images/download.svg" class="menu-button" /></a>
+                <a><img id="share-map" title="Create Map Link Share" alt="Create Map Link Share" src="images/share.svg"
+                    class="menu-button" /></a>
             </div>
             <button id="submit-button" class="map-drop-submit-button" type="submit" hidden="true"></button>
         </div>
@@ -109,22 +108,19 @@
         </form>
 
         <form id="uploadForm" method="post" enctype="multipart/form-data" action="cgi-bin/ncupload.cgi" target="results"
-        class="map-form-input" class="map-form-input" hidden="true">
-        <input id="file" type="file" name="file" class="map-drop-zone__input map-menu-button map-file-upload-button"
-            multiple="true" accept=".geojson" hidden="true">
-        </div>
-        <button id="submit-button" class="map-drop-submit-button" name="submit-button" type="submit"
-            hidden="true">Upload</button>
-            <input id="directory" name="directory" value="" type="text"
-                class="map-menu-button map-form-input-text">
-        <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
-        <input id="redirectCGI" name="redirectCGI" hidden="true"
-            value="photomap-loader.js?dir=%s&response_type=json" />
-        <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.geojson" />
-        <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
-    </form>
-
-
+            class="map-form-input" class="map-form-input" hidden="true">
+            <input id="file" type="file" name="file" class="map-drop-zone__input map-menu-button map-file-upload-button"
+                multiple="true" accept=".geojson" hidden="true">
+            </div>
+            <button id="submit-button" class="map-drop-submit-button" name="submit-button" type="submit"
+                hidden="true">Upload</button>
+            <input id="directory" name="directory" value="" type="text" class="map-menu-button map-form-input-text">
+            <input id="maxFilesPerRequest" name="maxFilesPerRequest" hidden="true" value="50" />
+            <input id="redirectCGI" name="redirectCGI" hidden="true"
+                value="photomap-loader.js?dir=%s&response_type=json" />
+            <input id="fileTypePathMap" name="fileTypePathMap" hidden="true" value="*=.geojson" />
+            <input id="basePathMap" name="basePathMap" hidden="true" value="uploads" />
+        </form>
     </header>
     <div id="map2d" class="map-drop-zone map-base"></div>
     <!-- <div id="map3d" class="map-drop-zone map-base"></div> -->
