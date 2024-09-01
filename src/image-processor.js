@@ -156,7 +156,6 @@ export class ImageProcessorClass {
             //console.log('fileImageData.imageFileData = ', fileImageData.imageFileData);
             URL.revokeObjectURL(fileImageData.imageFileData);
             fileImageData.imageFileData = null;
-            fileImageData.imageData = null;
 
             //console.log('Worker calling ThumbnailReadyEvent');
             let ThumbnailReadyEvent = new CustomEvent(this._ThumbnailReadyEventStr, { async: true, detail: { ImageData: fileImageData } });

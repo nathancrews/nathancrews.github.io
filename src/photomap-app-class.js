@@ -34,6 +34,7 @@ class PhotoMapAppClass {
     async UpdateMaps(event) {
 
         let localgeoJSONFileData = event.detail.geoJSONFileData;
+        let shouldReZoom = event.detail.shouldZoom;
 
         if (!localgeoJSONFileData) {
             console.log("UpdateMaps: invalid geoJSON data!");
@@ -42,7 +43,7 @@ class PhotoMapAppClass {
         console.log("updating maps...:");
 
         let startTime = performance.now();
-        await Map2D.UpdateMap2D(localgeoJSONFileData);
+        await Map2D.UpdateMap2D(localgeoJSONFileData, shouldReZoom);
         let endTime = performance.now();
         console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
@@ -55,7 +56,7 @@ class PhotoMapAppClass {
 
     /** FindImageNameInArray: 
      * Helper function to detect duplicate files */
-    FindImageNameInArray(nameStr, imageArray) {
+    DoesImageNameExtistInArray(nameStr, imageArray) {
         let existsInArray = false;
 
         for (let ii = 0; ii < imageArray.length; ii++) {
@@ -67,8 +68,20 @@ class PhotoMapAppClass {
         return existsInArray;
     }
 
-    GetGeoJSONDataChangedEvent(ingeoJSONFileData) {
-        return new CustomEvent(this._geoJSONDataChangedEventStr, { detail: { geoJSONFileData: ingeoJSONFileData } });
+    FindImageNameIndexInArray(nameStr, imageArray) {
+        let arrayIndex = -1;
+
+        for (let ii = 0; ii < imageArray.length; ii++) {
+            if (nameStr === imageArray[ii].name) {
+                arrayIndex = ii;
+                break;
+            }
+        }
+        return arrayIndex;
+    }
+
+    GetGeoJSONDataChangedEvent(ingeoJSONFileData, inShouldZoom) {
+        return new CustomEvent(this._geoJSONDataChangedEventStr, { detail: { geoJSONFileData: ingeoJSONFileData, shouldZoom: inShouldZoom } });
     }
 
     /** Primary function for files dropped or choosen by user */
@@ -144,7 +157,7 @@ class PhotoMapAppClass {
 
                                     //console.log("AppMapData.imageDataArray:  ", AppMapData.imageDataArray)
 
-                                    let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONObj);
+                                    let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONObj, true);
 
                                     if (UpdateMapEvent) {
                                         AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -157,7 +170,7 @@ class PhotoMapAppClass {
                         return;
                     }
 
-                    else if (!PhotoMapApp.FindImageNameInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
+                    else if (!PhotoMapApp.DoesImageNameExtistInArray(allowedFiles[ii].name, AppMapData.imageDataArray)) {
                         files.push(allowedFiles[ii]);
                     }
                 }
@@ -197,7 +210,7 @@ class PhotoMapAppClass {
 
                 if (geoJSONval) {
 
-                    let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONval);
+                    let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONval, true);
 
                     if (UpdateMapEvent) {
                         AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
@@ -206,7 +219,7 @@ class PhotoMapAppClass {
 
                 PhotoMapApp.ShowLoadingImage(false);
                 // clear the array and count for the next drop operation
-                //AppUIData.GarbageCollect();
+                AppUIData.GarbageCollect();
             }
             else {
                 // console.log("waiting for complete results array.... ")
@@ -485,6 +498,51 @@ class PhotoMapAppClass {
     }
 
     /////////////////////////////////////////////////
+    /**  Map Edits: Remove and Move photos on map  */
+    /////////////////////////////////////////////////
+    RemoveImage(imageName) {
+
+        console.log("DELETING: ", imageName);
+
+        let foundIndex = this.FindImageNameIndexInArray(imageName, AppMapData.imageDataArray);
+
+        if (foundIndex > -1) {
+
+            AppMapData.imageDataArray.splice(foundIndex, 1);
+
+            let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
+
+            if (geoJSONval) {
+
+                let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONval, false);
+
+                if (UpdateMapEvent) {
+                    AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                }
+            }
+        }
+    }
+
+    MoveImage(imageName, lat, lng) {
+
+        console.log("MOVING: ", imageName);
+
+        let foundIndex = this.FindImageNameIndexInArray(imageName, AppMapData.imageDataArray);
+
+        if (foundIndex > -1) {
+
+            AppMapData.imageDataArray[foundIndex].lat = lat;
+            AppMapData.imageDataArray[foundIndex].lng = lng;
+
+            let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
+
+            if (geoJSONval) {
+                AppMapData.geoJSONFileData = geoJSONval;
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////
     /**  Saves map data to localStorage */
     /////////////////////////////////////////////////
     SaveMapToLocalStorage() {
@@ -563,7 +621,7 @@ class PhotoMapAppClass {
 
                     this.ShowLoadingImage(true);
 
-                    let UpdateMapEvent = this.GetGeoJSONDataChangedEvent(geoJSON);
+                    let UpdateMapEvent = this.GetGeoJSONDataChangedEvent(geoJSON, true);
 
                     if (UpdateMapEvent) {
                         AppUIData.submitButton.dispatchEvent(UpdateMapEvent);

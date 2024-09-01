@@ -30,6 +30,7 @@
 import { AppMapData, AppUIData } from "./app-data.js";
 import { AppSettings } from "./app-settings.js";
 import { FileUtils } from "./file-utils.js";
+import { PhotoMapApp } from "./photomap-app-class.js";
 
 export class Map2DClass {
 
@@ -51,10 +52,10 @@ export class Map2DClass {
     //************************************
     // Define Map2D Methods
     //************************************
-    async RedrawMap2D(){
+    async RedrawMap2D() {
         let retVal = false;
 
-       //console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
+        //console.log("2DMap AppMapData.geoJSONFileData=", AppMapData.geoJSONFileData);
 
         if (AppMapData.geoJSONFileData) {
 
@@ -69,6 +70,14 @@ export class Map2DClass {
             //console.log("_droneIcon = ", this._droneIcon)
 
             this._imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
+
+                onEachFeature: function (feature, layer) {
+                   // console.log("feature = ", feature);
+                   // console.log("layer = ", layer);
+
+                    layer.on('contextmenu', Map2D.OnContextMenu);
+                    layer.on('dragend', Map2D.OnDragEnd);
+                },
 
                 pointToLayer: function (point, latlng) {
                     // console.log("point.properties.thumbFileName = ", point.properties.thumbFileName)
@@ -101,17 +110,17 @@ export class Map2DClass {
                         }
                     }
 
-                    return L.marker(latlng, { icon: currentDroneIcon });
+                    return L.marker(latlng, { icon: currentDroneIcon, draggable: true, autoPan: true});
                 },
             }).bindPopup(function (layer) {
                 return "<div><p class='leaflet-div-p' style='width:fit-content;'><b>" + layer.feature.properties.name + "</b></p> \
                    <p class='leaflet-div-p'>Date: " + layer.feature.properties.date + "</p><img ' src='" +
                     layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
-            });
+            })
 
             if (this._imagesLayer) {
                 this._imageLayerGroup.addLayer(this._imagesLayer);
-                this._LMap.fitBounds(this._imagesLayer.getBounds());
+                // this._LMap.fitBounds(this._imagesLayer.getBounds());
                 retVal = true;
             }
         }
@@ -119,9 +128,31 @@ export class Map2DClass {
         return retVal;
     }
 
-    async UpdateMap2D(geoJSONResults) {
+    OnContextMenu(event) {
+  
+        if (event.originalEvent.ctrlKey === true) {
+            
+            event.target.removeEventListener('contextmenu', Map2D.OnContextMenu);
+            event.target.removeEventListener('dragend', Map2D.OnDragEnd);
 
-       console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
+            console.log("deleting photo: ", event.target.feature.properties.name);
+            PhotoMapApp.RemoveImage(event.target.feature.properties.name);
+        }
+    }
+
+    OnDragEnd(event) {
+
+        var marker = event.target;
+        var position = marker.getLatLng();
+
+//        console.log("should MOVE: ", event.target.feature.properties.name);
+//        console.log("TO: ", position);
+        PhotoMapApp.MoveImage(event.target.feature.properties.name, position.lat.toFixed(8),  position.lng.toFixed(8));
+    }
+
+    async UpdateMap2D(geoJSONResults, shouldReZoom) {
+
+        console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
 
         let localgeoJSONResults = geoJSONResults;
 
@@ -141,7 +172,10 @@ export class Map2DClass {
             AppMapData.geoJSONFileData = localgeoJSONResults;
         }
 
-        return this.RedrawMap2D();
+        await this.RedrawMap2D();
+        if (shouldReZoom && shouldReZoom === true){
+            this.ResetMap2DView();
+        }
     }
 
     async ResetMap2D() {
@@ -200,7 +234,7 @@ export class Map2DClass {
         this._LMap = L.map('map2d', {
             center: [this._defaultLatitude, this._defaultLongitude],
             zoom: 18,
-            maxZoom: 19,
+            maxZoom: 21,
             layers: [osm, Esri_Imagery /*, googleHybrid, googleRoadmap, googleSatellite */]
         });
 
@@ -216,8 +250,10 @@ export class Map2DClass {
         this._layerControl = L.control.layers(baseMaps);
         this._layerControl.addOverlay(this._imageLayerGroup, "Uploaded Pics");  // Add empty photos group to layer control
         this._layerControl.addTo(this._LMap);
-    }
 
+        //  this._LMap.on('contextmenu', this.OnContextMenu);
+
+    }
 
 }
 
