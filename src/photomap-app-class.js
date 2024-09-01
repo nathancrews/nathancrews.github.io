@@ -301,7 +301,7 @@ class PhotoMapAppClass {
 
             await PhotoMapApp.ResetMap();
 
-            await Map2D.UpdateMap2D(geoJSONval);
+            await Map2D.UpdateMap2D(geoJSONval, true);
 
             await Map3D.UpdateMap3D(geoJSONval);
 
