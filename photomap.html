@@ -27,6 +27,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/photomap.css" />
@@ -42,8 +44,12 @@
 </head>
 
 <body class="map-body">
-    <div class="button" data-page="about">
-        <a href="https://apps.nathancrews.com" target="_blank">About</a>
+    <div style="margin-top:1rem">
+        <div class="button"  data-page="about" title="About the app...">
+            <a href="https://apps.nathancrews.com" target="_blank">About</a>
+        </div>
+
+        <div class="button" id="help-btn" title="Watch Help Video">Help</div>
     </div>
     <header id="loading-header" name="loading-header" class="map-header">
         <h1 class="map-h1">Photo Map Creator: Drop photos on map or choose</h1>
@@ -68,7 +74,7 @@
                 <a id="download-map-a" download="photoMap.geojson"><img id="download-map" title="Download Map File"
                         alt="Download Map File" src="images/download.svg" class="menu-button" /></a>
                 <a><img id="share-map" title="Create Map Link Share" alt="Create Map Link Share" src="images/share.svg"
-                    class="menu-button" /></a>
+                        class="menu-button" /></a>
             </div>
             <button id="submit-button" class="map-drop-submit-button" type="submit" hidden="true"></button>
         </div>

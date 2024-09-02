@@ -72,8 +72,8 @@ export class Map2DClass {
             this._imagesLayer = L.geoJSON(AppMapData.geoJSONFileData, {
 
                 onEachFeature: function (feature, layer) {
-                   // console.log("feature = ", feature);
-                   // console.log("layer = ", layer);
+                    // console.log("feature = ", feature);
+                    // console.log("layer = ", layer);
 
                     layer.on('contextmenu', Map2D.OnContextMenu);
                     layer.on('dragend', Map2D.OnDragEnd);
@@ -110,11 +110,12 @@ export class Map2DClass {
                         }
                     }
 
-                    return L.marker(latlng, { icon: currentDroneIcon, draggable: true, autoPan: true});
+                    return L.marker(latlng, { icon: currentDroneIcon, draggable: true, autoPan: true });
                 },
             }).bindPopup(function (layer) {
-                return "<div><p class='leaflet-div-p' style='width:fit-content;'><b>" + layer.feature.properties.name + "</b></p> \
-                   <p class='leaflet-div-p'>Date: " + layer.feature.properties.date + "</p><img ' src='" +
+                return "<div><p class='leaflet-div-p font-photo-name' \
+                        style='width:fit-content;'>" + layer.feature.properties.name + "</p> \
+                   <p class='leaflet-div-p font-photo-hw'>Date: " + layer.feature.properties.date + "</p><img ' src='" +
                     layer.feature.properties.imageURLData + "' class='map-thumb-2d' /></a></div>";
             })
 
@@ -129,9 +130,9 @@ export class Map2DClass {
     }
 
     OnContextMenu(event) {
-  
+
         if (event.originalEvent.ctrlKey === true) {
-            
+
             event.target.removeEventListener('contextmenu', Map2D.OnContextMenu);
             event.target.removeEventListener('dragend', Map2D.OnDragEnd);
 
@@ -145,14 +146,14 @@ export class Map2DClass {
         var marker = event.target;
         var position = marker.getLatLng();
 
-//        console.log("should MOVE: ", event.target.feature.properties.name);
-//        console.log("TO: ", position);
-        PhotoMapApp.MoveImage(event.target.feature.properties.name, position.lat.toFixed(8),  position.lng.toFixed(8));
+        //        console.log("should MOVE: ", event.target.feature.properties.name);
+        //        console.log("TO: ", position);
+        PhotoMapApp.MoveImage(event.target.feature.properties.name, position.lat.toFixed(8), position.lng.toFixed(8));
     }
 
     async UpdateMap2D(geoJSONResults, shouldReZoom) {
 
-        console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
+        //console.log("UpdateMap2D geoJSONResults=", geoJSONResults);
 
         let localgeoJSONResults = geoJSONResults;
 
@@ -173,7 +174,7 @@ export class Map2DClass {
         }
 
         await this.RedrawMap2D();
-        if (shouldReZoom && shouldReZoom === true){
+        if (shouldReZoom && shouldReZoom === true) {
             this.ResetMap2DView();
         }
     }
@@ -181,6 +182,18 @@ export class Map2DClass {
     async ResetMap2D() {
 
         console.log("clearing 2D Map...");
+
+        let imageMarkers = document.getElementsByClassName("leaflet-marker-icon");
+
+        // remove event listeners
+        if (imageMarkers) {
+           // console.log("found imageMarkers: ", imageMarkers.length);
+            
+            for (let ii = 0; ii < imageMarkers.length; ii++) {
+                imageMarkers[ii].removeEventListener('contextmenu', Map2D.OnContextMenu);
+                imageMarkers[ii].removeEventListener('dragend', Map2D.OnDragEnd);
+            }
+        }
 
         if (this._imagesLayer) {
             console.log("removing imageLayerGroup");

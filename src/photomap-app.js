@@ -29,11 +29,24 @@
 
 
 import { PhotoMapApp } from "./photomap-app-class.js"
+import { MessageUI } from "./message-ui.js";
+
+function ShowHelp(event) {
+    event.preventDefault(true);
+
+    MessageUI.ShowMessage("<h2>Photo Map Creator Help Video</h2>",
+                          '<iframe width="400" height="300" src="https://www.youtube.com/embed/E0HH1-r0-5Y?autoplay=1&mute=1"></iframe>', null);
+}
+
+let helpBtn = document.getElementById("help-btn");
+
+if (helpBtn) {
+    helpBtn.onclick = ShowHelp;
+}
 
 await PhotoMapApp.RunApp();
 
 let jsonFileURLEl = document.getElementById("jsonFileURL");
-
 
 if (jsonFileURLEl) {
 
@@ -42,4 +55,6 @@ if (jsonFileURLEl) {
     PhotoMapApp.ShowLoadingImage(true);
 
     await PhotoMapApp.LoadMapFromURL(jsonFileURLEl.innerHTML);
+
+
 }
