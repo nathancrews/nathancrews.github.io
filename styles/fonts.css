@@ -1,11 +1,13 @@
 
 .font-photo-name{
+  color: black;
   font-family: "Lucida Handwriting", sans-serif;
   font-size: medium;
   font-weight: bold;
 }
 
 .font-photo-hw {
+  color: black;
   font-family: "Caveat", sans-serif;
   font-size: larger;
   font-weight: bold;

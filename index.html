@@ -10,7 +10,7 @@
   <meta name="keywords"
     content="client-side, image rendering, 2D, 3D, map, geolocate, GPS, drone, survey, HTML, CSS, JavaScript">
   <meta name="keywords"
-    content="cesium, leaflet, geospatial, GIS, application, development, mapping, photogrammetry, civil engineer, land development">
+    content="cesium, MapBoxJS, leaflet, geospatial, GIS, application, development, mapping, photogrammetry, civil engineer, land development">
   <meta name="keywords"
     content="arial, imagery, memory, memories, where, was, picture, taken, photo, jpeg, jpg, png, map, mapper">
   <meta name="keywords"
@@ -385,6 +385,7 @@
                       </ul>
                       <ul class="sub-li-1">
                         <li>LeftletJS</li>
+                        <li>MapBoxJS</li>
                         <li>CesiumJS</li>
                       </ul>
                     </div>
@@ -451,7 +452,7 @@
     <div id="project-gallery" class="grid-container projectBox">
       <box class="project">
         <h3 class="project-title">Photo Map Creator</h3>
-        <article class="description-text" style="font-size: small;">Quickly maps photos with GPS data by dropping photo images files onto the map. 
+        <article class="description-text" style="font-size: small;">Quickly maps (MapBoxJS & LeafletJS) photos with GPS data by dropping photo images files onto the map. 
           Fine tune the map by Adding, Moving and Deleting photos. Create a map viewer link, anyone with the link can view (not edit) the shared map. 
           Supports desktop and mobile browsers.
         </article>
@@ -467,7 +468,7 @@
               <div class="message-text">Build Tools: VSCode, Chrome, Edge, Safari</div>
               <div class="message-text">Platforms: desktop and mobile browsers</div>
               <div class="message-text">Framework: DOM JavaScript</div>
-              <div class="message-text">Libraries: leafletJS, CesiumJS, GeoJSON, EXIFReader</div>
+              <div class="message-text">Libraries: leafletJS, MapBoxJS, CesiumJS, GeoJSON, EXIFReader</div>
               <div style="display: block;align-self: center;justify-self: center; border:none">
 
                 <div class="button">
@@ -483,13 +484,15 @@
             </div>
           </details>
           <div id="project-pmc-slides" class="slide-button-caption" data-slide-show-id="project-pmc-slides"
-            data-slide-show-slide-images="./images/projects/webapps/photomapper-2D.webp, 
+            data-slide-show-slide-images="./images/projects/webapps/photomapper-3D.webp, 
+                                        ./images/projects/webapps/photomapper-2D.webp,
                                         ./images/projects/webapps/map-set-name.webp,
                                         ./images/projects/webapps/save-map.webp,
                                         ./images/projects/webapps/save-map-link.webp,
                                         ./images/projects/webapps/shared-map.webp";
 
-            data-slide-show-slide-image-captions="Photos with GPS data in 2D Map, 
+            data-slide-show-slide-image-captions="Photos with GPS data in 3D Map (MapBoxJS),
+                                                  Photos with GPS data in 2D Map (LeafletJS), 
                                                   Photo Mapper Settings - set the map name to save on local drive and create share link,
                                                   Save the map on local drive for later loading and editing,
                                                   Create a simple to use map viewer link,

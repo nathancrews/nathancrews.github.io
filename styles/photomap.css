@@ -6,6 +6,10 @@
   padding:0rem;
 }
 
+.mapboxgl-popup-content{
+  width: fit-content;
+  border-radius: 10px;
+}
 
 div.leaflet-popup-content-wrapper{
   width: fit-content;

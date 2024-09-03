@@ -3,7 +3,7 @@ import { AppSettings } from "./app-settings.js";
 import { MessageUI } from "./message-ui.js";
 import { DropHandler } from "./map-drop-zone.js";
 import { Map2D } from "./map-view2D.js";
-import { Map3D } from "./map-view3D.js";
+import { MapBox } from "./map-viewBox.js";
 import { FileUtils } from "./file-utils.js";
 import { ImageProcessor } from "./image-processor.js"
 import { ImageData } from "./image-data.js"
@@ -48,10 +48,10 @@ class PhotoMapAppClass {
         console.log(`UpdateMap2D duration ${endTime - startTime}ms`)
 
         startTime = performance.now();
-        await Map3D.UpdateMap3D(localgeoJSONFileData);
+        await MapBox.UpdateMap(localgeoJSONFileData, shouldReZoom);
         PhotoMapApp.ShowLoadingImage(false);
         endTime = performance.now();
-        console.log(`UpdateMap3D duration ${endTime - startTime}ms`)
+        console.log(`UpdateMapBox duration ${endTime - startTime}ms`)
     }
 
     /** FindImageNameInArray: 
@@ -189,7 +189,7 @@ class PhotoMapAppClass {
 
             if (AppUIData.processingArrayCount == 0) {
                 PhotoMapApp.ShowLoadingImage(false);
-                MessageUI.ShowMessage("Photo Map", "Sorry, no valid image files with GPS data were selected OR duplicate images not procressed!", null);
+                MessageUI.ShowMessage("Photo Map", "Sorry, no valid image files with GPS data were selected OR duplicate images not processed!", null);
             }
         }
     }
@@ -288,7 +288,7 @@ class PhotoMapAppClass {
         this.InitMenuBar();
 
         await Map2D.InitMap2D(AppMapData.defaultLatitude, AppMapData.defaultLongitude);
-        await Map3D.InitMap3D(AppMapData.defaultLatitude, AppMapData.defaultLongitude);
+        await MapBox.InitMap(AppMapData.defaultLatitude, AppMapData.defaultLongitude);
 
         await this.Show2DMap(null);
     }
@@ -303,7 +303,7 @@ class PhotoMapAppClass {
 
             await Map2D.UpdateMap2D(geoJSONval, true);
 
-            await Map3D.UpdateMap3D(geoJSONval);
+            await MapBox.UpdateMap(geoJSONval);
 
             PhotoMapApp.ShowLoadingImage(false);
         }
@@ -474,7 +474,7 @@ class PhotoMapAppClass {
 
         if (map3D_div_el) {
             map3D_div_el.style.display = "block";
-            await Map3D.ResetMap3DView();
+            await MapBox.ResetMapView();
             console.log("view set to 3D");
         }
     }
@@ -491,7 +491,7 @@ class PhotoMapAppClass {
         AppMapData.geoJSONFileData = null;
 
         await Map2D.ResetMap2D();
-        await Map3D.ResetMap3D();
+        await MapBox.ResetMap();
 
         AppMapData.GarbageCollect();
         AppUIData.GarbageCollect();
@@ -537,7 +537,11 @@ class PhotoMapAppClass {
             let geoJSONval = GeoJSON.parse(AppMapData.imageDataArray, { Point: ['lat', 'lng', 'elevation'] });
 
             if (geoJSONval) {
-                AppMapData.geoJSONFileData = geoJSONval;
+                let UpdateMapEvent = PhotoMapApp.GetGeoJSONDataChangedEvent(geoJSONval, false);
+
+                if (UpdateMapEvent) {
+                    AppUIData.submitButton.dispatchEvent(UpdateMapEvent);
+                }
             }
         }
     }
