@@ -27,6 +27,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
 
+import { AppMapData } from "./app-data.js";
+
 export class Map3DClass {
 
     _csMap = null;
@@ -40,12 +42,12 @@ export class Map3DClass {
     }
 
     async InitMap3D(defaultLatitude, defaultLongitude) {
-
         this._defaultLatitude = defaultLatitude;
         this._defaultLongitude = defaultLongitude;
 
         if (!this._csMap) {
-            this._csMap = await this.LoadCesium3D();
+            let jsk = await AppMapData.Getcsp();
+            this._csMap = await this.LoadCesium3D(jsk);
         }
     }
 
@@ -154,15 +156,18 @@ export class Map3DClass {
         });
     }
 
-    async LoadCesium3D() {
+    async LoadCesium3D(mn) {
         let retView = null;
 
-        if (document.getElementById('map3d')) {
+        if (document.getElementById('csmap3d')) {
             try {
 
-                Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYmVjM2RmMy01MTVmLTQxNTctYjk0OC1jNmM2ZTFmMzkwZDYiLCJpZCI6MTc0MzI1LCJpYXQiOjE2OTgzOTQxNjh9.qw8O6-GM1BxdYdPyUFz7MLKH3KTh52edzeS_K0EmmZQ";
 
-                retView = await new Cesium.Viewer('map3d', {
+                console.log("mn: ", mn);
+                
+                Cesium.Ion.defaultAccessToken = mn;
+
+                retView = await new Cesium.Viewer('csmap3d', {
                     imageryProvider: false,
                     baseLayerPicker: false,
                     homeButton: false,

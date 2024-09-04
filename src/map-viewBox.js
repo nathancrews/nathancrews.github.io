@@ -26,9 +26,11 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////////
+import { AppMapData } from "./app-data.js";
 import { PhotoMapApp } from "./photomap-app-class.js";
 
 export class MapBoxClass {
+    #mbgl = "";
 
     constructor() {
         this._csMap = null;
@@ -44,12 +46,13 @@ export class MapBoxClass {
     }
 
     async InitMap(defaultLatitude, defaultLongitude) {
+        this.#mbgl = await AppMapData.Getmbp();
 
         this._defaultLatitude = defaultLatitude;
         this._defaultLongitude = defaultLongitude;
 
         if (!this._csMap) {
-            await this.LoadMap();
+            await this.LoadMap(this.#mbgl);
         }
     }
 
@@ -222,7 +225,7 @@ export class MapBoxClass {
         this._csMapBounds = [[999, 999], [-999, -999]];
     }
 
-    async LoadMap() {
+    async LoadMap(mbname) {
 
         this._csMapElement = document.getElementById('map3d');
 
@@ -232,7 +235,8 @@ export class MapBoxClass {
         }
 
         try {
-            mapboxgl.accessToken = "pk.eyJ1IjoibmF0aGFuY3Jld3MiLCJhIjoiY20wZXZ3eGxyMG12NjJqcXM4c3BreGdidyJ9.kypvQwSJk44YjvCnOcFERA";
+            
+            mapboxgl.accessToken = `${mbname}`;
 
             this._csMap = new mapboxgl.Map({
                 container: 'map3d',

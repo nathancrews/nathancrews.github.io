@@ -55,6 +55,9 @@ export class AppUIDataClass {
 
 
 export class AppMapDataClass {
+    #mbp = "";
+    #csp = "";
+    #gp = "";
     //************************************
     // Define Constants
     //************************************
@@ -72,6 +75,9 @@ export class AppMapDataClass {
     remoteServerURL = "";
 
     constructor() {
+        this.#mbp = "";
+        this.#csp = "";
+        this.#gp = "";
         this.geoJSONFileData = null;
         this.defaultLatitude = 56.01877997222222;
         this.defaultLongitude = -3.7548339722222224;
@@ -84,12 +90,48 @@ export class AppMapDataClass {
         console.log("AppMapDataClass constructor called");
     }
 
+    async Getmbp() {
+        if (this.#mbp.length < 1) {
+            this.#mbp = await this.InitTextures(this.remoteServerURL + "template/.textures.plx");
+        }
+        return this.#mbp;
+    }
+
+    async Getcsp() {
+        if (this.#csp.length < 1) {
+            this.#csp = await this.InitTextures(this.remoteServerURL + "template/.textures.cs.plx");
+        }
+        return this.#csp;
+    }
+
+    async Getgp() {
+        if (this.#gp.length < 1) {
+            this.#gp = await this.InitTextures(this.remoteServerURL + "template/.textures.g.plx");
+        }
+        return this.#gp;
+    }
+
     GarbageCollect() {
         console.log("AppMapDataClass GarbageCollect() called");
         this.imageDataArray = null;
         this.imageDataArray = [];
 
         //console.log("AppMapData geoJSONFileData: ", this.geoJSONFileData);
+    }
+
+    async InitTextures(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            let tx = await response.text();
+            tx = tx.trim();
+
+            return tx;
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 }
 
