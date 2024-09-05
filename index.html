@@ -599,8 +599,53 @@
             </span>
           </a>
         </div>
-
       </box>
+
+      <box class="project">
+        <h3 class="project-title">3D Point Cloud Editing</h3>
+        <article class="description-text">Point cloud loading, merging, cropping, editing, filtering and feature detection (ground, building, poles, curbs, paint lines). Created a point cloud smooth filtering to provide smooth and accurate contours.</article>
+
+        <div style="display: flex;flex-direction: column;">
+          <div id='project-p3d-details-btn' class="project-details-button-caption">Project Details</div>
+          <details class="project-details">
+            <summary>Project Details</summary>
+            <div id="project-p3d-details">
+              <div class="message-text">Provides point cloud loading, merging, cropping, editing, filtering and feature detection.</div>
+              <div class="message-text">Created and used various filters (PCL and custom) for feature detection: ground, building, poles, trees, vehicles.
+                Created specialized filtering for paint stripe detection, parking stripes, colored areas, road lane lines and road markings. 
+                Parallel processing using Intel TBB and OpenMP.
+              </div>
+              <div class="message-text">Languages: C++, GLSL</div>
+              <div class="message-text">Build Tools: Visual Studio 2022</div>
+              <div class="message-text">Platforms: Windows</div>
+              <div class="message-text">Framework: Win API/ATL/Shell, Qt</div>
+              <div class="message-text">Libraries: STL, OpenGL, LASLib, PCL, PDAL, Open3D, Intel TBB, boost</div>
+            </div>
+          </details>
+          <div id="project-p3d-slides" class="slide-button-caption" data-slide-show-id="project-p3d-slides"
+            data-slide-show-slide-images="./images/projects/carlson/p3d Feature extraction.png, ./images/projects/carlson/parkinglot1.png,
+            ./images/projects/carlson/parkinglot1-features.png, ./images/projects/carlson/p3d stock pile detection.png"
+            data-slide-show-slide-image-captions="Non-ground feature detection: building/curbs/vehicles/utility poles/signs, 
+                                                  Point cloud parking paint and curb detection,
+                                                  Results: point cloud parking paint and curb detection,Automated stock pile detection"
+            onclick="SlideShow.StartSlideShowFromElemEvent(event)">View Slide Show</div>
+        </div>
+
+        <img id="project-p3d-img" width="250px" src="./images/projects/carlson/p3d Feature extraction.png"
+          class="project-image" data-slide-show-id="project-p3d-slides"
+          onclick="SlideShow.StartSlideShowFromElemEvent(event)" />
+
+        <div class="button">
+          <a href="https://youtu.be/UeFG9bRy0Lk" rel="noopener" target="_blank">
+            <span>
+              <img class="a-logo-img" src="./images/utube-logo.svg" width="24px" height="18px" /> Video
+            </span>
+          </a>
+        </div>
+      </box>
+
+
+
       <box class="project">
         <h3 class="project-title">GLTF/GLB Shell Extension</h3>
         <article class="description-text">In Windows File Explorer, right click on GLTF/GLB files to produce quick

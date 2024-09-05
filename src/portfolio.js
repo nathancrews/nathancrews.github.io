@@ -130,6 +130,21 @@ function showPMDetails(event) {
     }
 }
 
+
+
+let p3dDetailsBtn = document.getElementById('project-p3d-details-btn');
+if (p3dDetailsBtn) {
+    p3dDetailsBtn.onclick = showp3dDetails;
+}
+
+function showp3dDetails(event) {
+
+    let p3dDetails = document.getElementById('project-p3d-details');
+    if (p3dDetails) {
+        MessageUI.ShowMessage("<h3>Point cloud Editing & feature detection</h3>", p3dDetails.innerHTML, null);
+    }
+}
+
 let pcDetailsBtn = document.getElementById('project-pc-details-btn');
 if (pcDetailsBtn) {
     pcDetailsBtn.onclick = showPCDetails;
