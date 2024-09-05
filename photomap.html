@@ -37,17 +37,13 @@
     <link rel="stylesheet" href="styles/menubar.css" />
     <script src="./src/geojson/geojson.min.js" type="module" defer></script>
     <script src="./src/photomap-app.js" type="module" defer></script>
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-        data-cf-beacon='{"token": "e2b26c1669c44cc08b9db6bcd2ae3c83"}'></script>
-    <!-- End Cloudflare Web Analytics -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2111887613548752"
-    crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 </head>
 
 <body class="map-body">
     <div style="margin-top:1rem">
-        <div class="button"  data-page="about" title="About the app...">
+        <div class="button" data-page="about" title="About the app...">
             <a href="https://apps.nathancrews.com" target="_blank">About</a>
         </div>
 
@@ -131,7 +127,12 @@
         </form>
     </header>
     <div id="map2d" class="map-drop-zone map-base"></div>
-    <div id="map3d" class="map-drop-zone map-base"></div> 
+    <div id="map3d" class="map-drop-zone map-base"></div>
+
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "e2b26c1669c44cc08b9db6bcd2ae3c83"}'>
+    </script><!-- End Cloudflare Web Analytics -->
 </body>
 
 </html>
