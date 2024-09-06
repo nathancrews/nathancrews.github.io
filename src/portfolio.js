@@ -130,8 +130,6 @@ function showPMDetails(event) {
     }
 }
 
-
-
 let p3dDetailsBtn = document.getElementById('project-p3d-details-btn');
 if (p3dDetailsBtn) {
     p3dDetailsBtn.onclick = showp3dDetails;
@@ -144,6 +142,20 @@ function showp3dDetails(event) {
         MessageUI.ShowMessage("<h3>Point cloud Editing & feature detection</h3>", p3dDetails.innerHTML, null);
     }
 }
+
+let p3d2DetailsBtn = document.getElementById('project-p3d2-details-btn');
+if (p3d2DetailsBtn) {
+    p3d2DetailsBtn.onclick = showp3d2Details;
+}
+
+function showp3d2Details(event) {
+
+    let p3d2Details = document.getElementById('project-p3d2-details');
+    if (p3d2Details) {
+        MessageUI.ShowMessage("<h3>Surface Modeling/Visualization Tools</h3>", p3d2Details.innerHTML, null);
+    }
+}
+
 
 let pcDetailsBtn = document.getElementById('project-pc-details-btn');
 if (pcDetailsBtn) {
