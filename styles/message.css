@@ -42,6 +42,7 @@
 }
 
 .message-div {
+  color: #f6f6f6;
   display: grid;
   justify-content: left;
   align-content: center;
@@ -50,7 +51,7 @@
   padding: 0.5rem;
   border: 3px solid black;
   border-radius: 15px;
-  background-color: #52D6F4;
+  background-color: #408697;
 }
 
 .message-title {
@@ -73,7 +74,7 @@
   display: flex;
   word-wrap:break-word;
   word-break: break-word;
-  color: #363538;
+  color:363538;
   align-self: center;
   font-size: small;
   width: fit-content;
@@ -134,7 +135,7 @@
 }
 
 .message-button-ok:hover{
-  background-color: #408697;
+  background-color: #52D6F4;
   color: #F6F6F6;
 }
 
